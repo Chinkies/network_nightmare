@@ -7,10 +7,10 @@ extends RefCounted
 
 # Structure interne représentant un paquet en transit sur ce câble
 class WireTransit:
-	var packet: Packet
+	var packet: NetworkPacket
 	var distance: float = 0.0		# Distance parcourue sur le câble
 	
-	func _init(p_packet: Packet) -> void:
+	func _init(p_packet: NetworkPacket) -> void:
 		packet = p_packet
 
 
@@ -67,7 +67,7 @@ func _calculate_total_length() -> void:
 
 # Tente d'injecter un nouveau paquet sur le câble (appelé par le device émetteur)
 # Renvoie true si le paquet a pu entrer, false si le câble est saturé / en cooldown
-func push_packet(packet: Packet) -> bool:
+func push_packet(packet: NetworkPacket) -> bool:
 	# On vérifie qu'il n'y a pas de cooldown
 	if injection_cooldown > 0.0:
 		return false
@@ -93,7 +93,7 @@ func simulate(delta: float) -> void:
 		
 		# Si un paquet est en sortie de câble, on tente de le délivrer
 		if transit_queue.front().distance >= total_length:
-			_deliver_arrived_packets()
+			_deliver_arrived_packet()
 
 
 # Résout l'avancement des paquets et gère l'accumulation (bouchons)
@@ -122,5 +122,12 @@ func _update_packet_positions(delta: float) -> void:
 
 
 # Tente de faire entrer le paquet arrivé au bout dans le to_device
-func _deliver_arrived_packets() -> void:
-	pass
+func _deliver_arrived_packet() -> void:
+	# On vérifie si le device existe
+	if to_device == null:
+		return
+	else:
+		# On vérifie si le device peut acceuillir le paquet
+		if to_device.can_receive_packet(to_port):
+			var delivered_packet = transit_queue.pop_front().packet
+			to_device.receive_packet(to_port, delivered_packet)

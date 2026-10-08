@@ -1,4 +1,4 @@
-class_name Packet
+class_name NetworkPacket
 extends RefCounted
 
 enum PacketColor { BLUE, RED, GREEN, YELLOW }
