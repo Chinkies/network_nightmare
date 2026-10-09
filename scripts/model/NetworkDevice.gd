@@ -26,12 +26,13 @@ var grid_position: Vector2i = Vector2i.ZERO
 var rotation_quadrants: int = 0 	# 0: 0°, 1: 90°, 2: 180°, 3: 270°
 
 # --- Configuration locale des ports (index de port -> direction locale) ---
-var input_ports: Dictionary = {}		# Ex: { 0: Vector2i.LEFT }
-var output_ports: Dictionary = {}
+var input_ports: Dictionary[int, Vector2i] = {}
+var output_ports: Dictionary[int, Vector2i] = {}
+# Ex: { 0: Vector2i.LEFT }
 
 # --- Connexions réelles (index de port -> NetworkWire) ---
-var input_wires: Dictionary = {}
-var output_wires: Dictionary = {}
+var input_wires: Dictionary[int, NetworkWire] = {}
+var output_wires: Dictionary[int, NetworkWire] = {}
 
 # --- Buffer & Métriques matérielles ---
 var buffer: Array[NetworkPacket] = []
@@ -66,7 +67,7 @@ func connect_output(port: int, wire: NetworkWire) -> bool:
 
 # Tente de connecter un câble à un port d'entrée donné
 func connect_input(port: int, wire: NetworkWire) -> bool:
-	if wire == null or input_ports.get(port) == null or input_wires.get(port) != null:
+	if wire == null or not input_ports.has(port) or input_wires.get(port) != null:
 		return false
 	
 	input_wires[port] = wire
@@ -87,7 +88,8 @@ func disconnect_input(port: int) -> void:
 # Convertit une direction locale (-1, 0, etc.) en direction sur la grille selon la rotation
 func get_port_global_direction(local_dir: Vector2i) -> Vector2i:
 	var dir: Vector2i = local_dir
-	for _i in range(rotation_quadrants % 4):
+	var steps: int = posmod(rotation_quadrants, 4)
+	for _i in range(steps):
 		dir = Vector2i(-dir.y, dir.x)
 	return dir
 
@@ -130,10 +132,19 @@ func simulate(delta: float) -> void:
 	# Vérifie si la machine est fonctionnelle
 	if is_broken:
 		return
-	# Update le cooldown
+	
+	# 1. Update le cooldown
 	if processing_cooldown > 0.0:
 		processing_cooldown = maxf(0.0, processing_cooldown - delta)
-	# Vérifie s'il y a des paquets à traiter
+	
+	# 2. Purge des paquets expirés dans le buffer interne
+	for i in range(buffer.size() - 1, -1, -1):
+		var packet: NetworkPacket = buffer[i]
+		if packet.is_expired:
+			buffer.remove_at(i)
+			packet_dropped.emit(packet, "TTL expired")
+	
+	# 3. Vérifie si on peut traiter le paquet suivant
 	if processing_cooldown <= 0.0 and not buffer.is_empty():
 		_process_next_packet()
 	# TODO: ajouter un passage à l'état broken sous conditions

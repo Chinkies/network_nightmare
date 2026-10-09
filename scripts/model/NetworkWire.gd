@@ -1,6 +1,9 @@
 class_name NetworkWire
 extends RefCounted
 
+# Signaux pour la logique du rendu et du son
+signal packet_dropped(packet: NetworkPacket, reason: String)
+
 # =====================
 # ===== STRUCTURE =====
 # =====================
@@ -12,7 +15,6 @@ class WireTransit:
 	
 	func _init(p_packet: NetworkPacket) -> void:
 		packet = p_packet
-
 
 
 # ======================
@@ -87,13 +89,26 @@ func simulate(delta: float) -> void:
 	if injection_cooldown > 0.0:
 		injection_cooldown = maxf(0.0, injection_cooldown - delta)
 	
+	if transit_queue.is_empty():
+		return
+	
+	# Purge des paquets expirés en transit sur le câble
+	for i in range(transit_queue.size() - 1, -1, -1):
+		var transit: WireTransit = transit_queue[i]
+		if transit.packet.is_expired:
+			var dropped: NetworkPacket = transit.packet
+			transit_queue.remove_at(i)
+			packet_dropped.emit(dropped, "TTL expired")
+	
+	if transit_queue.is_empty():
+		return
+	
 	# On déplace les paquets
-	if not transit_queue.is_empty():
-		_update_packet_positions(delta)
-		
-		# Si un paquet est en sortie de câble, on tente de le délivrer
-		if transit_queue.front().distance >= total_length:
-			_deliver_arrived_packet()
+	_update_packet_positions(delta)
+	
+	# Si un paquet est en sortie de câble, on tente de le délivrer
+	if transit_queue.front().distance >= total_length:
+		_deliver_arrived_packet()
 
 
 # Résout l'avancement des paquets et gère l'accumulation (bouchons)
