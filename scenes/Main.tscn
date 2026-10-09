@@ -1,13 +1,22 @@
 [gd_scene format=3 uid="uid://t7qhd72rywme"]
 
 [ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://scenes/PanZoomCamera.gd" id="1_elqb8"]
+[ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://scenes/UIPuzzle.tscn" id="2_rvslj"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=107341410]
+limit_left = -1500
+limit_top = -800
+limit_right = 1500
+limit_bottom = 800
 script = ExtResource("1_elqb8")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1267928573]
 offset_right = 100.0
 offset_bottom = 100.0
 color = Color(0.7340823, 0, 0.1613833, 0.99215686)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
+
+[node name="UiPuzzle" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("2_rvslj")]

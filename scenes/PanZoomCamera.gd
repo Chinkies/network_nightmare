@@ -14,9 +14,9 @@ extends Camera2D
 @export var zoom_factor: float = 1.15
 @export var zoom_duration: float = 0.15
 
+
 var _target_zoom: Vector2 = Vector2.ONE
 var _zoom_tween: Tween
-
 
 # ====================
 # ===== METHODES =====
@@ -43,7 +43,13 @@ func _handle_movement(delta: float) -> void:
 	var input_vector: Vector2 = Input.get_vector("pan_left", "pan_right", "pan_up", "pan_down")
 	if input_vector != Vector2.ZERO:
 		# On divise par zoom.x pour que la vitesse perçue reste constante quel que soit le niveau de zoom
+		
+		var half_size_screen: Vector2 = (get_viewport_rect().size / 2.0) / zoom
+
 		position += input_vector * (move_speed / zoom.x) * delta
+
+		position.x = clamp(position.x, limit_left + half_size_screen.x, limit_right - half_size_screen.x)
+		position.y = clamp(position.y, limit_top + half_size_screen.y, limit_bottom - half_size_screen.y)
 
 
 # Ajuste le zoom de manière fluide et bornée
