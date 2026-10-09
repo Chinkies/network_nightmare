@@ -32,11 +32,11 @@ var points: Array[Vector2] = []
 var total_length: float = 0.0
 var speed: float = 100.0				# Pixels par seconde
 var min_packet_spacing: float = 24.0	# Distance minimale en pixels entre 2 paquets
-var max_rate: float = 1.0				# Paquets max par seconde
 
 # --- File de transit ---
 # Ordonnée : l'élément à l'index 0 est le plus proche de l'arrivée
 var transit_queue: Array[WireTransit] = []
+var max_rate: float = 1.0				# Paquets max par seconde
 var injection_cooldown: float = 0.0 	# Chronomètre interne pour cadencer les entrées
 
 
