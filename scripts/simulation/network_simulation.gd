@@ -42,6 +42,19 @@ func register_ephemeral_packet(packet: NetworkPacket) -> void:
 
 
 
+# --- Contrôle de l'exécution ---
+
+func start() -> void:
+	is_running = true
+
+func stop() -> void:
+	is_running = false
+
+func toggle() -> void:
+	is_running = not is_running
+
+
+
 # --- Boucle principale ---
 
 func _physics_process(delta: float) -> void:

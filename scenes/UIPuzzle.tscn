@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dacb2cdaf1703"]
 
+[ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://scripts/ui/ui_puzzle_controller.gd" id="1_1t41w"]
 [ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
 [ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
 
@@ -89,6 +90,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1t41w")
 
 [node name="SimulationContainer" type="PanelContainer" parent="." unique_id=2015785237]
 layout_mode = 1
@@ -121,6 +123,7 @@ horizontal_alignment = 1
 uppercase = true
 
 [node name="StartButton" type="Button" parent="SimulationContainer/MarginContainer/VBoxContainer" unique_id=815953164]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 28
@@ -133,6 +136,7 @@ text = "Start"
 script = ExtResource("1_4j4o3")
 
 [node name="StopButton" type="Button" parent="SimulationContainer/MarginContainer/VBoxContainer" unique_id=104445643]
+unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 28
@@ -168,5 +172,6 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="HintButton" type="Button" parent="HintContainer/MarginContainer" unique_id=1545421254]
+unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_4j4o3")
