@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dacb2cdaf1703"]
 
-[ext_resource type="Script" uid="uid://cywim5k80nr0r" path="res://scripts/UI/button_group.gd" id="1_p67w2"]
-[ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://ressources/ideaButton.tres" id="2_4j4o3"]
+[ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/UI/radio_button.gd" id="1_4j4o3"]
+[ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/idea_button.tres" id="2_4j4o3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44saq"]
 bg_color = Color(0, 0.2482624, 0.5986371, 1)
@@ -90,7 +90,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ContainerSimulation" type="PanelContainer" parent="." unique_id=2015785237]
+[node name="SimulationContainer" type="PanelContainer" parent="." unique_id=2015785237]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -102,26 +102,25 @@ offset_top = -213.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="ContainerSimulation" unique_id=1490584512]
+[node name="MarginContainer" type="MarginContainer" parent="SimulationContainer" unique_id=1490584512]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ContainerSimulation/MarginContainer" unique_id=132006472]
+[node name="VBoxContainer" type="VBoxContainer" parent="SimulationContainer/MarginContainer" unique_id=132006472]
 layout_mode = 2
-offset_transform_position = Vector2(6.36, 0)
 theme_override_constants/separation = 20
 
-[node name="Simulation" type="Label" parent="ContainerSimulation/MarginContainer/VBoxContainer" unique_id=1010990681]
+[node name="SimulationLabel" type="Label" parent="SimulationContainer/MarginContainer/VBoxContainer" unique_id=1010990681]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Simulation"
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Start" type="Button" parent="ContainerSimulation/MarginContainer/VBoxContainer" unique_id=815953164]
+[node name="StartButton" type="Button" parent="SimulationContainer/MarginContainer/VBoxContainer" unique_id=815953164]
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 28
@@ -131,9 +130,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_p67w2")
 toggle_mode = true
 button_group = SubResource("ButtonGroup_4j4o3")
 text = "Start"
-script = ExtResource("1_p67w2")
+script = ExtResource("1_4j4o3")
 
-[node name="Stop" type="Button" parent="ContainerSimulation/MarginContainer/VBoxContainer" unique_id=104445643]
+[node name="StopButton" type="Button" parent="SimulationContainer/MarginContainer/VBoxContainer" unique_id=104445643]
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 28
@@ -144,9 +143,9 @@ toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_4j4o3")
 text = "Stop"
-script = ExtResource("1_p67w2")
+script = ExtResource("1_4j4o3")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=663456003]
+[node name="HintContainer" type="PanelContainer" parent="." unique_id=663456003]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -161,13 +160,13 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_jsphu")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=528928049]
+[node name="MarginContainer" type="MarginContainer" parent="HintContainer" unique_id=528928049]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer" unique_id=1545421254]
+[node name="HintButton" type="Button" parent="HintContainer/MarginContainer" unique_id=1545421254]
 layout_mode = 2
 theme = ExtResource("2_4j4o3")
