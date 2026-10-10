@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://t7qhd72rywme"]
 
-[ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://scenes/pan_zoom_camera.gd" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://scripts/camera/pan_zoom_camera.gd" id="1_elqb8"]
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://scenes/UIPuzzle.tscn" id="2_rvslj"]
 
 [node name="Main" type="Node2D" unique_id=872985249]

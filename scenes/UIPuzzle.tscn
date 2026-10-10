@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dacb2cdaf1703"]
 
-[ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/UI/radio_button.gd" id="1_4j4o3"]
-[ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/idea_button.tres" id="2_4j4o3"]
+[ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
+[ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44saq"]
 bg_color = Color(0, 0.2482624, 0.5986371, 1)
