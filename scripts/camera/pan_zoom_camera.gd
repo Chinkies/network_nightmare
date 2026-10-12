@@ -9,8 +9,9 @@ extends Camera2D
 @export var move_speed: float = 600.0 # Pixels par seconde
 
 # --- Paramètres de zoom ---
-@export var min_zoom: float = 0.5
-@export var max_zoom: float = 2.5
+@export var min_zoom: float = 1.0
+@export var max_zoom: float = 3.0
+@export var zoom_range_factor: float = 3.0
 @export var zoom_factor: float = 1.15
 @export var zoom_duration: float = 0.15
 
@@ -38,7 +39,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_adjust_zoom(1.0 / zoom_factor)
 
 
-# Déplacement au clavier ZQSD
+## Déplacement au clavier ZQSD
 func _handle_movement(delta: float) -> void:
 	var input_vector: Vector2 = Input.get_vector("pan_left", "pan_right", "pan_up", "pan_down")
 	if input_vector != Vector2.ZERO:
@@ -52,7 +53,7 @@ func _handle_movement(delta: float) -> void:
 		position.y = clamp(position.y, limit_top + half_size_screen.y, limit_bottom - half_size_screen.y)
 
 
-# Ajuste le zoom de manière fluide et bornée
+## Ajuste le zoom de manière fluide et bornée
 func _adjust_zoom(factor: float) -> void:
 	var new_zoom_val: float = clampf(_target_zoom.x * factor, min_zoom, max_zoom)
 	_target_zoom = Vector2(new_zoom_val, new_zoom_val)
@@ -63,3 +64,32 @@ func _adjust_zoom(factor: float) -> void:
 
 	_zoom_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_zoom_tween.tween_property(self, "zoom", _target_zoom, zoom_duration)
+
+
+## Cadre la caméra sur une zone rectangulaire (centre, zoom mini et limites)
+func frame_rect(rect_center: Vector2, rect_size: Vector2, margin_cells: float = 2.0, cell_size: float = 64.0) -> void:
+	var viewport_size := get_viewport_rect().size
+	if viewport_size == Vector2.ZERO:
+		return
+
+	# 1. Calcul de la marge (padding) en pixels pour le décor
+	var padding := Vector2.ONE * (margin_cells * cell_size * 2.0)
+	var bounding_size := rect_size + padding
+
+	# 2. Zoom optimal pour faire rentrer tout le plateau + la marge
+	var zoom_factor: float = min(viewport_size.x / bounding_size.x, viewport_size.y / bounding_size.y)
+	
+	# Si la variable de zoom minimum existe dans ton script (ex: min_zoom), on l'aligne :
+	min_zoom = zoom_factor
+	max_zoom = zoom_factor * zoom_range_factor
+	zoom = Vector2(zoom_factor, zoom_factor)
+
+	# 3. Centrage de la caméra
+	global_position = rect_center
+
+	# 4. Ajustement des limites de la caméra (pour ne pas pan dans le vide infini)
+	var half_bounds := bounding_size * 0.5
+	limit_left = int(rect_center.x - half_bounds.x)
+	limit_right = int(rect_center.x + half_bounds.x)
+	limit_top = int(rect_center.y - half_bounds.y)
+	limit_bottom = int(rect_center.y + half_bounds.y)

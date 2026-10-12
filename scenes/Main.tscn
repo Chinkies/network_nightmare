@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://scripts/camera/pan_zoom_camera.gd" id="1_elqb8"]
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://scenes/UIPuzzle.tscn" id="2_rvslj"]
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://scripts/simulation/network_simulation.gd" id="4_rarhs"]
+[ext_resource type="Script" uid="uid://b01ym5arm37sy" path="res://scripts/grid/grid_manager.gd" id="5_vcsgt"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
 script = ExtResource("1_0bbpv")
@@ -15,11 +16,6 @@ limit_right = 1500
 limit_bottom = 800
 script = ExtResource("1_elqb8")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1267928573]
-offset_right = 100.0
-offset_bottom = 100.0
-color = Color(0.7340823, 0, 0.1613833, 0.99215686)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
 
 [node name="UiPuzzle" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("2_rvslj")]
@@ -28,3 +24,7 @@ unique_name_in_owner = true
 [node name="NetworkSimulation" type="Node" parent="." unique_id=61842431]
 unique_name_in_owner = true
 script = ExtResource("4_rarhs")
+
+[node name="GridManager" type="Node2D" parent="." unique_id=233354947]
+unique_name_in_owner = true
+script = ExtResource("5_vcsgt")
