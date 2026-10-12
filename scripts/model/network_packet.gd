@@ -13,19 +13,23 @@ var id: int
 var color: PacketColor
 var shape: PacketShape
 
+var source_id: String
+var destination_id: String
+var payload: Dictionary = {}
+
 var ttl: float = -1.0 	#Time-To-Live, -1 pour un paquet non éphémère
 var is_expired: bool = false
-
-var payload: Dictionary = {}
 
 
 # --- Méthodes ---
 
-func _init(p_id: int, p_color: PacketColor, p_shape: PacketShape, p_ttl: int = -1, p_payload: Dictionary = {}) -> void:
+func _init(p_id: int, p_color: PacketColor, p_shape: PacketShape, p_source_id: String, p_destination_id: String, p_payload: Dictionary = {}, p_ttl: int = -1) -> void:
 	id = p_id
 	color = p_color
 	shape = p_shape
 	ttl = p_ttl
+	source_id = p_source_id
+	destination_id = p_destination_id
 	payload = p_payload
 
 # Appelé uniquement par le manager sur la liste globale des paquets éphémères

@@ -7,7 +7,7 @@ signal packet_processed(packet: NetworkPacket)
 signal packet_dropped(packet: NetworkPacket, reason: String)
 # TODO: signal device_overloaded(device: NetworkDevice)
 
-# Types de machines pour JSON, UI et Factory
+## Types de machines pour JSON, UI et Factory
 enum Type {
 	GENERIC,
 	EMITTER,
@@ -57,7 +57,7 @@ func _init(p_id: String, p_capacity: int = 5, p_rate: float = 2.0) -> void:
 
 # --- Branchement des câbles aux ports
 
-# Tente de connecter un câble à un port de sortie donné
+## Tente de connecter un câble à un port de sortie donné
 func connect_output(port: int, wire: NetworkWire) -> bool:
 	if wire == null or not output_ports.has(port) or output_wires.get(port) != null:
 		return false
@@ -65,7 +65,7 @@ func connect_output(port: int, wire: NetworkWire) -> bool:
 	output_wires[port] = wire
 	return true
 
-# Tente de connecter un câble à un port d'entrée donné
+## Tente de connecter un câble à un port d'entrée donné
 func connect_input(port: int, wire: NetworkWire) -> bool:
 	if wire == null or not input_ports.has(port) or input_wires.get(port) != null:
 		return false
@@ -74,18 +74,18 @@ func connect_input(port: int, wire: NetworkWire) -> bool:
 	return true
 
 
-# Déconnecte le câble branché sur un port de sortie donné
+## Déconnecte le câble branché sur un port de sortie donné
 func disconnect_output(port: int) -> void:
 	output_wires.erase(port)
 
-# Déconnecte le câble branché sur un port d'entrée donné
+## Déconnecte le câble branché sur un port d'entrée donné
 func disconnect_input(port: int) -> void:
 	input_wires.erase(port)
 
 
 # --- Utilitaires géométriques ---
 
-# Convertit une direction locale (-1, 0, etc.) en direction sur la grille selon la rotation
+## Convertit une direction locale (-1, 0, etc.) en direction sur la grille selon la rotation
 func get_port_global_direction(local_dir: Vector2i) -> Vector2i:
 	var dir: Vector2i = local_dir
 	var steps: int = posmod(rotation_quadrants, 4)
@@ -93,7 +93,7 @@ func get_port_global_direction(local_dir: Vector2i) -> Vector2i:
 		dir = Vector2i(-dir.y, dir.x)
 	return dir
 
-# Renvoie la case voisine ciblée par un port de sortie donné
+## Renvoie la case voisine ciblée par un port de sortie donné
 func get_output_target_cell(port: int) -> Vector2i:
 	if not output_ports.has(port):
 		return grid_position
@@ -102,12 +102,12 @@ func get_output_target_cell(port: int) -> Vector2i:
 
 # --- Traitement des paquets ---
 
-# Vérifie si le port d'entrée existe et si le buffer interne a de la place + machine not broken
+## Vérifie si le port d'entrée existe et si le buffer interne a de la place + machine not broken
 func can_receive_packet(port: int) -> bool:
 	return not is_broken and input_ports.has(port) and buffer.size() < buffer_capacity
 
 
-# Réceptionne un paquet sur un port donné
+## Réceptionne un paquet sur un port donné
 func receive_packet(port: int, packet: NetworkPacket) -> void:
 	# 1. Vérification de sécurité matérielle
 	if not can_receive_packet(port):
@@ -127,7 +127,7 @@ func receive_packet(port: int, packet: NetworkPacket) -> void:
 	packet_received.emit(port, packet)
 
 
-# Fait avancer le cycle interne de la machine
+## Fait avancer le cycle interne de la machine
 func simulate(delta: float) -> void:
 	# Vérifie si la machine est fonctionnelle
 	if is_broken:
@@ -151,7 +151,7 @@ func simulate(delta: float) -> void:
 
 
 # Méthode virtuelle : surchargée par chaque type d'appareil
-# Implémentation par défaut : tente d'évacuer le premier paquet sur le port 0
+## Implémentation par défaut : tente d'évacuer le premier paquet sur le port 0
 func _process_next_packet() -> void:
 	# On cherche le câble branché sur le port de sortie 0
 	if output_wires.is_empty():
