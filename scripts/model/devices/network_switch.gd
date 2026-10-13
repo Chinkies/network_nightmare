@@ -9,12 +9,12 @@ var mac_table: Dictionary = {}
 # ===== METHODES =====
 # ====================
 
+# --- Surcharges des méthodes de Device ---
+
 func _init(p_id: String, p_capacity: int = 10, p_rate: float = 2.0) -> void:
 	super(p_id, p_capacity, p_rate)
 	device_type = Type.SWITCH
 
-
-# --- Surcharges des méthodes de Device ---
 
 ## Surcharge : Aiguillage conditionnel basé sur la table
 func _process_next_packet() -> void:
