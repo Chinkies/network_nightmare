@@ -10,12 +10,11 @@ enum PacketShape { CIRCLE, SQUARE, TRIANGLE }
 # --- Attributs ---
 
 var id: int
+var target_number: int 
 var color: PacketColor
 var shape: PacketShape
 
-var source_id: String
-var destination_id: String
-var payload: Dictionary = {}
+var routing_history: Dictionary[String, int] = {}	# (clé: String (id du switch), valeur: int (port))
 
 var ttl: float = -1.0 	#Time-To-Live, -1 pour un paquet non éphémère
 var is_expired: bool = false
@@ -23,14 +22,22 @@ var is_expired: bool = false
 
 # --- Méthodes ---
 
-func _init(p_id: int, p_color: PacketColor, p_shape: PacketShape, p_source_id: String, p_destination_id: String, p_payload: Dictionary = {}, p_ttl: int = -1) -> void:
+func _init(p_id: int, p_target_number: int, p_color: PacketColor, p_shape: PacketShape, p_ttl: float = -1.0) -> void:
 	id = p_id
+	target_number = p_target_number
 	color = p_color
 	shape = p_shape
 	ttl = p_ttl
-	source_id = p_source_id
-	destination_id = p_destination_id
-	payload = p_payload
+
+
+# Méthode pour dupliquer un paquet
+func clone() -> NetworkPacket:
+	var copy = NetworkPacket.new(id, target_number, color, shape, ttl)
+	copy.is_expired = is_expired
+	# Copie profonde de l'historique
+	copy.routing_history = routing_history.duplicate(true)
+	return copy
+
 
 # Appelé uniquement par le manager sur la liste globale des paquets éphémères
 func update_ttl(delta: float) -> bool:

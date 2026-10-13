@@ -11,7 +11,8 @@ signal packet_dropped(packet: NetworkPacket, reason: String)
 enum Type {
 	GENERIC,
 	EMITTER,
-	RECEIVER
+	RECEIVER,
+	SWITCH
 }
 
 

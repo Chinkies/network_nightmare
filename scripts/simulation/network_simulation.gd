@@ -7,6 +7,7 @@ extends Node
 
 # --- Registres actifs de la simulation ---
 var devices: Array[NetworkDevice] = []
+var _device_map: Dictionary = {}
 var wires: Array[NetworkWire] = []
 var ephemeral_packets: Array[NetworkPacket] = []
 
@@ -24,9 +25,11 @@ var simulation_speed: float = 1.0
 func register_device(device: NetworkDevice) -> void:
 	if not devices.has(device):
 		devices.append(device)
+		_device_map[device.id] = device # Indexation par ID
 
 func unregister_device(device: NetworkDevice) -> void:
 	devices.erase(device)
+	_device_map.erase(device.id)
 
 func register_wire(wire: NetworkWire) -> void:
 	if not wires.has(wire):
@@ -86,3 +89,16 @@ func _update_ephemeral_packets(delta: float) -> void:
 		# Si le paquet a expiré lors de ce pas de temps
 		if packet.update_ttl(delta):
 			ephemeral_packets.remove_at(i)
+
+
+# Appelée par une machine terminale (Receiver) quand un paquet est validé
+func apply_route_learning(routing_history: Dictionary, packet_color: int, target_number: int) -> void:
+	for switch_id in routing_history.keys():
+		var port_used: int = routing_history[switch_id]
+		
+		# On vérifie de manière sécurisée si la machine existe toujours dans le registre
+		var device = _device_map.get(switch_id, null)
+		
+		# Si la machine est bien un switch, on lui demande de mettre à jour sa table
+		if device != null and device is NetworkSwitch:
+			device.learn_route(packet_color, target_number, port_used)

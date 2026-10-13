@@ -1,100 +1,81 @@
 class_name NetworkSwitch
 extends NetworkDevice
 
-# Table de commutation : destination_id (ou IP/MAC) -> index de port de sortie
-var mac_table: Dictionary[String, int] = {}
-
-# Configuration des 4 directions physiques locales des ports
-# 0: Haut, 1: Droite, 2: Bas, 3: Gauche
-const PORT_DIRECTIONS: Dictionary[int, Vector2i] = {
-	0: Vector2i.UP,
-	1: Vector2i.RIGHT,
-	2: Vector2i.DOWN,
-	3: Vector2i.LEFT
-}
+# Table d'adresses : clé = "Couleur_Numéro" (ex: "0_5" pour BLUE et machine 5), valeur = port de sortie
+var mac_table: Dictionary = {}
 
 
-func _init(p_id: String, p_capacity: int = 6, p_rate: float = 3.0) -> void:
-	super._init(p_id, p_capacity, p_rate)
-	device_type = Type.GENERIC
+# ====================
+# ===== METHODES =====
+# ====================
+
+func _init(p_id: String, p_capacity: int = 10, p_rate: float = 2.0) -> void:
+	super(p_id, p_capacity, p_rate)
+	device_type = Type.SWITCH
 
 
-# --- Gestion dynamique des connexions ---
+# --- Surcharges des méthodes de Device ---
 
-## Tente de brancher un câble en entrée sur l'un des 4 ports physiques
-func connect_input(port: int, wire: NetworkWire) -> bool:
-	if wire == null or not PORT_DIRECTIONS.has(port):
-		return false
-	# Un port ne peut pas être à la fois entrée et sortie
-	if output_wires.has(port) or input_wires.has(port):
-		return false
-
-	input_ports[port] = PORT_DIRECTIONS[port]
-	input_wires[port] = wire
-	return true
-
-
-## Tente de brancher un câble en sortie sur l'un des 4 ports physiques
-func connect_output(port: int, wire: NetworkWire) -> bool:
-	if wire == null or not PORT_DIRECTIONS.has(port):
-		return false
-	# Un port ne peut pas être à la fois entrée et sortie
-	if input_wires.has(port) or output_wires.has(port):
-		return false
-
-	output_ports[port] = PORT_DIRECTIONS[port]
-	output_wires[port] = wire
-	return true
-
-
-func disconnect_input(port: int) -> void:
-	super.disconnect_input(port)
-	input_ports.erase(port)
-
-
-func disconnect_output(port: int) -> void:
-	super.disconnect_output(port)
-	output_ports.erase(port)
-
-
-# --- Logique de commutation ---
-
-func receive_packet(port: int, packet: NetworkPacket) -> void:
-	# Apprentissage dynamique (Auto-learning) :
-	# On retient que l'émetteur du paquet est accessible via ce port
-	if not packet.source_id.is_empty():
-		mac_table[packet.source_id] = port
-
-	super.receive_packet(port, packet)
-
-
+## Surcharge : Aiguillage conditionnel basé sur la table
 func _process_next_packet() -> void:
-	if output_wires.is_empty():
-		return
-
 	var packet: NetworkPacket = buffer.front()
-	var target_port: int = -1
+	var routing_key: String = str(packet.color) + "_" + str(packet.target_number)
+	
+	if mac_table.has(routing_key):
+		_handle_unicast(packet, mac_table[routing_key])
+	else:
+		_handle_broadcast(packet)
 
-	# 1. Vérification dans la table de commutation
-	if mac_table.has(packet.destination_id):
-		var candidate_port: int = mac_table[packet.destination_id]
-		# On s'assure qu'un câble de sortie y est bien branché
-		if output_wires.has(candidate_port):
-			target_port = candidate_port
 
-	# 2. Si destination inconnue ou non raccordée : diffusion (Flooding) vers la première sortie disponible
-	# (ou un tour de rôle / round-robin)
-	if target_port == -1:
-		for port_index in output_wires.keys():
-			target_port = port_index
-			break
 
+# --- Méthodes spécifiques au Switch ---
+
+## Envoi direct si la route est connue
+func _handle_unicast(packet: NetworkPacket, target_port: int) -> void:
 	var wire: NetworkWire = output_wires.get(target_port, null)
+	
 	if wire == null:
+		var dropped: NetworkPacket = buffer.pop_front()
+		packet_dropped.emit(dropped, "No wire on target port")
 		return
-
-	# Injection sur le câble sélectionné
+		
 	if wire.push_packet(packet):
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
 		packet_processed.emit(packet)
+
+
+## Duplication et ajout de la trace si la route est inconnue
+func _handle_broadcast(packet: NetworkPacket) -> void:
+	var valid_ports: Array[int] = output_wires.keys()
+	
+	if valid_ports.is_empty():
+		var dropped: NetworkPacket = buffer.pop_front()
+		packet_dropped.emit(dropped, "No output routes for broadcast")
+		return
+		
+	# Le switch attend que tous les ports soient libres pour lancer son broadcast synchronisé
+	for port in valid_ports:
+		var wire: NetworkWire = output_wires[port]
+		if wire.injection_cooldown > 0.0 or (not wire.transit_queue.is_empty() and wire.transit_queue.back().distance < wire.min_packet_spacing):
+			return
+
+	buffer.pop_front()
+	
+	for port in valid_ports:
+		var packet_copy: NetworkPacket = packet.clone()
+		# Le switch inscrit simplement son ID (String) et le port de sortie
+		packet_copy.routing_history[id] = port 
+		output_wires[port].push_packet(packet_copy)
+		
+	processing_cooldown = 1.0 / processing_rate
+	packet_processed.emit(packet)
+
+
+## Méthode appelée par un Receiver terminal lorsqu'un paquet arrive à la bonne destination
+func learn_route(packet_color: int, target_number: int, learned_port: int) -> void:
+	var routing_key: String = str(packet_color) + "_" + str(target_number)
+	
+	if not mac_table.has(routing_key) or mac_table[routing_key] != learned_port:
+		mac_table[routing_key] = learned_port
+		# TODO: Émettre un signal pour l'UI afin d'afficher la nouvelle entrée dans la table visuelle
