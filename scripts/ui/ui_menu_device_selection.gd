@@ -8,6 +8,12 @@ var available_items: Array[NetworkDevice] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if not available_items.is_empty():
+		populate_menu()
+
+## Méthode appelée lors du chargement du json
+func setup_menu(devices: Array[NetworkDevice]) -> void:
+	available_items = devices
 	populate_menu()
 
 ## Génère les éléments dans la grille de sélection

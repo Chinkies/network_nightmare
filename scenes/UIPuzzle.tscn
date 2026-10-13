@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
 [ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
 [ext_resource type="Script" uid="uid://br303se0nha48" path="res://scripts/ui/ui_menu_device_selection.gd" id="4_ow60c"]
+[ext_resource type="PackedScene" uid="uid://xn20r8fonny0" path="res://scenes/UiDraggableSlot.tscn" id="5_xul0j"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44saq"]
 bg_color = Color(0, 0.2482624, 0.5986371, 1)
@@ -182,12 +183,16 @@ layout_mode = 0
 offset_top = 113.0
 offset_right = 24.0
 offset_bottom = 145.0
+folded = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="FoldableContainer" unique_id=1198708450]
+visible = false
+custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
+[node name="UIMenuDeviceSelection" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
-columns = 2
 script = ExtResource("4_ow60c")
-slot_scene = null
+slot_scene = ExtResource("5_xul0j")
