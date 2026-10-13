@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://scripts/ui/ui_puzzle_controller.gd" id="1_1t41w"]
 [ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
 [ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
+[ext_resource type="Script" uid="uid://br303se0nha48" path="res://scripts/ui/ui_menu_device_selection.gd" id="4_ow60c"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44saq"]
 bg_color = Color(0, 0.2482624, 0.5986371, 1)
@@ -175,3 +176,18 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_4j4o3")
+
+[node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=641946065]
+layout_mode = 0
+offset_top = 113.0
+offset_right = 24.0
+offset_bottom = 145.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="FoldableContainer" unique_id=1198708450]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
+layout_mode = 2
+columns = 2
+script = ExtResource("4_ow60c")
+slot_scene = null

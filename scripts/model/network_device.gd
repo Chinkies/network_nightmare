@@ -44,7 +44,8 @@ var is_broken: bool = false
 var processing_rate: float = 2.0 # Paquets traités par seconde
 var processing_cooldown: float = 0.0
 
-
+# --- Texture du device ---
+var icon: Texture2D
 
 # ====================
 # ===== METHODES =====
