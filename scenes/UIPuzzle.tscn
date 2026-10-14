@@ -179,20 +179,22 @@ layout_mode = 2
 theme = ExtResource("2_4j4o3")
 
 [node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=641946065]
-layout_mode = 0
-offset_top = 113.0
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
 offset_right = 24.0
-offset_bottom = 145.0
-folded = true
+grow_vertical = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="FoldableContainer" unique_id=1198708450]
-visible = false
 custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
 [node name="UIMenuDeviceSelection" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 400)
+propagate_maximum_size = false
 layout_mode = 2
+columns = 2
 script = ExtResource("4_ow60c")
 slot_scene = ExtResource("5_xul0j")
+margin = 40

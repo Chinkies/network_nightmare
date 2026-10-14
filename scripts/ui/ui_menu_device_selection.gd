@@ -30,7 +30,7 @@ func populate_menu() -> void:
 	for item_data in available_items:
 		if item_data == null:
 			continue
-		
+
 		var slot_instance = slot_scene.instantiate() as UIDraggableItem
 		if slot_instance:
 			slot_instance.item_data = item_data

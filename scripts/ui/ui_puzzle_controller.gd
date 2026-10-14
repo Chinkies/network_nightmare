@@ -54,7 +54,7 @@ func _load_mock_devices_for_testing() -> void:
 	switch_dev.device_type = NetworkDevice.Type.SWITCH
 
 	var switch_texture = PlaceholderTexture2D.new()
-	switch_texture.size = Vector2(64, 64)
+	switch_texture.size = Vector2(100, 100)
 	switch_dev.icon = switch_texture
 
 	mock_devices.append(switch_dev)
@@ -63,10 +63,32 @@ func _load_mock_devices_for_testing() -> void:
 	receiver_dev.device_type = NetworkDevice.Type.RECEIVER
 
 	var receiver_texture = PlaceholderTexture2D.new()
-	receiver_texture.size = Vector2(64, 64)
+	receiver_texture.size = Vector2(100, 100)
 	receiver_dev.icon = receiver_texture
 
 	mock_devices.append(receiver_dev)
+
+	var extra_types = [
+		NetworkDevice.Type.EMITTER,
+		NetworkDevice.Type.SWITCH,
+		NetworkDevice.Type.RECEIVER,
+		NetworkDevice.Type.GENERIC
+	]
+
+	for i in range(8):
+		var dev_id = "device_%02d" % (i + 3)
+		# Alternance automatique des types et des capacités pour varier
+		var dev_type = extra_types[i % extra_types.size()]
+		var capacity = 5 + (i * 2)
+		
+		var dev = NetworkDevice.new(dev_id, capacity, 2.0)
+		dev.device_type = dev_type
+
+		var tex = PlaceholderTexture2D.new()
+		tex.size = Vector2(100, 100)
+		dev.icon = tex
+		
+		mock_devices.append(dev)
 	
 	if has_node("%UIMenuDeviceSelection"):
 		%UIMenuDeviceSelection.setup_menu(mock_devices)
