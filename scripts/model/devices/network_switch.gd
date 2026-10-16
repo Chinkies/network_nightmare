@@ -14,6 +14,18 @@ var mac_table: Dictionary = {}
 func _init(p_id: String, p_capacity: int = 10, p_rate: float = 2.0) -> void:
 	super(p_id, p_capacity, p_rate)
 	device_type = Type.SWITCH
+	
+	# Les 4 faces sont dynamiques
+	port_types = {
+		0: PortType.DYNAMIC,
+		1: PortType.DYNAMIC,
+		2: PortType.DYNAMIC,
+		3: PortType.DYNAMIC
+	}
+	
+	# Les limites mathématiques imposent les 3 schémas possibles
+	max_input_ports = 3
+	max_output_ports = 3
 
 
 ## Surcharge : Aiguillage conditionnel basé sur la table
@@ -58,7 +70,7 @@ func _handle_broadcast(packet: NetworkPacket) -> void:
 	for port in valid_ports:
 		var wire: NetworkWire = output_wires[port]
 		if wire.injection_cooldown > 0.0 or (not wire.transit_queue.is_empty() and wire.transit_queue.back().distance < wire.min_packet_spacing):
-			return
+			return 
 
 	buffer.pop_front()
 	

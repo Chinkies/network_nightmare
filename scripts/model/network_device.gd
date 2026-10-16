@@ -15,6 +15,14 @@ enum Type {
 	SWITCH
 }
 
+## Types possibles pour chaque face de la machine
+enum PortType {
+	BLOCKED,			# Face murée, aucune connexion
+	STATIC_INPUT,		# N'accepte que des câbles entrants
+	STATIC_OUTPUT,		# N'accepte que des câbles sortants
+	DYNAMIC				# Accepte entrantou sortant suivant certaines règles propres à chaque machine
+}
+
 
 # =====================
 # ===== ATTRIBUTS =====
@@ -26,10 +34,16 @@ var device_type: Type = Type.GENERIC
 var grid_position: Vector2i = Vector2i.ZERO
 var rotation_quadrants: int = 0 	# 0: 0°, 1: 90°, 2: 180°, 3: 270°
 
-# --- Configuration locale des ports (index de port -> direction locale) ---
-var input_ports: Dictionary[int, Vector2i] = {}
-var output_ports: Dictionary[int, Vector2i] = {}
-# Ex: { 0: Vector2i.LEFT }
+# --- Configuration locale des faces (0: Haut, 1: Droite, 2: Bas, 3: Gauche) ---
+# Par défaut, une machine générique est totalement bloquée. Les classes enfants surchargeront ceci.
+var port_types: Dictionary = {
+	0: PortType.BLOCKED,
+	1: PortType.BLOCKED,
+	2: PortType.BLOCKED,
+	3: PortType.BLOCKED
+}
+var max_input_ports: int = 0
+var max_output_ports: int = 0
 
 # --- Connexions réelles (index de port -> NetworkWire) ---
 var input_wires: Dictionary[int, NetworkWire] = {}
@@ -44,6 +58,7 @@ var is_broken: bool = false
 var processing_rate: float = 2.0 # Paquets traités par seconde
 var processing_cooldown: float = 0.0
 
+# TODO:
 # --- Texture du device ---
 var icon: Texture2D
 
@@ -57,56 +72,104 @@ func _init(p_id: String, p_capacity: int = 5, p_rate: float = 2.0) -> void:
 	processing_rate = p_rate
 
 
-# --- Branchement des câbles aux ports
+# --- Gestion des Connexions ---
 
-## Tente de connecter un câble à un port de sortie donné
-func connect_output(port: int, wire: NetworkWire) -> bool:
-	if wire == null or not output_ports.has(port) or output_wires.get(port) != null:
-		return false
+## Vérifie si on peut brancher un câble ENTRANT sur cette face locale
+func can_connect_input(local_port: int) -> bool:
+	if not port_types.has(local_port): return false
+	var type: int = port_types[local_port]
 	
-	output_wires[port] = wire
+	if type == PortType.BLOCKED or type == PortType.STATIC_OUTPUT:
+		return false
+	if input_wires.has(local_port):
+		return false # Déjà un câble entrant ici
+		
+	# Règle universelle anti-collision (Full-duplex interdit sur une même face)
+	if output_wires.has(local_port):
+		return false 
+		
+	# Vérification stricte de la limite matérielle
+	if input_wires.size() >= max_input_ports:
+		return false
+		
 	return true
 
-## Tente de connecter un câble à un port d'entrée donné
-func connect_input(port: int, wire: NetworkWire) -> bool:
-	if wire == null or not input_ports.has(port) or input_wires.get(port) != null:
-		return false
+## Vérifie si on peut brancher un câble SORTANT sur cette face locale
+func can_connect_output(local_port: int) -> bool:
+	if not port_types.has(local_port): return false
+	var type: int = port_types[local_port]
 	
-	input_wires[port] = wire
+	if type == PortType.BLOCKED or type == PortType.STATIC_INPUT:
+		return false
+	if output_wires.has(local_port):
+		return false # Déjà un câble sortant ici
+		
+	# Règle universelle anti-collision (Full-duplex interdit sur une même face)
+	if input_wires.has(local_port):
+		return false 
+		
+	# Vérification stricte de la limite matérielle
+	if output_wires.size() >= max_output_ports:
+		return false
+		
 	return true
 
 
-## Déconnecte le câble branché sur un port de sortie donné
-func disconnect_output(port: int) -> void:
-	output_wires.erase(port)
+## Tente de connecter un câble à un port donné
+func connect_input(local_port: int, wire: NetworkWire) -> bool:
+	if can_connect_input(local_port):
+		input_wires[local_port] = wire
+		return true
+	return false
+
+## Tente de connecter un câble à un port donné
+func connect_output(local_port: int, wire: NetworkWire) -> bool:
+	if can_connect_output(local_port):
+		output_wires[local_port] = wire
+		return true
+	return false
+
 
 ## Déconnecte le câble branché sur un port d'entrée donné
 func disconnect_input(port: int) -> void:
 	input_wires.erase(port)
 
+## Déconnecte le câble branché sur un port de sortie donné
+func disconnect_output(port: int) -> void:
+	output_wires.erase(port)
+
+
 
 # --- Utilitaires géométriques ---
 
-## Convertit une direction locale (-1, 0, etc.) en direction sur la grille selon la rotation
-func get_port_global_direction(local_dir: Vector2i) -> Vector2i:
-	var dir: Vector2i = local_dir
+const LOCAL_DIRECTIONS = {
+	0: Vector2i(0, -1), # Haut
+	1: Vector2i(1, 0),  # Droite
+	2: Vector2i(0, 1),  # Bas
+	3: Vector2i(-1, 0)  # Gauche
+}
+
+## Convertit une face locale en direction sur la grille globale selon la rotation
+func get_port_global_direction(local_port: int) -> Vector2i:
+	var dir: Vector2i = LOCAL_DIRECTIONS.get(local_port, Vector2i.ZERO)
 	var steps: int = posmod(rotation_quadrants, 4)
 	for _i in range(steps):
 		dir = Vector2i(-dir.y, dir.x)
 	return dir
 
-## Renvoie la case voisine ciblée par un port de sortie donné
-func get_output_target_cell(port: int) -> Vector2i:
-	if not output_ports.has(port):
+## Renvoie la coordonnée de la case ciblée par le port de sortie
+func get_output_target_cell(local_port: int) -> Vector2i:
+	if not output_wires.has(local_port):
 		return grid_position
-	return grid_position + get_port_global_direction(output_ports[port])
+	return grid_position + get_port_global_direction(local_port)
+
 
 
 # --- Traitement des paquets ---
 
 ## Vérifie si le port d'entrée existe et si le buffer interne a de la place + machine not broken
 func can_receive_packet(port: int) -> bool:
-	return not is_broken and input_ports.has(port) and buffer.size() < buffer_capacity
+	return not is_broken and input_wires.has(port) and buffer.size() < buffer_capacity
 
 
 ## Réceptionne un paquet sur un port donné
@@ -116,8 +179,8 @@ func receive_packet(port: int, packet: NetworkPacket) -> void:
 		var reason: String = "Unknown error"
 		if is_broken:
 			reason = "Device broken"
-		elif not input_ports.has(port):
-			reason = "Invalid input port"
+		elif not input_wires.has(port):
+			reason = "Invalid or unconnected input port"
 		elif buffer.size() >= buffer_capacity:
 			reason = "Buffer full"
 			

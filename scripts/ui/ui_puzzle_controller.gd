@@ -46,6 +46,7 @@ func set_simulation_running(is_running: bool) -> void:
 	else:
 		stop_button.button_pressed = true
 
+
 ## === TEMPORAIRE POUR TESTER LES MENUS ===
 func _load_mock_devices_for_testing() -> void:
 	var mock_devices: Array[NetworkDevice] = []

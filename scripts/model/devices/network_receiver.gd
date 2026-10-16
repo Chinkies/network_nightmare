@@ -22,6 +22,16 @@ func _init(p_id: String, p_color: NetworkPacket.PacketColor, p_number: int, p_ca
 	device_type = Type.RECEIVER
 	expected_color = p_color
 	expected_number = p_number
+	
+	# Configuration asymétrique : Une seule entrée statique en bas
+	port_types = {
+		0: PortType.BLOCKED,
+		1: PortType.BLOCKED,
+		2: PortType.STATIC_INPUT,
+		3: PortType.BLOCKED
+	}
+	max_input_ports = 1
+	max_output_ports = 0
 
 
 ## Surcharge : Un Receiver ne transfère pas, il consomme et valide
@@ -32,7 +42,6 @@ func _process_next_packet() -> void:
 	# 1. Validation de la destination
 	if packet.color == expected_color and packet.target_number == expected_number:
 		# Succès ! Le paquet a atteint la bonne cible.
-		# On émet le signal pour que la simulation mette à jour les switchs
 		if not packet.routing_history.is_empty():
 			route_learned.emit(packet.routing_history, packet.color, packet.target_number)
 			
