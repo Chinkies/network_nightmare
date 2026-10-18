@@ -49,25 +49,30 @@ func set_simulation_running(is_running: bool) -> void:
 
 ## === TEMPORAIRE POUR TESTER LES MENUS ===
 func _load_mock_devices_for_testing() -> void:
-	var mock_devices: Array[NetworkDevice] = []
+	var mock_device_data: Array[NetworkDeviceData] = []
 
-	var switch_dev = NetworkDevice.new("switch_01", 5, 2.0)
-	switch_dev.device_type = NetworkDevice.Type.SWITCH
+	#SWITCH
+	var switch_data = NetworkDeviceData.new();
+	switch_data.device_id_template = "switch_01"
+	switch_data.device_name = "Switch Réseau"
+	switch_data.device_type = NetworkDevice.Type.SWITCH
 
 	var switch_texture = PlaceholderTexture2D.new()
 	switch_texture.size = Vector2(100, 100)
-	switch_dev.icon = switch_texture
+	switch_data.icon = switch_texture
 
-	mock_devices.append(switch_dev)
+	mock_device_data.append(switch_data)
 
-	var receiver_dev = NetworkDevice.new("receiver_01", 5, 2.0)
-	receiver_dev.device_type = NetworkDevice.Type.RECEIVER
+	var receiver_data = NetworkDeviceData.new()
+	receiver_data.device_id_template = "receiver_01"
+	receiver_data.device_name = "Receiver"
+	receiver_data.device_type = NetworkDevice.Type.RECEIVER
 
 	var receiver_texture = PlaceholderTexture2D.new()
 	receiver_texture.size = Vector2(100, 100)
-	receiver_dev.icon = receiver_texture
+	receiver_data.icon = receiver_texture
 
-	mock_devices.append(receiver_dev)
+	mock_device_data.append(receiver_data)
 
 	var extra_types = [
 		NetworkDevice.Type.EMITTER,
@@ -77,22 +82,20 @@ func _load_mock_devices_for_testing() -> void:
 	]
 
 	for i in range(8):
-		var dev_id = "device_%02d" % (i + 3)
-		# Alternance automatique des types et des capacités pour varier
-		var dev_type = extra_types[i % extra_types.size()]
-		var capacity = 5 + (i * 2)
-		
-		var dev = NetworkDevice.new(dev_id, capacity, 2.0)
-		dev.device_type = dev_type
+
+		var device_data = NetworkDeviceData.new()
+		device_data.device_id_template = "device_%02d" % (i + 3)
+		device_data.device_name = "Appareil %02d" % (i + 3)
+		device_data.device_type = extra_types[i % extra_types.size()]
 
 		var tex = PlaceholderTexture2D.new()
 		tex.size = Vector2(100, 100)
-		dev.icon = tex
+		device_data.icon = tex
 		
-		mock_devices.append(dev)
+		mock_device_data.append(device_data)
 	
 	if has_node("%UIMenuDeviceSelection"):
-		%UIMenuDeviceSelection.setup_menu(mock_devices)
-		print("[Test] Menu peuplé avec succès avec %d devices." % mock_devices.size())
+		%UIMenuDeviceSelection.setup_menu(mock_device_data)
+		print("[Test] Menu peuplé avec succès avec %d devices." % mock_device_data.size())
 	else:
 		push_warning("[Test] Impossible de trouver le nœud UIMenuDeviceSelection via %UIMenuDeviceSelection")

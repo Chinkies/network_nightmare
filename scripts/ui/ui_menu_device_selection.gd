@@ -2,7 +2,7 @@ class_name UIMenuDeviceSelection
 extends GridContainer
 
 ## Liste des items disponibles
-var available_items: Array[NetworkDevice] = []
+var available_items: Array[NetworkDeviceData] = []
 
 @export var slot_scene: PackedScene
 
@@ -12,7 +12,7 @@ func _ready() -> void:
 		populate_menu()
 
 ## Méthode appelée lors du chargement du json
-func setup_menu(devices: Array[NetworkDevice]) -> void:
+func setup_menu(devices: Array[NetworkDeviceData]) -> void:
 	available_items = devices
 	populate_menu()
 

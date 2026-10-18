@@ -4,7 +4,7 @@ extends Control
 @export var icon_size: Vector2
 @export var margin: Vector2
 
-var item_data: NetworkDevice
+var item_data: NetworkDeviceData
 
 #pas sur de ça, c'est pour la texture dans l'ui mais ça sera surement récup via le networkDevice
 @onready var icon_texture: TextureRect = $TextureRect
@@ -33,6 +33,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	var preview_rect := TextureRect.new()
 	preview_rect.texture = item_data.icon
 	preview_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview_rect.custom_maximum_size = Vector2(48, 48)
 	preview_rect.custom_minimum_size = icon_size
 
 	var preview_container := Control.new()
