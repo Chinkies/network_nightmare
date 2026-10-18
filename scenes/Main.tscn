@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://scenes/UIPuzzle.tscn" id="2_rvslj"]
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://scripts/simulation/network_simulation.gd" id="4_rarhs"]
 [ext_resource type="Script" uid="uid://b01ym5arm37sy" path="res://scripts/grid/grid_manager.gd" id="5_vcsgt"]
+[ext_resource type="Script" uid="uid://tspvdkinqr8d" path="res://scripts/grid/grid_drop_zone.gd" id="6_c01mt"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
 script = ExtResource("1_0bbpv")
@@ -25,6 +26,13 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 script = ExtResource("4_rarhs")
 
-[node name="GridManager" type="Node2D" parent="." unique_id=233354947]
+[node name="GridManager" type="Node2D" parent="." unique_id=808974821]
 unique_name_in_owner = true
 script = ExtResource("5_vcsgt")
+
+[node name="GridDropZone" type="Control" parent="GridManager" unique_id=274467169 node_paths=PackedStringArray("grid_manager")]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 0
+script = ExtResource("6_c01mt")
+grid_manager = NodePath("..")

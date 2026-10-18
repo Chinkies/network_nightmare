@@ -94,3 +94,58 @@ func get_grid_pixel_size() -> Vector2:
 ## Renvoie le centre global du plateau
 func get_grid_center_world() -> Vector2:
 	return to_global(get_grid_pixel_size() * 0.5)
+
+
+# ================================================
+# ===== GESTION DU DRAG & DROP SUR LA GRILLE =====
+# ================================================
+
+## Verifie si le drop est possible sur la case
+func can_handle_drop(_at_position: Vector2, data: Variant) -> bool:
+	
+	# Securité sur le contenu de data
+	if typeof(data) != TYPE_DICTIONARY or not data.has("item_data"):
+		print("[GridManager] PLacement impossible device incorrecte")
+		return false
+	
+	var cell := world_to_cell(get_global_mouse_position())
+
+	# Verifie si la cellule est occupée / dans la grille
+	if not is_inside_grid(cell) or is_cell_occupied(cell):
+		return false
+
+	return true
+
+## Exécute le drop du device
+func handle_drop(_at_position: Vector2, data: Variant) -> void:
+	if not can_handle_drop(_at_position, data):
+		return
+		
+	var item_data: NetworkDeviceData = data["item_data"]
+	var cell := world_to_cell(get_global_mouse_position())
+
+	var unique_id = "%s_%d_%s" % [item_data.device_id_template, cell.x, cell.y]
+
+	var logic_device = item_data.instantiate_device(unique_id)
+	logic_device.grid_position = cell
+
+	var device_node: Node2D = null
+	if item_data.device_scene:
+		device_node = item_data.device_scene.instantiate() as Node2D
+	else :
+		device_node = Node2D.new()
+		var sprite = Sprite2D.new()
+		sprite.texture = item_data.icon
+		if item_data.icon:
+				var tex_size := item_data.icon.get_size()
+				if tex_size.x > 0 and tex_size.y > 0:
+					var scale_factor = float(cell_size) / max(tex_size.x, tex_size.y)
+					sprite.scale = Vector2(scale_factor, scale_factor)
+		device_node.add_child(sprite)
+
+	device_node.global_position = cell_to_world_center(cell)
+	
+	add_child(device_node)
+	set_cell_occupied(cell, device_node)
+
+	print("[GridManager] Appareil '%s' placé avec succès sur la cellule %s" % [unique_id, cell])
