@@ -5,6 +5,9 @@ extends Node2D
 # ===== ATTRIBUTS =====
 # =====================
 
+# Référence vers la simulation pour enregistrer les machines créées
+@export var simulation: NetworkSimulation
+
 @export var cell_size: int = 64
 @export var grid_width: int = 10   # Largeur en nombre de cellules
 @export var grid_height: int = 6  # Hauteur en nombre de cellules
@@ -100,11 +103,11 @@ func get_grid_center_world() -> Vector2:
 # ===== GESTION DU DRAG & DROP SUR LA GRILLE =====
 # ================================================
 
-## Verifie si le drop est possible sur la case
+## Vérifie si le drop est possible sur la case
 func can_handle_drop(_at_position: Vector2, data: Variant) -> bool:
 	
 	# Securité sur le contenu de data
-	if typeof(data) != TYPE_DICTIONARY or not data.has("item_data"):
+	if typeof(data) != TYPE_DICTIONARY or not data.has("device_data"):
 		print("[GridManager] PLacement impossible device incorrecte")
 		return false
 	
@@ -121,31 +124,37 @@ func handle_drop(_at_position: Vector2, data: Variant) -> void:
 	if not can_handle_drop(_at_position, data):
 		return
 		
-	var item_data: NetworkDeviceData = data["item_data"]
+	var device_data: NetworkDeviceData = data["device_data"]
 	var cell := world_to_cell(get_global_mouse_position())
 
-	var unique_id = "%s_%d_%s" % [item_data.device_id_template, cell.x, cell.y]
-
-	var logic_device = item_data.instantiate_device(unique_id)
+	# 1. Création de la machine logique
+	var unique_id = "%s_%d_%s" % [device_data.device_id_template, cell.x, cell.y]
+	var logic_device = device_data.instantiate_device(unique_id)
 	logic_device.grid_position = cell
 
-	var device_node: Node2D = null
-	if item_data.device_scene:
-		device_node = item_data.device_scene.instantiate() as Node2D
-	else :
-		device_node = Node2D.new()
-		var sprite = Sprite2D.new()
-		sprite.texture = item_data.icon
-		if item_data.icon:
-				var tex_size := item_data.icon.get_size()
-				if tex_size.x > 0 and tex_size.y > 0:
-					var scale_factor = float(cell_size) / max(tex_size.x, tex_size.y)
-					sprite.scale = Vector2(scale_factor, scale_factor)
-		device_node.add_child(sprite)
+	# 2. Création de la machine visuelle (La Vue)
+	if not device_data.device_scene:
+		push_error("[GridManager] Impossible de placer : aucune device_scene définie dans la ressource !")
+		return
+		
+	var view_node = device_data.device_scene.instantiate() as NetworkDeviceView
+	if not view_node:
+		push_error("[GridManager] La scène n'a pas le script NetworkDeviceView attaché !")
+		return
 
-	device_node.global_position = cell_to_world_center(cell)
+	# On place le visuel au centre de la case
+	view_node.global_position = cell_to_world_center(cell)
+	add_child(view_node)
 	
-	add_child(device_node)
-	set_cell_occupied(cell, device_node)
+	# 3. On lie la vue à la logique
+	view_node.setup(logic_device, device_data.texture, float(cell_size))
 
-	print("[GridManager] Appareil '%s' placé avec succès sur la cellule %s" % [unique_id, cell])
+	# 4. Enregistrements
+	set_cell_occupied(cell, view_node)
+	
+	if simulation:
+		simulation.register_device(logic_device)
+	else:
+		push_warning("[GridManager] Attention, aucune NetworkSimulation assignée. La machine ne tournera pas !")
+
+	print("[GridManager] Appareil '%s' placé et enregistré avec succès." % unique_id)

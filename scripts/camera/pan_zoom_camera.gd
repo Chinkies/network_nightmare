@@ -77,12 +77,12 @@ func frame_rect(rect_center: Vector2, rect_size: Vector2, margin_cells: float = 
 	var bounding_size := rect_size + padding
 
 	# 2. Zoom optimal pour faire rentrer tout le plateau + la marge
-	var zoom_factor: float = min(viewport_size.x / bounding_size.x, viewport_size.y / bounding_size.y)
+	var optimum_zoom_factor: float = min(viewport_size.x / bounding_size.x, viewport_size.y / bounding_size.y)
 	
 	# Si la variable de zoom minimum existe dans ton script (ex: min_zoom), on l'aligne :
-	min_zoom = zoom_factor
-	max_zoom = zoom_factor * zoom_range_factor
-	zoom = Vector2(zoom_factor, zoom_factor)
+	min_zoom = optimum_zoom_factor
+	max_zoom = optimum_zoom_factor * zoom_range_factor
+	zoom = Vector2(optimum_zoom_factor, optimum_zoom_factor)
 
 	# 3. Centrage de la caméra
 	global_position = rect_center

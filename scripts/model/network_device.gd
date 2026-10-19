@@ -20,7 +20,7 @@ enum PortType {
 	BLOCKED,			# Face murée, aucune connexion
 	STATIC_INPUT,		# N'accepte que des câbles entrants
 	STATIC_OUTPUT,		# N'accepte que des câbles sortants
-	DYNAMIC				# Accepte entrantou sortant suivant certaines règles propres à chaque machine
+	DYNAMIC				# Accepte entrant ou sortant suivant certaines règles propres à chaque machine
 }
 
 
@@ -58,9 +58,7 @@ var is_broken: bool = false
 var processing_rate: float = 2.0 # Paquets traités par seconde
 var processing_cooldown: float = 0.0
 
-# TODO:
-# --- Texture du device ---
-var icon: Texture2D
+
 
 # ====================
 # ===== METHODES =====

@@ -7,7 +7,7 @@ extends Node2D
 
 @onready var camera: PanZoomCamera = $Camera2D
 @onready var grid_manager: GridManager = %GridManager
-@onready var ui_puzzle: UIPuzzleController = %UiPuzzle
+@onready var puzzle_ui: PuzzleUiController = %PuzzleUi
 @onready var simulation: NetworkSimulation = %NetworkSimulation
 
 
@@ -25,9 +25,9 @@ func _ready() -> void:
 # --- Fonctions de gestion des signaux ---
 
 func _connect_ui_signals() -> void:
-	ui_puzzle.simulation_started.connect(_on_simulation_started)
-	ui_puzzle.simulation_stopped.connect(_on_simulation_stopped)
-	ui_puzzle.hint_requested.connect(_on_hint_requested)
+	puzzle_ui.simulation_started.connect(_on_simulation_started)
+	puzzle_ui.simulation_stopped.connect(_on_simulation_stopped)
+	puzzle_ui.hint_requested.connect(_on_hint_requested)
 
 
 func _on_simulation_started() -> void:

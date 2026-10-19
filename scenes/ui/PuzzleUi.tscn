@@ -1,10 +1,13 @@
 [gd_scene format=3 uid="uid://dacb2cdaf1703"]
 
-[ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://scripts/ui/ui_puzzle_controller.gd" id="1_1t41w"]
 [ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
+[ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://scripts/ui/puzzle_ui_controller.gd" id="1_4m780"]
+[ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://scripts/model/resources/network_device_data.gd" id="2_0s4q3"]
 [ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
-[ext_resource type="Script" uid="uid://br303se0nha48" path="res://scripts/ui/ui_menu_device_selection.gd" id="4_ow60c"]
-[ext_resource type="PackedScene" uid="uid://xn20r8fonny0" path="res://scenes/UiDraggableSlot.tscn" id="5_xul0j"]
+[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="3_mwg6p"]
+[ext_resource type="Resource" uid="uid://bsb2a6r6khtdb" path="res://resources/devices/switch.tres" id="4_k4vns"]
+[ext_resource type="Script" uid="uid://br303se0nha48" path="res://scripts/ui/device_selection_menu/device_selection_menu.gd" id="4_ow60c"]
+[ext_resource type="PackedScene" uid="uid://xn20r8fonny0" path="res://scenes/ui/DraggableSlot.tscn" id="5_xul0j"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_44saq"]
 bg_color = Color(0, 0.2482624, 0.5986371, 1)
@@ -85,7 +88,7 @@ corner_radius_top_right = 1000
 corner_radius_bottom_right = 1000
 corner_radius_bottom_left = 1000
 
-[node name="UiPuzzle" type="Control" unique_id=214307631]
+[node name="PuzzleUi" type="Control" unique_id=214307631]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,7 +96,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_1t41w")
+script = ExtResource("1_4m780")
+available_devices = Array[ExtResource("2_0s4q3")]([ExtResource("3_mwg6p"), ExtResource("4_k4vns")])
 
 [node name="SimulationContainer" type="PanelContainer" parent="." unique_id=2015785237]
 layout_mode = 1
@@ -190,7 +194,7 @@ grow_vertical = 2
 custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
-[node name="UIMenuDeviceSelection" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
+[node name="DeviceSelectionMenu" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 400)
 propagate_maximum_size = false

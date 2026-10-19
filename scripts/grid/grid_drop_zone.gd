@@ -1,5 +1,4 @@
 class_name GridDropZone
-
 extends Control
 
 @export var grid_manager: GridManager

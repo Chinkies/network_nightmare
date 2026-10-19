@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://xn20r8fonny0"]
 
-[ext_resource type="Script" uid="uid://bblqkt4238hnu" path="res://scripts/ui/ui_draggable_item.gd" id="1_qa6m0"]
+[ext_resource type="Script" uid="uid://bblqkt4238hnu" path="res://scripts/ui/device_selection_menu/draggable_item.gd" id="1_g30ky"]
 
-[node name="UiDraggableSlot" type="Control" unique_id=1821049040]
+[node name="DraggableSlot" type="Control" unique_id=1821049040]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_qa6m0")
-icon_size = Vector2(80, 80)
+script = ExtResource("1_g30ky")
+visual_size = Vector2(80, 80)
 margin = Vector2(20, 20)
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2084630119]
