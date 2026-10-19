@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dfeqmbf30xv7x"]
 
-[ext_resource type="Script" uid="uid://cren2yw16c03r" path="res://scripts/view/network_device_view.gd" id="1_xkd5p"]
+[ext_resource type="Script" uid="uid://cren2yw16c03r" path="res://scripts/view/network_device_view.gd" id="1_lpfqe"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_27gwp"]
 
-[node name="GenericDeviceView" type="Node2D" unique_id=336253877]
-script = ExtResource("1_xkd5p")
+[node name="NetworkDeviceView" type="Node2D" unique_id=336253877]
+script = ExtResource("1_lpfqe")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1176998973]
 texture = SubResource("PlaceholderTexture2D_27gwp")
