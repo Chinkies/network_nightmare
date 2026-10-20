@@ -1,14 +1,28 @@
 # Network Nightmare - Roadmap & Todo List
 
+> État vérifié le 20/10/2026 sur la branche `connectionMode`, à partir du code présent
+> et de l'historique Git jusqu'au commit `1a1995f`.
+
+### Réalisations confirmées par l'historique
+
+- `ea3b3ba` à `9f47bd6` : modèle réseau, câbles, devices, TTL et boucle de simulation.
+- `0acffdc` à `730effb` : scène principale, caméra et contrôles UI reliés à la simulation.
+- `775a5b8` : grille 2D, occupation des cellules et cadrage dynamique de la caméra.
+- `4003c29` à `d2efbc8` : switch, receiver et logique d'apprentissage/routage.
+- `7ccfdf9` à `b866036`, puis `d1ba169` et `a7aac3d` : inventaire, ressources de
+  devices, textures, drag-and-drop et refactorisation.
+- `e740a4c` et `1a1995f` : validation des ports et géométrie logique des câbles.
+  Leur rendu et leur création interactive restent à faire.
+
 ## 1. Fondations & Socle Technique Réalisés
 
 * [x] **Modèle de données abstrait**
-  * [x] Classe abstraite `NetworkDevice` (`network_device.gd`).
+  * [x] Classe de base `NetworkDevice` (`scripts/model/network_device.gd`).
   * [x] Modélisation logique des câbles `NetworkWire` (`network_wire.gd`).
   * [x] Modélisation des unités de données `NetworkPacket` (`network_packet.gd`).
 
 * [x] **Moteur d'horloge et de simulation**
-  * [x] Moteur `NetworkSimulation` (`simulation.gd`) avec boucle `_physics_process`.
+  * [x] Moteur `NetworkSimulation` (`scripts/simulation/network_simulation.gd`) avec boucle `_physics_process`.
   * [x] Enregistrement et mise à jour cyclique des équipements et des câbles.
   * [x] Gestion du cycle de vie et expiration des paquets éphémères (`ephemeral_packets` / TTL).
   * [x] Méthodes d'exécution (`start`, `stop`, `step`).
@@ -18,7 +32,7 @@
   * [x] Caméra panoramique avec translations et zoom (`pan_zoom_camera.gd`).
 
 * [x] **Contrôle utilisateur & Orchestration de base**
-  * [x] Scène `UIPuzzle.tscn` intégrée dans un `CanvasLayer` dédié.
+  * [x] Scène `PuzzleUi.tscn` intégrée dans un `CanvasLayer` dédié.
   * [x] Boutons exclusifs de contrôle d'exécution : **Start** et **Stop** (`radio_button.gd`).
   * [x] Bouton d'aide et indices (**Hint**).
   * [x] Contrôleur d'interface `ui_puzzle_controller.gd` avec signaux découplés.
@@ -30,46 +44,52 @@
 
 * [x] **Composant `GridManager`**
   * [x] Définir la structure du gestionnaire de grille (taille de cellule paramétrable, ex: 64x64 px).
-  * [x] Fonctions de conversion bidirectionnelle : `world_to_grid(pos)` et `grid_to_world(coord)`.
+  * [x] Fonctions de conversion : `world_to_cell(pos)` et `cell_to_world_center(coord)`.
   * [x] Registre d'occupation des cellules (savoir quelle machine ou quel câble occupe quelle case).
   * [x] Rendu visuel de la grille 2D (lignes ou points discrets configurables selon la taille du niveau).
   * [x] Gestion du confinement de la caméra aux limites de la grille du niveau courant.
   * [x] Gestion dynamique du niveau de zoom.
-  * [ ] Gestion de la vitesse de déplacement en fonction du niveau de zoom.
+  * [x] Gestion de la vitesse de déplacement en fonction du niveau de zoom.
 
 ---
 
 ## 3. Première Machine Concrète & Volet d'Inventaire
 
-* [ ] **Socle 2D d'une machine concrète**
-  * [ ] Créer une scène dérivée/concrète (ex: `HostNode` ou `Terminal` avec `Sprite2D` / `Area2D`).
-  * [ ] Définition des connecteurs d'E/S (**Ports réseau**) avec ancrages locaux précis sur le sprite.
+* [ ] **Socle 2D d'une machine concrète** *(partiellement réalisé)*
+  * [x] Scène générique `NetworkDeviceView` avec `Sprite2D`, texture et liaison à la logique.
+  * [x] Définition logique des ports réseau et de leurs contraintes par type de device.
+  * [ ] Définition des connecteurs visuels avec ancrages locaux précis sur le sprite.
   * [ ] Distinction des états de persistance : `is_locked` (machine imposée par le puzzle) vs `is_editable` (placée par le joueur).
 
-* [ ] **Volet latéral d'inventaire (UI rétractable)**
-  * [ ] Panneau ancré à gauche de l'écran dans le `CanvasLayer`.
-  * [ ] Bouton ou poignée permettant de replier/déplier le panneau avec animation/tween.
-  * [ ] Liste des équipements disponibles pour le niveau avec icône, nom et compteur de stock restant.
+* [ ] **Volet latéral d'inventaire (UI rétractable)** *(partiellement réalisé)*
+  * [x] Panneau latéral présent dans le `CanvasLayer` avec `ScrollContainer`.
+  * [x] Structure de panneau repliable (`FoldableContainer`).
+  * [x] Liste des équipements disponibles avec leurs icônes.
+  * [ ] Afficher le nom et le compteur de stock restant par équipement.
   * [ ] Blocage des entrées de la caméra et du monde (`mouse_filter`) lorsque le curseur survole le volet.
 
-* [ ] **Mécanique de placement sur la grille**
-  * [ ] Détection du drag & drop (ou clic-sélection) depuis l'inventaire vers le monde 2D.
-  * [ ] Prévisualisation "fantôme" (ghost preview) de la machine sous la souris, aimantée à la cellule ciblée.
-  * [ ] Validation de placement : cellule libre, dans les limites de la grille, stock d'inventaire décrémenté.
+* [ ] **Mécanique de placement sur la grille** *(partiellement réalisé)*
+  * [x] Drag & drop depuis l'inventaire vers la grille.
+  * [ ] Prévisualisation fantôme aimantée à la cellule ciblée (le drag preview actuel n'est pas une prévisualisation dans le monde).
+  * [x] Validation de la cellule libre et des limites de la grille.
+  * [ ] Décrémenter et restaurer le stock d'inventaire.
 
 ---
 
 ## 4. Câblage Interactif & Raccordement
 
-* [ ] **Rendu 2D des liaisons (`NetworkWire`)**
+* [ ] **Rendu 2D des liaisons (`NetworkWire`)** *(partiellement réalisé)*
   * [ ] Représentation visuelle d'un câble via `Line2D`.
-  * [ ] Définir la géométrie de tracé : connexion directe (port à port) ou routage orthogonal le long des axes de la grille.
+  * [x] Modèle logique du câble avec points clés, longueur et cases occupées.
+  * [ ] Définir et afficher le tracé direct ou orthogonal dans la scène.
 
-* [ ] **Outil de tracé de câble**
+* [ ] **Outil de tracé de câble** *(partiellement réalisé côté données)*
   * [ ] Bouton d'activation du mode câblage (ou déclenchement intuitif par clic/tirer depuis un port réseau).
   * [ ] Ligne élastique temporaire suivant le curseur de la souris lors du tirage de câble.
   * [ ] Détection et aimantation sur le port cible d'une autre machine.
-  * [ ] Validation de connexion : ports compatibles, non redondants, et instanciation du `NetworkWire` logique.
+  * [x] Validation logique des ports compatibles, des collisions et des limites d'E/S.
+  * [x] Construction logique d'un `NetworkWire` avec occupation des cases.
+  * [ ] Brancher cette logique à une interaction utilisateur et l'enregistrer dans la simulation.
 
 ---
 
@@ -77,11 +97,13 @@
 
 * [ ] **Matérialisation des paquets en vol**
   * [ ] Composant visuel pour `NetworkPacket` (sprite compact, impulsion lumineuse ou forme vectorielle).
-  * [ ] Interpolation de la position du paquet le long du chemin géométrique du câble en fonction du temps de transit.
+  * [x] Simulation logique du transit, de la vitesse, de l'espacement et de la livraison au device cible.
+  * [ ] Interpolation visuelle de la position le long du chemin géométrique.
   * [ ] Animation de consommation ou d'injection du paquet lors du passage dans les ports de machine.
 
-* [ ] **Affichage des états d'erreur & Debug visuel**
-  * [ ] Effet visuel lors de la destruction d'un paquet (expiration de TTL ou saturation de buffer).
+* [ ] **Affichage des états d'erreur & Debug visuel** *(partiellement réalisé)*
+  * [x] Signal logique de paquet rejeté et feedback rouge temporaire sur la vue du device.
+  * [ ] Effet visuel dédié lors de l'expiration TTL ou d'une saturation de buffer.
   * [ ] Infobulle contextuelle au survol d'un paquet ou d'un câble pendant l'exécution (type, payload, destination).
 
 ---
@@ -108,7 +130,8 @@
   * [ ] Panneau UI dédié affichant les statistiques courantes (capacité du buffer, débit, règles).
 
 * [ ] **Implémentation de nouveaux équipements spécialisés**
-  * [ ] **Switch / Hub :** Acheminement vers tous les ports ou aiguillage selon table d'apprentissage MAC.
+  * [x] **Switch / Hub :** Aiguillage MAC, broadcast et apprentissage implémentés dans `NetworkSwitch`.
+  * [ ] Ajouter l'interface de configuration et l'affichage de la table MAC.
   * [ ] **Routeur :** Interface d'édition d'une table de routage simple (tables statiques).
   * [ ] **Firewall / Filtre :** Interface de définition de règles de filtrage (bloquer paquets d'un certain type ou origine).
 
