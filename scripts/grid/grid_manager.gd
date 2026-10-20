@@ -105,7 +105,7 @@ func get_grid_center_world() -> Vector2:
 
 ## Vérifie si le drop est possible sur la case
 func can_handle_drop(_at_position: Vector2, data: Variant) -> bool:
-	
+
 	# Securité sur le contenu de data
 	if typeof(data) != TYPE_DICTIONARY or not data.has("device_data"):
 		print("[GridManager] PLacement impossible device incorrecte")
@@ -122,6 +122,7 @@ func can_handle_drop(_at_position: Vector2, data: Variant) -> bool:
 ## Exécute le drop du device
 func handle_drop(_at_position: Vector2, data: Variant) -> void:
 	if not can_handle_drop(_at_position, data):
+		print("help")
 		return
 		
 	var device_data: NetworkDeviceData = data["device_data"]
@@ -158,3 +159,39 @@ func handle_drop(_at_position: Vector2, data: Variant) -> void:
 		push_warning("[GridManager] Attention, aucune NetworkSimulation assignée. La machine ne tournera pas !")
 
 	print("[GridManager] Appareil '%s' placé et enregistré avec succès." % unique_id)
+
+#fonction debug pour placer un device manuellement
+func debug_add_device(cell: Vector2, data: Variant) -> void:
+	var unique_id = "%s_%d_%s" % [data.device_id_template, cell.x, cell.y]
+	var logic_device = data.instantiate_device(unique_id)
+	logic_device.grid_position = cell
+
+	if not data.device_scene:
+		push_error("[GridManager] Impossible de placer : aucune device_scene définie dans la ressource !")
+		return
+		
+	var view_node = data.device_scene.instantiate() as NetworkDeviceView
+	if not view_node:
+		push_error("[GridManager] La scène n'a pas le script NetworkDeviceView attaché !")
+		return
+	if not view_node:
+		push_error("[GridManager] La scène n'a pas le script NetworkDeviceView attaché !")
+		return
+
+	# On place le visuel au centre de la case
+	view_node.global_position = cell_to_world_center(cell)
+	add_child(view_node)
+	
+	# 3. On lie la vue à la logique
+	view_node.setup(logic_device, data.texture, float(cell_size))
+
+	# 4. Enregistrements
+	set_cell_occupied(cell, view_node)
+	
+	if simulation:
+		simulation.register_device(logic_device)
+	else:
+		push_warning("[GridManager] Attention, aucune NetworkSimulation assignée. La machine ne tournera pas !")
+
+	print("[GridManager] Appareil '%s' placé et enregistré avec succès." % unique_id)
+

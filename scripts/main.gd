@@ -10,6 +10,10 @@ extends Node2D
 @onready var puzzle_ui: PuzzleUiController = %PuzzleUi
 @onready var simulation: NetworkSimulation = %NetworkSimulation
 
+@export_category("Test & Debug - Mock Level Setup")
+## Ressource du transmitter de test à placer au lancement (pour le dev)
+@export var debug_transmitter_data: NetworkTransmitterData
+@export var debug_transmitter_cell: Vector2i = Vector2i(0, 2)
 
 # ====================
 # ===== METHODES =====
@@ -20,6 +24,9 @@ func _ready() -> void:
 	
 	# Appel après le premier frame pour s'assurer que la taille du viewport est initialisée
 	call_deferred("_setup_camera_framing")
+
+	#MOCK pour le transmetter
+	call_deferred("_debug_spawn_transmitter")
 
 
 # --- Fonctions de gestion des signaux ---
@@ -53,3 +60,11 @@ func _setup_camera_framing() -> void:
 	
 	# Marge de 2 cellules de chaque côté pour le décor
 	camera.frame_rect(center, size, 2.0, grid_manager.cell_size)
+
+func _debug_spawn_transmitter() -> void:
+	if not debug_transmitter_data:
+		return
+	
+	grid_manager.debug_add_device(debug_transmitter_cell, debug_transmitter_data)
+	
+	print("[Main] Transmitter de test instancié et enregistré en cellule %s" % debug_transmitter_cell)

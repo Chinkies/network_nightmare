@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://8rwb8mt8yiuu" path="res://scripts/main.gd" id="1_0bbpv"]
 [ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://scripts/camera/pan_zoom_camera.gd" id="1_elqb8"]
+[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="2_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://scenes/ui/PuzzleUi.tscn" id="2_rvslj"]
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://scripts/simulation/network_simulation.gd" id="4_rarhs"]
 [ext_resource type="Script" uid="uid://b01ym5arm37sy" path="res://scripts/grid/grid_manager.gd" id="5_vcsgt"]
@@ -9,6 +10,8 @@
 
 [node name="Main" type="Node2D" unique_id=872985249]
 script = ExtResource("1_0bbpv")
+debug_transmitter_data = ExtResource("2_nxtc6")
+debug_transmitter_cell = Vector2i(1, 2)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=107341410]
 limit_left = -1500
