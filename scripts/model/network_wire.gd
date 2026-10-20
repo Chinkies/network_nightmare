@@ -8,10 +8,10 @@ signal packet_dropped(packet: NetworkPacket, reason: String)
 # ===== STRUCTURE =====
 # =====================
 
-# Structure interne représentant un paquet en transit sur ce câble
+## Structure interne représentant un paquet en transit sur ce câble
 class WireTransit:
 	var packet: NetworkPacket
-	var distance: float = 0.0		# Distance parcourue sur le câble
+	var distance: float = 0.0		# Distance parcourue sur le câble (en nombre de case)
 	
 	func _init(p_packet: NetworkPacket) -> void:
 		packet = p_packet
@@ -27,11 +27,12 @@ var from_port: int
 var to_device: NetworkDevice
 var to_port: int
 
-# --- Géométrie & Métriques ---
-var points: Array[Vector2] = []
-var total_length: float = 0.0
-var speed: float = 100.0				# Pixels par seconde
-var min_packet_spacing: float = 24.0	# Distance minimale en pixels entre 2 paquets
+# --- Géométrie & Métriques (relatifs à la grille) ---
+var key_points: Array[Vector2i] = []		# Cordonnées de grille des points clés
+var occupied_cells: Array[Vector2i] = []	# Cache des cases physiques occupées par le câble
+var total_length: float = 0.0				# Longueur total du câble (nombre de cases)
+var speed: float = 1.0						# Cases par seconde
+var min_packet_spacing: float = 0.1			# Distance minimale entre 2 paquets (fraction de case)
 
 # --- File de transit ---
 # Ordonnée : l'élément à l'index 0 est le plus proche de l'arrivée
@@ -45,30 +46,64 @@ var injection_cooldown: float = 0.0 	# Chronomètre interne pour cadencer les en
 # ===== METHODES =====
 # ====================
 
-func _init(p_from_device: NetworkDevice, p_from_port: int, p_to_device: NetworkDevice, p_to_port: int, p_points: Array[Vector2]) -> void:
+func _init(p_from_device: NetworkDevice, p_from_port: int, p_to_device: NetworkDevice, p_to_port: int, p_key_points: Array[Vector2i]) -> void:
 	from_device = p_from_device
 	from_port = p_from_port
 	to_device = p_to_device
 	to_port = p_to_port
-	points = p_points
+	key_points = p_key_points
 	_calculate_total_length()
+	_calculate_occupied_cells()
 
 
-# Calcule la somme des longueurs des segments du tracé
+# --- Méthodes privées : calcul de géométrie ---
+
+## Calcule la somme des longueurs des segments du tracé
 func _calculate_total_length() -> void:
 	total_length = 0.0
 	
-	if points.size() <= 1:
+	if key_points.size() <= 1:
 		return
 	
-	var length: float = 0.0
-	for i in range(points.size()-1):
-		length += points[i+1].distance_to(points[i])
-	total_length = length
+	var length: int = 0
+	for i in range(key_points.size()-1):
+		var p1 = key_points[i]
+		var p2 = key_points[i + 1]
+		length += abs(p1.x - p2.x) + abs(p1.y - p2.y)
+	
+	# La longueur réelle commence au port de départ et s'arrête au port d'arrivée (-0.5 et -0.5)
+	total_length = maxf(0.0, float(length) - 1.0)
 
 
-# Tente d'injecter un nouveau paquet sur le câble (appelé par le device émetteur)
-# Renvoie true si le paquet a pu entrer, false si le câble est saturé / en cooldown
+## Calcule toutes les cases physiques traversées par le câble (excluant les extrémités)
+func _calculate_occupied_cells() -> void:
+	occupied_cells.clear()
+	if key_points.size() < 2:
+		return
+		
+	for i in range(key_points.size() - 1):
+		var p1 = key_points[i]
+		var p2 = key_points[i + 1]
+		
+		# Direction du segment (ex: Vector2i(1, 0) pour la droite)
+		var dir = (p2 - p1).sign()
+		var current = p1 + dir
+		
+		# On ajoute toutes les cases jusqu'au point d'arrivée du segment
+		while current != p2:
+			occupied_cells.append(current)
+			current += dir
+			
+		# Si ce point d'arrivée (p2) est un "coude" (et donc pas la machine finale), on l'occupe aussi
+		if i < key_points.size() - 2:
+			occupied_cells.append(p2)
+
+
+
+# --- Interface publique : simulation des paquets ---
+
+## Tente d'injecter un nouveau paquet sur le câble (appelé par le device émetteur)
+## Renvoie true si le paquet a pu entrer, false si le câble est saturé / en cooldown
 func push_packet(packet: NetworkPacket) -> bool:
 	# On vérifie qu'il n'y a pas de cooldown
 	if injection_cooldown > 0.0:
@@ -83,7 +118,7 @@ func push_packet(packet: NetworkPacket) -> bool:
 	return true
 
 
-# Fait avancer les paquets et gère la sortie
+## Fait avancer les paquets et gère la sortie
 func simulate(delta: float) -> void:
 	# On met à jour le cooldown du câble
 	if injection_cooldown > 0.0:
@@ -111,7 +146,7 @@ func simulate(delta: float) -> void:
 		_deliver_arrived_packet()
 
 
-# Résout l'avancement des paquets et gère l'accumulation (bouchons)
+## Résout l'avancement des paquets et gère l'accumulation (bouchons)
 func _update_packet_positions(delta: float) -> void:
 	var move_step: float = delta * speed
 	
@@ -136,7 +171,7 @@ func _update_packet_positions(delta: float) -> void:
 		cur_pack.distance = maxf(cur_pack.distance, legal_closeness_distance)
 
 
-# Tente de faire entrer le paquet arrivé au bout dans le to_device
+## Tente de faire entrer le paquet arrivé au bout dans le to_device
 func _deliver_arrived_packet() -> void:
 	# On vérifie si le device existe
 	if to_device == null:
