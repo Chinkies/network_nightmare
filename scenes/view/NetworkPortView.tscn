@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bfp5bwm51ti4s"]
+
+[ext_resource type="Texture2D" uid="uid://pfck2prru1c4" path="res://resources/images/port_assets/circle_shape.png" id="1_ept8p"]
+[ext_resource type="Script" uid="uid://d1xb12vhgn2yl" path="res://scripts/view/network_port_view.gd" id="1_frj0e"]
+[ext_resource type="Texture2D" uid="uid://bb6sttsxq7ai6" path="res://resources/images/port_assets/dynamic_flow_shape.png" id="2_1yp3i"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mkcf6"]
+radius = 64.0
+
+[node name="NetworkPortView" type="Area2D" unique_id=1844478943]
+scale = Vector2(0.125, 0.125)
+script = ExtResource("1_frj0e")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1742146259]
+modulate = Color(0, 0.9411765, 1, 0.8235294)
+texture = ExtResource("1_ept8p")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=449538104]
+modulate = Color(0.078431375, 0.101960786, 0.14117648, 1)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_1yp3i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1237314004]
+shape = SubResource("CircleShape2D_mkcf6")

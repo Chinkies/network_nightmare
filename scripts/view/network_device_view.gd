@@ -1,11 +1,25 @@
 class_name NetworkDeviceView
 extends Node2D
 
+
+# =====================
+# ===== ATTRIBUTS =====
+# =====================
+
+# Textures des ports
+const TEX_DYNAMIC = preload("res://resources/images/port_assets/dynamic_flow_shape.png")
+const TEX_STATIC = preload("res://resources/images/port_assets/static_flow_shape.png")
+
+## Référence sur la scène de la vue des indicateurs des ports
+@export var port_view_scene: PackedScene
+
+## Référence sur le sprite pour associer la texture du device
+@onready var visual_sprite: Sprite2D = $Sprite2D
+## Référence sur le container des ports pour instancier dynamiquement les ports
+@onready var ports_container = $PortsContainer
+
 ## La référence vers l'objet logique qui tourne en mémoire
 var logic_device: NetworkDevice
-
-# On peut imaginer qu'actuellement ton carré de couleur est un Sprite2D enfant
-@onready var visual_sprite: Sprite2D = $Sprite2D
 
 
 # ====================
@@ -31,9 +45,46 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 	logic_device.packet_received.connect(_on_packet_received)
 	logic_device.packet_processed.connect(_on_packet_processed)
 	logic_device.packet_dropped.connect(_on_packet_dropped)
+	
+	# On instancie les ports
+	var ports = logic_device.port_types
+	for port_id in ports:
+		var port_type = ports[port_id]
+		
+		if port_type != NetworkDevice.PortType.BLOCKED:
+			var port_direction: Vector2 = logic_device.get_port_global_direction(port_id)
+			var port_texture: Texture2D
+			var port_angle: float = 0.0
+			
+			# On déduit la texture et l'angle
+			match port_type:
+				NetworkDevice.PortType.STATIC_OUTPUT:
+					port_texture = TEX_STATIC
+					port_angle = port_direction.angle()
+				NetworkDevice.PortType.STATIC_INPUT:
+					port_texture = TEX_STATIC
+					# On inverse le vecteur pour que la flèche rentre dans la machine
+					port_angle = (-port_direction).angle()
+				NetworkDevice.PortType.DYNAMIC:
+					port_texture = TEX_DYNAMIC
+			
+			# Instanciation et rattachement à la scène
+			var port_instance = port_view_scene.instantiate() as NetworkPortView
+			ports_container.add_child(port_instance)
+			
+			# On décale l'indicateur du centre
+			port_instance.position = port_direction * (cell_size * 0.35)
+			
+			# Configuration du port
+			port_instance.setup(port_id, port_texture, port_angle)
+			
+			# On connecte le clic
+			port_instance.port_clicked.connect(_on_port_clicked)
 
 
-# --- Feedbacks Visuels ---
+# ----------------------------------------
+# --- Feedbacks de gestion des paquets ---
+# ----------------------------------------
 
 func _on_packet_received(_port: int, _packet: NetworkPacket) -> void:
 	# Plus tard : faire clignoter le port d'entrée
@@ -51,3 +102,12 @@ func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
 		tween.tween_property(visual_sprite, "modulate", Color.WHITE, 0.5)
 		
 	print("[Vue] Paquet détruit sur ", logic_device.id, " Raison : ", reason)
+
+
+# ------------------------------------------
+# --- Feedbacks des interfaces des ports ---
+# ------------------------------------------
+
+func _on_port_clicked(local_port_id: int) -> void:
+	print("Clic détecté sur la face locale ", local_port_id, " de la machine ", logic_device.id)
+	# Prochaine étape : demander au gestionnaire de jeu de démarrer ou terminer le tirage d'un câble
