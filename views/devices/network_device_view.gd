@@ -3,6 +3,15 @@ extends Node2D
 
 
 # =====================
+# ===== SIGNAUX =======
+# =====================
+
+## Émis lorsqu'un joueur interagit avec l'un des ports visuels de cette machine.
+## Relaye l'instance logique et l'identifiant du port vers le gestionnaire de modes.
+signal port_interaction_requested(device: NetworkDevice, local_port_id: int)
+
+
+# =====================
 # ===== ATTRIBUTS =====
 # =====================
 
@@ -82,6 +91,17 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 			port_instance.port_clicked.connect(_on_port_clicked)
 
 
+# ------------------------------------------
+# --- Gestion de la visibilité des ports ---
+# ------------------------------------------
+
+## Active ou désactive l'interaction et l'affichage de tous les ports de cette machine
+func set_ports_active(active: bool) -> void:
+	for child in ports_container.get_children(): 
+		if child is NetworkPortView:
+			child.set_interaction_active(active)
+
+
 # ----------------------------------------
 # --- Feedbacks de gestion des paquets ---
 # ----------------------------------------
@@ -108,6 +128,7 @@ func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
 # --- Feedbacks des interfaces des ports ---
 # ------------------------------------------
 
+## Capte le clic d'un NetworkPortView enfant et fait remonter l'événement 
+## jusqu'au ModeManager via le signal port_interaction_requested.
 func _on_port_clicked(local_port_id: int) -> void:
-	print("Clic détecté sur la face locale ", local_port_id, " de la machine ", logic_device.id)
-	# Prochaine étape : demander au gestionnaire de jeu de démarrer ou terminer le tirage d'un câble
+	port_interaction_requested.emit(logic_device, local_port_id)

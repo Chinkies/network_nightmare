@@ -67,3 +67,16 @@ func is_straight_path_clear(start: Vector2i, end: Vector2i) -> bool:
 		current += dir
 		
 	return true
+
+
+# ------------------------------------------------------
+# --- Gestion de la visibilité des ports des devices ---
+# ------------------------------------------------------
+
+## Affiche ou masque les ports de toutes les machines actuellement sur la grille
+func set_all_ports_interaction_active(active: bool) -> void:
+	for cell in _occupied_cells:
+		var item = _occupied_cells[cell]
+		# On s'assure que l'objet est bien une vue de machine avant de l'appeler
+		if item is NetworkDeviceView:
+			item.set_ports_active(active)

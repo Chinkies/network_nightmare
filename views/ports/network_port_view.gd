@@ -1,8 +1,14 @@
 class_name NetworkPortView
 extends Area2D
 
-# Signal émis quand le joueur clique sur ce port (uniquement s'il est cliquable)
+
+# --- Signaux ---
+
+## Signal émis quand le joueur clique sur ce port
 signal port_clicked(port_id: int)
+
+
+# --- Enumérations ---
 
 enum PortState { AVAILABLE, OCCUPIED, INCOMPATIBLE }
 
@@ -70,7 +76,9 @@ func set_state(new_state: PortState) -> void:
 		scale = base_scale
 
 
+# ------------------------------------
 # --- LOGIQUE D'ANIMATION (TWEENS) ---
+# ------------------------------------
 
 func _start_pulsing() -> void:
 	if pulse_tween and pulse_tween.is_valid():
@@ -85,7 +93,9 @@ func _stop_pulsing() -> void:
 		pulse_tween.kill()
 
 
+# ----------------------------
 # --- GESTION DE LA SOURIS ---
+# ----------------------------
 
 func _on_mouse_entered() -> void:
 	if current_state != PortState.AVAILABLE:
@@ -99,6 +109,7 @@ func _on_mouse_entered() -> void:
 	hover_tween = create_tween()
 	hover_tween.tween_property(self, "scale", base_scale * 1.3, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
+
 func _on_mouse_exited() -> void:
 	if current_state != PortState.AVAILABLE:
 		return
@@ -111,11 +122,23 @@ func _on_mouse_exited() -> void:
 	hover_tween.tween_property(self, "scale", base_scale, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	hover_tween.tween_callback(_start_pulsing)
 
+
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if current_state != PortState.AVAILABLE:
 		return
 		
-	# Si c'est un clic gauche enfoncé
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# Bloque la propagation du clic vers les éléments en dessous (comme la grille)
+		get_viewport().set_input_as_handled() 
 		port_clicked.emit(port_id)
-		# Optionnel : Tu peux ajouter un petit feedback visuel de clic ici (ex: un flash blanc)
+
+
+## Affiche/Masque le port et active/désactive sa détection de souris
+func set_interaction_active(active: bool) -> void:
+	visible = active
+	input_pickable = active # Propriété native de CollisionObject2D (Area2D)
+	
+	if active and current_state == PortState.AVAILABLE:
+		_start_pulsing()
+	else:
+		_stop_pulsing()

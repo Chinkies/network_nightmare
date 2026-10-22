@@ -1,11 +1,21 @@
+class_name BaseMode
 extends Node
 
+# =====================
+# ===== ATTRIBUTS =====
+# =====================
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+## Référence au gestionnaire pour permettre à un mode de déclencher lui-même un changement 
+## (ex: le changement d'état implicite lors du drop d'un composant)
+var mode_manager: ModeManager
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+# ====================
+# ===== METHODES =====
+# ====================
+
+func enter_mode() -> void:
+	pass
+
+func exit_mode() -> void:
 	pass
