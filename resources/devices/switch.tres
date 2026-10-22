@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="NetworkDeviceData" format=3 uid="uid://bsb2a6r6khtdb"]
 
-[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://scenes/view/NetworkDeviceView.tscn" id="1_y0a65"]
-[ext_resource type="Texture2D" uid="uid://b8av85i4rsmb7" path="res://resources/images/switch.png" id="2_x0wma"]
-[ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://scripts/model/resources/network_device_data.gd" id="3_eovfi"]
+[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://views/devices/network_device_view.tscn" id="1_y0a65"]
+[ext_resource type="Texture2D" uid="uid://b8av85i4rsmb7" path="res://views/devices/assets/switch.png" id="2_x0wma"]
+[ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://core/resource_definitions/network_device_data.gd" id="3_eovfi"]
 
 [resource]
 script = ExtResource("3_eovfi")

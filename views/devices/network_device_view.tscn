@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dfeqmbf30xv7x"]
+
+[ext_resource type="Script" uid="uid://cren2yw16c03r" path="res://views/devices/network_device_view.gd" id="1_1e4gy"]
+[ext_resource type="PackedScene" uid="uid://bfp5bwm51ti4s" path="res://views/ports/network_port_view.tscn" id="2_3jdbd"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_27gwp"]
+
+[node name="NetworkDeviceView" type="Node2D" unique_id=336253877]
+script = ExtResource("1_1e4gy")
+port_view_scene = ExtResource("2_3jdbd")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1176998973]
+texture = SubResource("PlaceholderTexture2D_27gwp")
+
+[node name="PortsContainer" type="Node2D" parent="." unique_id=632282972]

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://t7qhd72rywme"]
+
+[ext_resource type="Script" uid="uid://8rwb8mt8yiuu" path="res://levels/main.gd" id="1_3vw7n"]
+[ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://views/camera/pan_zoom_camera.gd" id="2_vmibe"]
+[ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://ui/puzzle_ui/puzzle_ui.tscn" id="3_bvijt"]
+[ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://core/simulation/simulation_runner.gd" id="4_3mabw"]
+[ext_resource type="Script" uid="uid://bt1dvknldftfd" path="res://core/grid/grid_board.gd" id="5_3vw7n"]
+[ext_resource type="Script" uid="uid://d1wlenpatmk2l" path="res://views/grid/grid_view.gd" id="6_vmibe"]
+
+[node name="Main" type="Node2D" unique_id=872985249]
+script = ExtResource("1_3vw7n")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=107341410]
+limit_left = -1500
+limit_top = -800
+limit_right = 1500
+limit_bottom = 800
+script = ExtResource("2_vmibe")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
+
+[node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
+unique_name_in_owner = true
+
+[node name="SimulationRunner" type="Node" parent="." unique_id=61842431]
+unique_name_in_owner = true
+script = ExtResource("4_3mabw")
+
+[node name="GridBoard" type="Node" parent="." unique_id=170178700]
+unique_name_in_owner = true
+script = ExtResource("5_3vw7n")
+
+[node name="GridView" type="Control" parent="." unique_id=35376964 node_paths=PackedStringArray("grid_board")]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("6_vmibe")
+grid_board = NodePath("../GridBoard")

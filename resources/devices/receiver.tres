@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="NetworkReceiverData" format=3 uid="uid://dy8ubn0mritvi"]
 
-[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://scenes/view/NetworkDeviceView.tscn" id="1_ucvky"]
-[ext_resource type="Texture2D" uid="uid://duq7e0e7w8h4e" path="res://resources/images/receiver.png" id="2_3krk2"]
-[ext_resource type="Script" uid="uid://cv17sdaxsymyd" path="res://scripts/model/resources/network_receiver_data.gd" id="3_32bcw"]
+[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://views/devices/network_device_view.tscn" id="1_ucvky"]
+[ext_resource type="Texture2D" uid="uid://duq7e0e7w8h4e" path="res://views/devices/assets/receiver.png" id="2_3krk2"]
+[ext_resource type="Script" uid="uid://cv17sdaxsymyd" path="res://core/resource_definitions/network_receiver_data.gd" id="3_32bcw"]
 
 [resource]
 script = ExtResource("3_32bcw")
