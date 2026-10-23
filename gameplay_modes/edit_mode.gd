@@ -1,6 +1,7 @@
 class_name EditMode
 extends BaseMode
 
+
 # =====================
 # ===== ATTRIBUTS =====
 # =====================
@@ -20,16 +21,10 @@ func _ready() -> void:
 	assert(grid_view != null, "[EditMode] Erreur critique : GridView non assigné !")
 	assert(simulation != null, "[EditMode] Erreur critique : SimulationRunner non assigné !")
 
-func enter_mode() -> void:
-	print("[EditMode] Mode actif. Prêt pour le placement.")
 
-func exit_mode() -> void:
-	print("[EditMode] Mode quitté.")
-
-
-# ---------------------------------------
+# ----------------------------------------
 # --- METHODES SPECIFIQUES AU EDITMODE ---
-# ---------------------------------------
+# ----------------------------------------
 
 func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	# 1. Vérification dans le Modèle

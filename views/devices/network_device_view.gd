@@ -89,6 +89,9 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 			
 			# On connecte le clic
 			port_instance.port_clicked.connect(_on_port_clicked)
+			
+			# On masque le port de base
+			port_instance.set_interaction_active(false)
 
 
 # ------------------------------------------

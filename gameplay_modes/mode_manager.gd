@@ -10,7 +10,7 @@ var current_mode: BaseMode
 var previous_mode: BaseMode
 
 @onready var edit_mode = $EditMode
-#@onready var wiring_mode = $WiringMode
+@onready var wiring_mode = $WiringMode
 #@onready var delete_mode = $DeleteMode
 #@onready var simulation_mode = $SimulationMode
 
@@ -29,9 +29,7 @@ func _ready() -> void:
 	call_deferred("switch_mode", edit_mode)
 
 
-# -------------------------
-# --- GESTION DES MODES ---
-# -------------------------
+# --- Gestion des modes ---
 
 func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 	if current_mode == new_mode:
@@ -55,28 +53,40 @@ func switch_to_previous_mode() -> void:
 		previous_mode = null
 
 
+# --- Gestion des évènements ---
+
 func _unhandled_input(event: InputEvent) -> void:
-	# On s'assure que c'est une pression de touche (et non un maintien prolongé)
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
-			KEY_C:
-				switch_mode(edit_mode)
-				print("[ModeManager] Bascule : CREATE (EditMode)")
 			KEY_W:
-				# switch_mode(wiring_mode)
-				print("[ModeManager] Bascule : WIRING")
+				# Si on est déjà en train de câbler, on range l'outil (retour édition)
+				if current_mode == wiring_mode:
+					switch_mode(edit_mode)
+					print("[ModeManager] Toggle : Retour à CREATE (EditMode)")
+				else:
+					switch_mode(wiring_mode)
+					print("[ModeManager] Bascule : WIRING")
+					
 			KEY_X:
-				# On active la sauvegarde de l'historique pour pouvoir revenir au mode précédent plus tard
-				# switch_mode(delete_mode, true) 
-				print("[ModeManager] Bascule : DELETE")
+				# Si on est déjà en train de supprimer, on annule et on reprend ce qu'on faisait
+				# if current_mode == delete_mode:
+					# switch_to_previous_mode()
+					# print("[ModeManager] Toggle : Annulation DELETE")
+				# else:
+					# switch_mode(delete_mode, true) # On sauvegarde l'historique
+					print("[ModeManager] Bascule : DELETE")
+					
 			KEY_R:
 				# switch_mode(simulation_mode)
 				print("[ModeManager] Bascule : RUN (Simulation)")
 
 
-# -------------------------------------
-# --- ROUTAGE DES ENTREES DU JOUEUR ---
-# -------------------------------------
+## Tente d'annuler l'action du mode courant. Retourne true si le signal a été consommé.
+func cancel_action() -> bool:
+	if current_mode and current_mode.has_method("cancel_action"):
+		return current_mode.cancel_action()
+	return false
+
 
 func on_device_drop_requested(cell: Vector2i, device_data: Variant) -> void:
 	# Seuls les modes qui possèdent explicitement cette méthode (Edition, Wiring, Delete) la recevront.

@@ -26,7 +26,6 @@ func register_device(device: NetworkDevice) -> void:
 	if not devices.has(device):
 		devices.append(device)
 		_device_map[device.id] = device
-		print("[Simulation] Appareil enregistré dans le moteur : ", device.id)
 		
 		# Connexion dynamique si la machine est un Receiver
 		if device is NetworkReceiver:

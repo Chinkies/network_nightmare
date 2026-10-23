@@ -19,3 +19,13 @@ func enter_mode() -> void:
 
 func exit_mode() -> void:
 	pass
+	
+
+# ------------------------------
+# --- Gestion des évènements ---
+# ------------------------------
+
+## Tente d'annuler l'action en cours dans ce mode. 
+## Retourne 'true' si une action a été annulée, 'false' s'il n'y avait rien à annuler.
+func cancel_action() -> bool:
+	return false
