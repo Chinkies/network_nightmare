@@ -48,7 +48,9 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 	if source_device == null:
 		source_device = device
 		source_port_id = local_port_id
-		# TODO : Ajouter un feedback visuel sur le port source (ex: le laisser en surbrillance)
+		
+		# On ordonne à la grille de mettre à jour l'affichage de tous les ports
+		grid_board.preview_wiring_compatibility(source_device, source_port_id)
 		
 	# CAS 2 : On clique sur le MÊME port -> On annule la sélection
 	elif source_device == device and source_port_id == local_port_id:
@@ -62,20 +64,22 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 # --- Méthodes privées ---
 
 func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> void:
-	# 1. Vérification logique basique (ex: on ne relie pas une machine à elle-même)
-	if source_device == target_device:
-		print("[WiringMode] Erreur : Impossible de relier un appareil à lui-même.")
-		_reset_selection()
-		return
-		
-	# TODO : Vérifier via la grille si le chemin physique est libre
-	# TODO : Instancier le NetworkWire logique et visuel
-	
+	# TODO : Instancier le NetworkWire logique et visuel (le dessin du câble)
 	print("[WiringMode] SUCCÈS : Connexion établie entre ", source_device.id, " et ", target_device.id)
-	_reset_selection()
+	
+	# Verrouillage définitif des deux ports
+	grid_board.set_port_occupied(source_device, source_port_id)
+	grid_board.set_port_occupied(target_device, target_port_id)
+	
+	# On nettoie la sélection en mémoire sans réinitialiser les ports désormais OCCUPIED
+	source_device = null
+	source_port_id = -1
+	grid_board.reset_wiring_preview()
 
 
 func _reset_selection() -> void:
+	if source_device != null:
+		grid_board.reset_wiring_preview()
+		
 	source_device = null
 	source_port_id = -1
-	# TODO : Retirer la surbrillance du port source si elle était active

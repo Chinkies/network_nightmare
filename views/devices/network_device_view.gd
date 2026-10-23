@@ -105,6 +105,55 @@ func set_ports_active(active: bool) -> void:
 			child.set_interaction_active(active)
 
 
+## Compare chaque port de cette machine avec le port source pour définir son état visuel
+func evaluate_ports_compatibility(source_device: NetworkDevice, source_port_id: int, source_type: int) -> void:
+	for child in ports_container.get_children():
+		if child is NetworkPortView:
+			# Si le port est déjà occupé par un câble, on n'y touche pas
+			if child.current_state == NetworkPortView.PortState.OCCUPIED:
+				continue
+				
+			# Si c'est exactement le port que l'on vient de cliquer (la source)
+			if logic_device == source_device and child.port_id == source_port_id:
+				child.set_state(NetworkPortView.PortState.SELECTED)
+				child.set_pulsing(false)
+				continue
+				
+			var target_type = logic_device.port_types[child.port_id]
+			
+			# Règle d'incompatibilité matérielle (Couche 1)
+			var is_incompatible = false
+			if source_type == NetworkDevice.PortType.STATIC_OUTPUT and target_type == NetworkDevice.PortType.STATIC_OUTPUT:
+				is_incompatible = true
+			elif source_type == NetworkDevice.PortType.STATIC_INPUT and target_type == NetworkDevice.PortType.STATIC_INPUT:
+				is_incompatible = true
+				
+			if is_incompatible:
+				child.set_state(NetworkPortView.PortState.INCOMPATIBLE)
+				child.set_pulsing(false)
+			else:
+				child.set_state(NetworkPortView.PortState.AVAILABLE)
+				child.set_pulsing(true) # On lance la pulsation guidée sur les ports valides
+
+
+## Restaure l'état AVAILABLE sur tous les ports qui ne sont pas verrouillés
+func reset_available_ports() -> void:
+	for child in ports_container.get_children():
+		if child is NetworkPortView:
+			if child.current_state != NetworkPortView.PortState.OCCUPIED:
+				child.set_state(NetworkPortView.PortState.AVAILABLE)
+				child.set_pulsing(false)
+
+
+## Modifie directement l'état d'un port précis (utilisé pour valider une connexion)
+func set_specific_port_state(port_id: int, state: NetworkPortView.PortState) -> void:
+	for child in ports_container.get_children():
+		if child is NetworkPortView and child.port_id == port_id:
+			child.set_state(state)
+			child.set_pulsing(false)
+			break
+
+
 # ----------------------------------------
 # --- Feedbacks de gestion des paquets ---
 # ----------------------------------------

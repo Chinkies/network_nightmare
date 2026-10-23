@@ -80,3 +80,30 @@ func set_all_ports_interaction_active(active: bool) -> void:
 		# On s'assure que l'objet est bien une vue de machine avant de l'appeler
 		if item is NetworkDeviceView:
 			item.set_ports_active(active)
+
+
+## Évalue la compatibilité physique de tous les ports de la grille par rapport au port source
+func preview_wiring_compatibility(source_device: NetworkDevice, source_port_id: int) -> void:
+	var source_type = source_device.port_types[source_port_id]
+	
+	for cell in _occupied_cells:
+		var view = _occupied_cells[cell]
+		if view is NetworkDeviceView:
+			view.evaluate_ports_compatibility(source_device, source_port_id, source_type)
+
+
+## Remet tous les ports non-occupés dans leur état AVAILABLE de base
+func reset_wiring_preview() -> void:
+	for cell in _occupied_cells:
+		var view = _occupied_cells[cell]
+		if view is NetworkDeviceView:
+			view.reset_available_ports()
+
+
+## Passe un port spécifique en état OCCUPIED (grisé, non cliquable)
+func set_port_occupied(device: NetworkDevice, port_id: int) -> void:
+	for cell in _occupied_cells:
+		var view = _occupied_cells[cell]
+		if view is NetworkDeviceView and view.logic_device == device:
+			view.set_specific_port_state(port_id, NetworkPortView.PortState.OCCUPIED)
+			break
