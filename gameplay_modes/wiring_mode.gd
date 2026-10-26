@@ -96,18 +96,46 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 
 # --- Méthodes privées ---
 
-## Mets à jour la ghost_line pour suivre la position de la souris.
-## Garrantit un segment valide. 
+## Mets à jour la ghost_line pour suivre la position de la souris en garrantissant un segment valide.
+## Pose un "coude" lors du clic sur une case vide.
 func _unhandled_input(event: InputEvent) -> void:
-	if source_device != null and event is InputEventMouseMotion:
-		# 1. On récupère la position de la souris dans le monde 2D
-		var mouse_world_pos = grid_view.get_global_mouse_position()
+	if source_device == null:
+		return
 		
-		# 2. On délègue tout le calcul au "juge" (contraintes, magnétisme, obstacles)
+	# CAS 1 : La souris bouge
+	if event is InputEventMouseMotion:
+		var mouse_world_pos = grid_view.get_global_mouse_position()
 		var valid_pos = _calculate_valid_segment(start_pos, mouse_world_pos, allowed_axis, strict_direction)
 		
-		# 3. On met à jour la ghost_line
-		ghost_line.set_point_position(1, valid_pos)
+		# On met à jour le dernier point de la ghost_line
+		ghost_line.set_point_position(ghost_line.get_point_count() - 1, valid_pos)
+	
+	# CAS 2 : Le joueur fait un clic gauche sur la grille
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var mouse_world_pos = grid_view.get_global_mouse_position()
+		
+		# On rejette le clic s'il est physiquement hors de la grille
+		var clicked_cell = grid_view.local_to_cell(mouse_world_pos - grid_view.global_position)
+		if not grid_board.is_inside_grid(clicked_cell):
+			return 
+		
+		var valid_pos = _calculate_valid_segment(start_pos, mouse_world_pos, allowed_axis, strict_direction)
+		var snapped_mouse = grid_view.snap_world_to_center(mouse_world_pos)
+		
+		# On valide le coude si la case cliquée fait partie du tracé valide
+		if snapped_mouse == valid_pos and valid_pos != start_pos:
+			# 1. Le point validé devient le nouveau point d'ancrage
+			start_pos = valid_pos
+			
+			# 2. On inverse mathématiquement l'axe autorisé (Horizontal <-> Vertical)
+			# Si c'était (1,0), ça devient (0,1) et inversement
+			allowed_axis = Vector2(1.0 - allowed_axis.x, 1.0 - allowed_axis.y)
+			
+			# 3. À partir d'un coude, le joueur est libre d'aller dans les deux sens sur le nouvel axe
+			strict_direction = Vector2.ZERO
+			
+			# 4. On ajoute un nouveau point à la ligne (qui deviendra le nouveau point flottant)
+			ghost_line.add_point(start_pos)
 
 
 ## Calcule la position finale valide d'un segment de câble en appliquant 
