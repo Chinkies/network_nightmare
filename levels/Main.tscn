@@ -57,9 +57,10 @@ grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 simulation = NodePath("../../SimulationRunner")
 
-[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("grid_board")]
+[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("grid_board", "grid_view")]
 script = ExtResource("9_3mabw")
 grid_board = NodePath("../../GridBoard")
+grid_view = NodePath("../../GridView")
 
 [node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816]
 

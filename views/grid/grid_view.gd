@@ -4,6 +4,7 @@ extends Control
 # =====================
 # ===== SIGNAUX =======
 # =====================
+
 ## Émis quand le joueur lâche un appareil sur une case valide
 signal device_drop_requested(cell: Vector2i, device_data: Variant)
 
@@ -53,7 +54,10 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, total_size), border_color, false, 2.0)
 
 
+
+# -----------------------------
 # --- Conversions Spatiales ---
+# -----------------------------
 
 func local_to_cell(local_pos: Vector2) -> Vector2i:
 	return Vector2i(
@@ -70,7 +74,23 @@ func cell_to_world_center(cell: Vector2i) -> Vector2:
 	return global_position + local_center
 
 
+## Aligne une coordonnée spatiale (monde) sur le centre de la cellule correspondante
+func snap_world_to_center(world_pos: Vector2) -> Vector2:
+	# On repasse en coordonnées locales pour prendre en compte un éventuel décalage de la grille
+	var local_pos = world_pos - global_position
+	var cell = local_to_cell(local_pos)
+	
+	# On clamp aux limites de la grille
+	if grid_board:
+		cell.x = clamp(cell.x, 0, grid_board.grid_width - 1)
+		cell.y = clamp(cell.y, 0, grid_board.grid_height - 1)
+	
+	return cell_to_world_center(cell)
+
+
+# ------------------------------------
 # --- Gestion du Drag & Drop natif ---
+# ------------------------------------
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not grid_board: return false
