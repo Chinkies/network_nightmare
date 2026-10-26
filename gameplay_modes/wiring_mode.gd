@@ -18,6 +18,8 @@ var ghost_line: Line2D
 var start_pos: Vector2 = Vector2.ZERO
 var allowed_axis: Vector2 = Vector2.ZERO # Vaudra (1,0) pour horizontal, (0,1) pour vertical
 var strict_direction: Vector2 = Vector2.ZERO 
+var initial_axis: Vector2 = Vector2.ZERO
+var initial_strict_direction: Vector2 = Vector2.ZERO
 
 
 # =====================
@@ -75,6 +77,10 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 		# On détermine l'axe permis et le sens strict
 		allowed_axis = Vector2(abs(direction.x), abs(direction.y))
 		strict_direction = direction
+		
+		# On sauvegarde ces valeurs pour pouvoir y revenir
+		initial_axis = allowed_axis
+		initial_strict_direction = strict_direction
 		
 		# On initialise la ligne fantôme
 		ghost_line.clear_points()
@@ -136,6 +142,55 @@ func _unhandled_input(event: InputEvent) -> void:
 			
 			# 4. On ajoute un nouveau point à la ligne (qui deviendra le nouveau point flottant)
 			ghost_line.add_point(start_pos)
+	
+	# --- CAS 3 : Le joueur fait un clic droit (Annulation intelligente ou totale) ---
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		var mouse_world_pos = grid_view.get_global_mouse_position()
+		var snapped_mouse = grid_view.snap_world_to_center(mouse_world_pos)
+		
+		var target_index = -1
+		
+		# On cherche si la case cliquée correspond à un point posé (sauf le point flottant final)
+		for i in range(ghost_line.get_point_count() - 1):
+			# distance_to prévient les erreurs d'arrondis des flottants au lieu de "=="
+			if ghost_line.get_point_position(i).distance_to(snapped_mouse) < 1.0:
+				target_index = i
+				break
+				
+		if target_index != -1:
+			var anchor_index = target_index - 1
+			
+			# Si on clique sur le port de départ (P0), on annule tout le câblage
+			if anchor_index < 0:
+				cancel_action()
+				return
+				
+			# On recule le point de départ
+			start_pos = ghost_line.get_point_position(anchor_index)
+			
+			# Restauration de l'axe de contrainte
+			if anchor_index == 0:
+				# Retour à l'état du port source
+				allowed_axis = initial_axis
+				strict_direction = initial_strict_direction
+			else:
+				# Rétro-ingénierie : l'axe autorisé est perpendiculaire au segment précédent
+				var prev_pos = ghost_line.get_point_position(anchor_index - 1)
+				var arriving_dir = (start_pos - prev_pos).normalized()
+				var arriving_axis = Vector2(abs(arriving_dir.x), abs(arriving_dir.y))
+				allowed_axis = Vector2(1.0 - arriving_axis.x, 1.0 - arriving_axis.y)
+				strict_direction = Vector2.ZERO
+				
+			# Nettoyage visuel : on coupe tous les points après notre nouvelle ancre
+			while ghost_line.get_point_count() > anchor_index + 1:
+				ghost_line.remove_point(ghost_line.get_point_count() - 1)
+				
+			# On rajoute le nouveau point flottant pour la souris
+			ghost_line.add_point(start_pos)
+			
+		else:
+			# Si le joueur fait un clic droit dans le vide, comportement par défaut : on annule tout
+			cancel_action()
 
 
 ## Calcule la position finale valide d'un segment de câble en appliquant 
@@ -241,4 +296,6 @@ func _reset_selection() -> void:
 	start_pos = Vector2.ZERO
 	allowed_axis = Vector2.ZERO
 	strict_direction = Vector2.ZERO
+	initial_axis = Vector2.ZERO
+	initial_strict_direction = Vector2.ZERO
 	ghost_line.visible = false
