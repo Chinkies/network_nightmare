@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://dacb2cdaf1703"]
 
-[ext_resource type="Script" uid="uid://bmrwfq6pawqim" path="res://scripts/ui/radio_button.gd" id="1_4j4o3"]
 [ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://scripts/ui/puzzle_ui_controller.gd" id="1_4m780"]
 [ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://scripts/model/resources/network_device_data.gd" id="2_0s4q3"]
 [ext_resource type="Theme" uid="uid://c6jsjwffalulb" path="res://resources/themes/idea_button.tres" id="2_4j4o3"]
@@ -86,7 +85,6 @@ texture_filter = 1
 layout_mode = 2
 texture_normal = ExtResource("8_3a8cn")
 stretch_mode = 5
-script = ExtResource("1_4j4o3")
 
 [node name="MarginReset" type="MarginContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1942959662]
 custom_minimum_size = Vector2(64, 64)
@@ -101,7 +99,6 @@ texture_filter = 1
 layout_mode = 2
 texture_normal = ExtResource("8_3a8cn")
 stretch_mode = 5
-script = ExtResource("1_4j4o3")
 
 [node name="MarginStart" type="MarginContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1628497196]
 custom_minimum_size = Vector2(64, 64)
@@ -116,4 +113,3 @@ texture_filter = 1
 layout_mode = 2
 texture_normal = ExtResource("10_ei2da")
 stretch_mode = 5
-script = ExtResource("1_4j4o3")
