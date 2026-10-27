@@ -99,11 +99,9 @@ mouse_filter = 2
 script = ExtResource("1_kijq7")
 available_devices = Array[ExtResource("2_8hbgh")]([ExtResource("3_8hbgh"), ExtResource("4_5p8q3")])
 
-[node name="SimulationContainer" type="PanelContainer" parent="." unique_id=2015785237]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1075811242]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -213.0
@@ -190,11 +188,14 @@ anchor_bottom = 1.0
 offset_right = 24.0
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="FoldableContainer" unique_id=1198708450]
+[node name="FoldableContainer" type="FoldableContainer" parent="HBoxContainer" unique_id=641946065]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/FoldableContainer" unique_id=1198708450]
 custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
-[node name="DeviceSelectionMenu" type="GridContainer" parent="FoldableContainer/ScrollContainer" unique_id=617299613]
+[node name="DeviceSelectionMenu" type="GridContainer" parent="HBoxContainer/FoldableContainer/ScrollContainer" unique_id=617299613]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 400)
 propagate_maximum_size = false
