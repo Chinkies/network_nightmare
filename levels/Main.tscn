@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://d1wlenpatmk2l" path="res://views/grid/grid_view.gd" id="6_vmibe"]
 [ext_resource type="Script" uid="uid://xj50lgcqr33r" path="res://gameplay_modes/mode_manager.gd" id="7_bvijt"]
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
+[ext_resource type="Script" uid="uid://4d4b2mhkij6n" path="res://views/wires/ghost_wire_view.gd" id="8_ko617"]
 [ext_resource type="Script" uid="uid://cw3g35nhnqyps" path="res://gameplay_modes/wiring_mode.gd" id="9_3mabw"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
@@ -48,6 +49,9 @@ mouse_filter = 1
 script = ExtResource("6_vmibe")
 grid_board = NodePath("../GridBoard")
 
+[node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
+script = ExtResource("8_ko617")
+
 [node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190]
 script = ExtResource("7_bvijt")
 
@@ -57,10 +61,11 @@ grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 simulation = NodePath("../../SimulationRunner")
 
-[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("grid_board", "grid_view")]
+[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("grid_board", "grid_view", "ghost_wire_view")]
 script = ExtResource("9_3mabw")
 grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
+ghost_wire_view = NodePath("../../GridView/GhostWire")
 
 [node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816]
 
