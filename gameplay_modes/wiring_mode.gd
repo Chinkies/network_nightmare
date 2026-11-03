@@ -3,6 +3,22 @@ extends BaseMode
 
 
 # =====================
+# ===== STRUCTURE =====
+# =====================
+
+## Encapsule le résultat logique pur du calcul d'un segment
+class ValidSegmentResult:
+	var cell: Vector2i
+	var target_device: NetworkDevice
+	var target_port_id: int
+	
+	func _init(c: Vector2i, dev: NetworkDevice = null, port: int = -1) -> void:
+		cell = c
+		target_device = dev
+		target_port_id = port
+
+
+# =====================
 # ===== ATTRIBUTS =====
 # =====================
 
@@ -63,9 +79,7 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 		source_device = device
 		source_port_id = local_port_id
 		
-		# Conversion spatiale -> grille
-		var port_w = grid_board.get_port_global_position(device, local_port_id)
-		var start_cell = grid_view.local_to_cell(port_w - grid_view.global_position)
+		var start_cell = device.grid_position
 		
 		# On détermine la direction du port, l'axe permis et le sens strict
 		strict_direction = device.get_port_global_direction(local_port_id)
@@ -76,7 +90,7 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 		# Le tableau contient le point de départ, et un second point (flottant) pour la souris
 		current_path = [start_cell, start_cell]
 		
-		ghost_wire_view.update_preview(current_path, grid_view)
+		ghost_wire_view.update_preview(current_path, grid_board, grid_view, source_device, source_port_id)
 		grid_board.preview_wiring_compatibility(source_device, source_port_id)
 		
 	# CAS 2 : On clique sur le MÊME port -> On annule la sélection
@@ -94,59 +108,86 @@ func _unhandled_input(event: InputEvent) -> void:
 	if source_device == null:
 		return
 		
-	# On traduit immédiatement la souris en coordonnée logique (bornée à la grille)
+	# On calcule la position brute pour rejeter les clics hors grille
 	var mouse_world_pos = grid_view.get_global_mouse_position()
-	var clicked_cell = grid_view.local_to_cell(mouse_world_pos - grid_view.global_position)
-	clicked_cell.x = clampi(clicked_cell.x, 0, grid_board.grid_width - 1)
-	clicked_cell.y = clampi(clicked_cell.y, 0, grid_board.grid_height - 1)
-		
-	# CAS 1 : La souris bouge
-	if event is InputEventMouseMotion:
-		# current_path[-2] est toujours notre point d'ancrage actuel (le dernier coude validé)
-		var valid_cell = _calculate_valid_segment(current_path[-2], clicked_cell, allowed_axis, strict_direction)
-		current_path[-1] = valid_cell
-		ghost_wire_view.update_preview(current_path, grid_view)
+	var raw_cell = grid_view.local_to_cell(mouse_world_pos - grid_view.global_position)
+	var is_inside = grid_board.is_inside_grid(raw_cell)
 	
-	# CAS 2 : Pose d'un coude
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var valid_cell = _calculate_valid_segment(current_path[-2], clicked_cell, allowed_axis, strict_direction)
+	# On calcule une version bornée uniquement pour le mouvement fluide de la souris
+	var motion_cell = raw_cell
+	motion_cell.x = clampi(motion_cell.x, 0, grid_board.grid_width - 1)
+	motion_cell.y = clampi(motion_cell.y, 0, grid_board.grid_height - 1)
 		
-		if clicked_cell == valid_cell and valid_cell != current_path[-2]:
-			current_path[-1] = valid_cell
+	# CAS 1 : La souris bouge (position bornée)
+	if event is InputEventMouseMotion:
+		var result = _calculate_valid_segment(current_path[-2], motion_cell, allowed_axis, strict_direction)
+		current_path[-1] = result.cell
+		
+		ghost_wire_view.update_preview(
+			current_path, grid_board, grid_view, 
+			source_device, source_port_id, 
+			result.target_device, result.target_port_id
+		)
+	
+	# CAS 2 : Pose d'un coude (position brute)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# Rejet strict des clics hors grille
+		if not is_inside:
+			return 
+			
+		var result = _calculate_valid_segment(current_path[-2], raw_cell, allowed_axis, strict_direction)
+		
+		if result.target_device == null and raw_cell == result.cell and result.cell != current_path[-2]:
+			current_path[-1] = result.cell
 			allowed_axis = Vector2i(1 - allowed_axis.x, 1 - allowed_axis.y)
 			strict_direction = Vector2i.ZERO
-			current_path.append(valid_cell) # Nouveau point flottant
+			current_path.append(result.cell)
 			
-	# CAS 3 : Annulation locale (Clic Droit)
+	# CAS 3 : Annulation locale au Clic Droit (position brute)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		var target_idx = current_path.find(clicked_cell)
+		if not is_inside:
+			cancel_action()
+			return
+			
+		var target_idx = current_path.find(raw_cell)
 		
-		# Si on clique sur une case de notre chemin (en ignorant le bout flottant actuel)
+		# On exclut le point flottant final de la sélection
 		if target_idx != -1 and target_idx < current_path.size() - 1:
-			if target_idx == 0:
+			var anchor_idx = target_idx - 1
+			
+			if anchor_idx < 0:
 				cancel_action()
 				return
 				
-			# On tronque le tableau jusqu'à l'index cible + 1 place pour le flottant
-			current_path.resize(target_idx + 2)
+			current_path.resize(anchor_idx + 2)
 			current_path[-1] = current_path[-2] 
 			
-			var prev_cell = current_path[target_idx - 1]
-			var curr_cell = current_path[target_idx]
-			var arriving_dir = (curr_cell - prev_cell).sign()
-			var arriving_axis = Vector2i(abs(arriving_dir.x), abs(arriving_dir.y))
-			
-			allowed_axis = Vector2i(1 - arriving_axis.x, 1 - arriving_axis.y)
-			strict_direction = Vector2i.ZERO
-			
-			ghost_wire_view.update_preview(current_path, grid_view)
+			if anchor_idx == 0:
+				allowed_axis = initial_axis
+				strict_direction = initial_strict_direction
+			else:
+				var prev_cell = current_path[anchor_idx - 1]
+				var curr_cell = current_path[anchor_idx]
+				var arriving_dir = (curr_cell - prev_cell).sign()
+				var arriving_axis = Vector2i(abs(arriving_dir.x), abs(arriving_dir.y))
+				allowed_axis = Vector2i(1 - arriving_axis.x, 1 - arriving_axis.y)
+				strict_direction = Vector2i.ZERO
+				
+			ghost_wire_view.update_preview(current_path, grid_board, grid_view, source_device, source_port_id)
 		else:
 			cancel_action()
 
 
 ## Calcule la position finale valide d'un segment de câble en appliquant 
 ## les contraintes d'axe, de sens, le magnétisme et les collisions.
-func _calculate_valid_segment(start_cell: Vector2i, target_cell: Vector2i, axis: Vector2i, strict_dir: Vector2i) -> Vector2i:
+func _calculate_valid_segment(
+	start_cell: Vector2i,
+	target_cell: Vector2i,
+	axis: Vector2i,
+	strict_dir: Vector2i,
+	expected_target_device: NetworkDevice = null,
+	expected_target_port_id: int = -1
+) -> ValidSegmentResult:
 	var constrained_cell = start_cell
 	
 	# 1. Contrainte sur l'axe
@@ -164,10 +205,10 @@ func _calculate_valid_segment(start_cell: Vector2i, target_cell: Vector2i, axis:
 		var dir_to_target = constrained_cell - start_cell
 		var dot = (dir_to_target.x * strict_dir.x) + (dir_to_target.y * strict_dir.y)
 		if dot <= 0:
-			return start_cell
+			return ValidSegmentResult.new(start_cell)
 			
 	if start_cell == constrained_cell:
-		return start_cell
+		return ValidSegmentResult.new(start_cell)
 		
 	# 3. Détection d'obstacles (Raycast sur la grille)
 	var current_cell = start_cell
@@ -179,27 +220,54 @@ func _calculate_valid_segment(start_cell: Vector2i, target_cell: Vector2i, axis:
 		if not grid_board.is_inside_grid(next_cell):
 			break
 			
+		# Une machine cible est autorisée uniquement si le câble arrive par la
+		# face du port demandé. Elle doit être testée avant l'auto-collision :
+		# une connexion vers le device source peut revenir sur sa case.
 		if grid_board.is_cell_occupied(next_cell):
 			var item = grid_board.get_cell_item(next_cell)
 			
 			if item is NetworkDeviceView:
-				var compatible_port = null
 				var expected_port_dir = Vector2i(-dir.x, -dir.y) 
+				var compatible_port_id := -1
 				
 				for child in item.ports_container.get_children():
 					if child is NetworkPortView:
 						var port_dir = item.logic_device.get_port_global_direction(child.port_id)
-						if port_dir == expected_port_dir and child.current_state == NetworkPortView.PortState.AVAILABLE:
-							compatible_port = child
+						var is_available = child.current_state == NetworkPortView.PortState.AVAILABLE
+						var is_requested = (
+							expected_target_device == item.logic_device
+							and expected_target_port_id == child.port_id
+						)
+						var is_allowed_target = expected_target_device == null or is_requested
+						if port_dir == expected_port_dir and is_available and is_allowed_target:
+							compatible_port_id = child.port_id
 							break
 							
-				if compatible_port != null:
-					return next_cell # Cible connectable atteinte
+				if compatible_port_id != -1:
+					return ValidSegmentResult.new(next_cell, item.logic_device, compatible_port_id)
 			break # Obstacle rencontré
+
+		# Vérification d'auto-collision avec les segments précédents
+		var hit_self = false
+		for i in range(current_path.size() - 2):
+			var p1 = current_path[i]
+			var p2 = current_path[i+1]
+			
+			var min_x = mini(p1.x, p2.x)
+			var max_x = maxi(p1.x, p2.x)
+			var min_y = mini(p1.y, p2.y)
+			var max_y = maxi(p1.y, p2.y)
+			
+			if next_cell.x >= min_x and next_cell.x <= max_x and next_cell.y >= min_y and next_cell.y <= max_y:
+				hit_self = true
+				break
+				
+		if hit_self:
+			break
 			
 		current_cell = next_cell
 		
-	return current_cell
+	return ValidSegmentResult.new(current_cell)
 
 
 func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> void:
@@ -209,15 +277,20 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 		_reset_selection()
 		return
 	
-	# On traduit le port cible en cellule
-	var target_w = grid_board.get_port_global_position(target_device, target_port_id)
-	var target_cell = grid_view.local_to_cell(target_w - grid_view.global_position)
+	var target_cell = target_device.grid_position
 	
 	# 2. On vérifie la validité physique du tracé
-	var valid_cell = _calculate_valid_segment(current_path[-2], target_cell, allowed_axis, strict_direction)
+	var result = _calculate_valid_segment(
+		current_path[-2],
+		target_cell,
+		allowed_axis,
+		strict_direction,
+		target_device,
+		target_port_id
+	)
 	
-	if valid_cell != target_cell:
-		print("[WiringMode] Erreur : Le chemin vers ce port n'est pas valide.")
+	if result.cell != target_cell or result.target_device != target_device or result.target_port_id != target_port_id:
+		print("[WiringMode] Erreur : Le chemin vers ce port n'est pas valide ou est bloqué.")
 		return
 	
 	# 3. Validation finale
