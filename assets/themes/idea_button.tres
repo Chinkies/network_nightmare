@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=4 uid="uid://c6jsjwffalulb"]
 
-[ext_resource type="Texture2D" uid="uid://ogpks6y6d6uu" path="res://assets/icons/idea.png" id="1_fju6v"]
+[ext_resource type="Texture2D" uid="uid://ogpks6y6d6uu" path="res://ui/assets/idea.png" id="1_jm7lw"]
 
 [sub_resource type="Image" id="Image_j1e5u"]
 data = {
@@ -1039,14 +1039,14 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g82hg"]
-texture = ExtResource("1_fju6v")
+texture = ExtResource("1_jm7lw")
 modulate_color = Color(0.93074834, 0.9307482, 3.080368e-06, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_44saq"]
-texture = ExtResource("1_fju6v")
+texture = ExtResource("1_jm7lw")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bdmjg"]
-texture = ExtResource("1_fju6v")
+texture = ExtResource("1_jm7lw")
 modulate_color = Color(0.54670835, 0.54670846, 0, 1)
 
 [resource]
