@@ -17,33 +17,8 @@ extends Node2D
 # ====================
 
 func _ready() -> void:
-	_connect_ui_signals()
-	
 	# Appel après le premier frame pour s'assurer que la taille du viewport est initialisée
 	call_deferred("_setup_camera_framing")
-
-
-# --- Fonctions de gestion des signaux ---
-
-func _connect_ui_signals() -> void:
-	puzzle_ui.simulation_started.connect(_on_simulation_started)
-	puzzle_ui.simulation_stopped.connect(_on_simulation_stopped)
-	puzzle_ui.hint_requested.connect(_on_hint_requested)
-
-
-func _on_simulation_started() -> void:
-	simulation.start()
-	print("[Simulation] Démarrée.")
-
-
-func _on_simulation_stopped() -> void:
-	simulation.stop()
-	print("[Simulation] Arrêtée.")
-
-
-func _on_hint_requested() -> void:
-	print("[UI] Demande d'indice reçue.")
-	# TODO: Afficher le dialogue ou la popup d'indice
 
 
 # --- Setup de la caméra ---

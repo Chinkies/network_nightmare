@@ -13,6 +13,7 @@ var ephemeral_packets: Array[NetworkPacket] = []
 
 # --- Contrôle du temps de simulation ---
 var is_running: bool = false
+var has_started: bool = false
 var simulation_speed: float = 1.0
 
 
@@ -61,6 +62,7 @@ func register_ephemeral_packet(packet: NetworkPacket) -> void:
 # --- Contrôle de l'exécution ---
 
 func start() -> void:
+	has_started = true
 	is_running = true
 
 func stop() -> void:
@@ -68,8 +70,18 @@ func stop() -> void:
 
 func toggle() -> void:
 	is_running = not is_running
+	if is_running:
+		has_started = true
 
-
+# Reset le runner de simulation
+func reset_runner() -> void:
+	stop()
+	devices.clear()
+	_device_map.clear()
+	wires.clear()
+	ephemeral_packets.clear()
+	simulation_speed = 1.0
+	has_started = false
 
 # --- Boucle principale ---
 

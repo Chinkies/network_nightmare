@@ -7,10 +7,38 @@
 [ext_resource type="Texture2D" uid="uid://ogpks6y6d6uu" path="res://ui/assets/idea.png" id="7_5p8q3"]
 [ext_resource type="Script" uid="uid://br303se0nha48" path="res://ui/device_selection_menu/device_selection_menu.gd" id="7_7rt4c"]
 [ext_resource type="Texture2D" uid="uid://cd2drrderclba" path="res://resources/ui/reset/reset.tres" id="8_3gv1r"]
+[ext_resource type="Texture2D" uid="uid://ceye5kpal83tp" path="res://resources/ui/speed/speed1.tres" id="8_kawcb"]
 [ext_resource type="PackedScene" uid="uid://xn20r8fonny0" path="res://ui/device_selection_menu/draggable_slot.tscn" id="8_kijq7"]
 [ext_resource type="Texture2D" uid="uid://dc87y7x1f565q" path="res://resources/ui/delete/delete.tres" id="8_pdk13"]
+[ext_resource type="Texture2D" uid="uid://cg581b2dos3n6" path="res://resources/ui/edit/edit.tres" id="8_tot04"]
+[ext_resource type="Texture2D" uid="uid://d210h3p46gdl2" path="res://resources/ui/wiring/wiringEnable.tres" id="8_xtaqe"]
+[ext_resource type="Texture2D" uid="uid://dgi05j6pdmu80" path="res://resources/ui/edit/editPressed.tres" id="9_2uvxc"]
 [ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/Button.png" id="9_3gv1r"]
+[ext_resource type="Texture2D" uid="uid://becgrgqnjtq82" path="res://resources/ui/wiring/wiringEnablePressed.tres" id="9_k2lam"]
 [ext_resource type="Texture2D" uid="uid://cq8rwycumd02m" path="res://resources/ui/wiring/wiringDisable.tres" id="9_kawcb"]
+[ext_resource type="Texture2D" uid="uid://d28l5jh3gi7ip" path="res://resources/ui/edit/editHover.tres" id="10_cxewn"]
+[ext_resource type="Texture2D" uid="uid://jtaopopl5u31" path="res://resources/ui/wiring/wiringEnableHover.tres" id="10_l0lmg"]
+[ext_resource type="Texture2D" uid="uid://dy8qj2htff7v6" path="res://resources/ui/start/start.tres" id="11_mxk3m"]
+[ext_resource type="Texture2D" uid="uid://u8qaq2rccgvp" path="res://resources/ui/speed/speed1Pressed.tres" id="12_ni558"]
+[ext_resource type="Texture2D" uid="uid://dedcxaa3rj4gk" path="res://resources/ui/speed/speed1Hover.tres" id="13_i5nrg"]
+[ext_resource type="Texture2D" uid="uid://f71y7r4nr1j4" path="res://resources/ui/pause/pause.tres" id="14_x7p0c"]
+[ext_resource type="Texture2D" uid="uid://dwettus0bahjp" path="res://resources/ui/pause/pausePressed.tres" id="15_6fgso"]
+[ext_resource type="Texture2D" uid="uid://bjling3rei20y" path="res://resources/ui/delete/deletePressed.tres" id="15_dp221"]
+[ext_resource type="Texture2D" uid="uid://bbrhhxk57bdi0" path="res://resources/ui/pause/pauseHover.tres" id="16_nil68"]
+[ext_resource type="Texture2D" uid="uid://k4oa26fq66oo" path="res://resources/ui/delete/deleteHover.tres" id="16_y3cch"]
+[ext_resource type="Texture2D" uid="uid://btvsxxoxwhrkx" path="res://resources/ui/wiring/wiringDisablePressed.tres" id="18_q3g77"]
+[ext_resource type="Texture2D" uid="uid://ci4i2yjwv7xsi" path="res://resources/ui/wiring/wiringDisableHover.tres" id="19_if15r"]
+[ext_resource type="Texture2D" uid="uid://bdw05axueay3y" path="res://resources/ui/speed/speed2.tres" id="20_nil68"]
+[ext_resource type="Texture2D" uid="uid://dcmul2ppobvva" path="res://resources/ui/speed/speed2Pressed.tres" id="21_jbwgn"]
+[ext_resource type="Texture2D" uid="uid://d1naw1cm4o2vp" path="res://resources/ui/reset/resetPressed.tres" id="21_xtaqe"]
+[ext_resource type="Texture2D" uid="uid://gmc1up4vsovu" path="res://resources/ui/reset/resetHover.tres" id="22_k2lam"]
+[ext_resource type="Texture2D" uid="uid://mb7mncvk3k84" path="res://resources/ui/speed/speed2Hover.tres" id="22_xirkk"]
+[ext_resource type="Texture2D" uid="uid://bpssvbjbs86un" path="res://resources/ui/reset/resetDisable.tres" id="23_cxewn"]
+[ext_resource type="Texture2D" uid="uid://dj6nmhctoysrf" path="res://resources/ui/speed/speed05.tres" id="23_p0i88"]
+[ext_resource type="Texture2D" uid="uid://cbs6acn7vydnq" path="res://resources/ui/speed/speed05Pressed.tres" id="24_0vpv5"]
+[ext_resource type="Texture2D" uid="uid://d1mwfe5h157v0" path="res://resources/ui/start/startPressed.tres" id="24_l0lmg"]
+[ext_resource type="Texture2D" uid="uid://cf35ee1g7xjbv" path="res://resources/ui/start/startHover.tres" id="25_mxk3m"]
+[ext_resource type="Texture2D" uid="uid://dkdsla0dmtwmx" path="res://resources/ui/speed/speed05Hover.tres" id="25_wbjex"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jsphu"]
 bg_color = Color(0.20080861, 0.20080864, 0.2008085, 1)
@@ -1109,6 +1137,41 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_kijq7")
 available_devices = Array[ExtResource("2_8hbgh")]([ExtResource("3_8hbgh"), ExtResource("4_5p8q3")])
+wiring_disable_textures = {
+"hover": ExtResource("19_if15r"),
+"normal": ExtResource("9_kawcb"),
+"pressed": ExtResource("18_q3g77")
+}
+wiring_enable_textures = {
+"hover": ExtResource("10_l0lmg"),
+"normal": ExtResource("8_xtaqe"),
+"pressed": ExtResource("9_k2lam")
+}
+simulation_start_textures = {
+"hover": ExtResource("25_mxk3m"),
+"normal": ExtResource("11_mxk3m"),
+"pressed": ExtResource("24_l0lmg")
+}
+simulation_pause_textures = {
+"hover": ExtResource("16_nil68"),
+"normal": ExtResource("14_x7p0c"),
+"pressed": ExtResource("15_6fgso")
+}
+speed_1_textures = {
+"hover": ExtResource("13_i5nrg"),
+"normal": ExtResource("8_kawcb"),
+"pressed": ExtResource("12_ni558")
+}
+speed_2_textures = {
+"hover": ExtResource("22_xirkk"),
+"normal": ExtResource("20_nil68"),
+"pressed": ExtResource("21_jbwgn")
+}
+speed_05_textures = {
+"hover": ExtResource("25_wbjex"),
+"normal": ExtResource("23_p0i88"),
+"pressed": ExtResource("24_0vpv5")
+}
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1297426158]
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1075811242]
@@ -1118,6 +1181,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="FoldableContainer" type="FoldableContainer" parent="HBoxContainer" unique_id=641946065]
 layout_mode = 2
@@ -1138,6 +1202,7 @@ slot_scene = ExtResource("5_xul0j")
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1323848207]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 alignment = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer" unique_id=744753387]
@@ -1161,6 +1226,22 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 theme = SubResource("Theme_pdk13")
 
+[node name="MarginSpeed" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=347400712]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="SpeedButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginSpeed" unique_id=127848254]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+texture_normal = ExtResource("8_kawcb")
+texture_pressed = ExtResource("12_ni558")
+texture_hover = ExtResource("13_i5nrg")
+
 [node name="MarginDelete" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=776137563]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
@@ -1170,9 +1251,30 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="DeleteButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginDelete" unique_id=2077008033]
+unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+toggle_mode = true
 texture_normal = ExtResource("8_pdk13")
+texture_pressed = ExtResource("15_dp221")
+texture_hover = ExtResource("16_y3cch")
+
+[node name="MarginEdit" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=370063749]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="EditButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginEdit" unique_id=562564547]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("8_tot04")
+texture_pressed = ExtResource("9_2uvxc")
+texture_hover = ExtResource("10_cxewn")
 
 [node name="MarginWiring" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=223956886]
 custom_minimum_size = Vector2(48, 48)
@@ -1183,9 +1285,13 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="WiringButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginWiring" unique_id=1926057222]
+unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+toggle_mode = true
 texture_normal = ExtResource("9_kawcb")
+texture_pressed = ExtResource("18_q3g77")
+texture_hover = ExtResource("19_if15r")
 
 [node name="MarginReset2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1854532766]
 custom_minimum_size = Vector2(64, 64)
@@ -1195,12 +1301,16 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="StopButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginReset" unique_id=796788466]
+[node name="ResetButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginReset" unique_id=796788466]
 unique_name_in_owner = true
 layout_mode = 2
+disabled = true
 texture_normal = ExtResource("8_3gv1r")
+texture_pressed = ExtResource("21_xtaqe")
+texture_hover = ExtResource("22_k2lam")
+texture_disabled = ExtResource("23_cxewn")
 
-[node name="MarginStart" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=797992869]
+[node name="MarginSimulation" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=797992869]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 theme_override_constants/margin_left = 5
@@ -1208,9 +1318,11 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="StartButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginStart" unique_id=1513687154]
+[node name="SimulationButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginSimulation" unique_id=1513687154]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_kawcb")
+texture_pressed = ExtResource("24_l0lmg")
+texture_hover = ExtResource("25_mxk3m")
 stretch_mode = 5

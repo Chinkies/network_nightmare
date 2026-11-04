@@ -1,4 +1,5 @@
-extends Node
+class_name DeleteMode
+extends BaseMode
 
 
 # Called when the node enters the scene tree for the first time.
