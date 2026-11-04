@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
 [ext_resource type="Script" uid="uid://4d4b2mhkij6n" path="res://views/wires/ghost_wire_view.gd" id="8_ko617"]
 [ext_resource type="Script" uid="uid://cw3g35nhnqyps" path="res://gameplay_modes/wiring_mode.gd" id="9_3mabw"]
+[ext_resource type="PackedScene" uid="uid://dfgh0pe1hwa38" path="res://views/wires/network_wire_view.tscn" id="12_owvkk"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
 script = ExtResource("1_3vw7n")
@@ -66,6 +67,7 @@ script = ExtResource("9_3mabw")
 grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 ghost_wire_view = NodePath("../../GridView/GhostWire")
+network_wire_view_scene = ExtResource("12_owvkk")
 
 [node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816]
 

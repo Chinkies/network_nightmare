@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dfgh0pe1hwa38"]
+
+[ext_resource type="Script" uid="uid://ommcybqgaqjs" path="res://views/wires/network_wire_view.gd" id="1_6j7ub"]
+
+[node name="NetworkWireView" type="Line2D" unique_id=2141481003]
+script = ExtResource("1_6j7ub")
+metadata/_custom_type_script = "uid://ommcybqgaqjs"

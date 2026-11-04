@@ -25,6 +25,7 @@ class ValidSegmentResult:
 @export var grid_board: GridBoard
 @export var grid_view: GridView
 @export var ghost_wire_view: GhostWireView
+@export var network_wire_view_scene: PackedScene
 
 # Mémoire du premier port cliqué
 var source_device: NetworkDevice = null
@@ -46,6 +47,7 @@ func _ready() -> void:
 	assert(grid_board != null, "[WiringMode] Erreur critique : GridBoard non assigné !")
 	assert(grid_view != null, "[WiringMode] Erreur critique : GridView non assigné !")
 	assert(ghost_wire_view != null, "[WiringMode] Erreur critique : GhostWireView non assignée !")
+	assert(network_wire_view_scene != null, "[WiringMode] Erreur critique : NetworkWireViewScene non assignée !")
 
 
 # --- Entrée et sortie du mode ---
@@ -303,17 +305,20 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 		current_path.duplicate()
 	)
 	
-	# 5. Enregistrement physique dans la grille (Bloque les cases pour les autres câbles)
+	# 5. Enregistrement physique dans la grille
 	grid_board.register_wire_cells(new_wire)
 	print("[WiringMode] SUCCÈS : Câble créé avec ", current_path.size(), " points. Cases bloquées : ", new_wire.occupied_cells)
 	
-	# TODO : Instancier la VUE (NetworkWireView) pour remplacer la ghost_line
+	# 6. Instanciation de la vue définitive
+	var wire_view = network_wire_view_scene.instantiate() as NetworkWireView
+	ghost_wire_view.get_parent().add_child(wire_view)
+	wire_view.setup_wire(new_wire, grid_board, grid_view)
 	
-	# 6. Verrouillage définitif des deux ports
+	# 7. Verrouillage définitif des deux ports
 	grid_board.set_port_occupied(source_device, source_port_id)
 	grid_board.set_port_occupied(target_device, target_port_id)
 	
-	# 7. Nettoyage de la sélection
+	# 8. Nettoyage de la sélection
 	_reset_selection()
 
 
