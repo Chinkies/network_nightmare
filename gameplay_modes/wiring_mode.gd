@@ -295,19 +295,36 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 		print("[WiringMode] Erreur : Le chemin vers ce port n'est pas valide ou est bloqué.")
 		return
 	
-	# 3. Validation finale
 	current_path[-1] = target_cell
+	
+	# 3. Résolution du sens de connexion 
+	var final_from_device = source_device
+	var final_from_port = source_port_id
+	var final_to_device = target_device
+	var final_to_port = target_port_id
+	var final_path = current_path.duplicate()
+	
+	var source_type = source_device.port_types.get(source_port_id)
+	var target_type = target_device.port_types.get(target_port_id)
+	
+	# Si le premier clic était sur une entrée OU le second clic sur une sortie, on inverse tout
+	if source_type == NetworkDevice.PortType.STATIC_INPUT or target_type == NetworkDevice.PortType.STATIC_OUTPUT:
+		final_from_device = target_device
+		final_from_port = target_port_id
+		final_to_device = source_device
+		final_to_port = source_port_id
+		final_path.reverse()
 	
 	# 4. Création de l'objet logique NetworkWire
 	var new_wire = NetworkWire.new(
-		source_device, source_port_id, 
-		target_device, target_port_id, 
-		current_path.duplicate()
+		final_from_device, final_from_port, 
+		final_to_device, final_to_port, 
+		final_path
 	)
 	
 	# 5. Enregistrement physique dans la grille
 	grid_board.register_wire_cells(new_wire)
-	print("[WiringMode] SUCCÈS : Câble créé avec ", current_path.size(), " points. Cases bloquées : ", new_wire.occupied_cells)
+	print("[WiringMode] SUCCÈS : Câble créé avec ", final_path.size(), " points. Cases bloquées : ", new_wire.occupied_cells)
 	
 	# 6. Instanciation de la vue définitive
 	var wire_view = network_wire_view_scene.instantiate() as NetworkWireView
@@ -315,8 +332,8 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 	wire_view.setup_wire(new_wire, grid_board, grid_view)
 	
 	# 7. Verrouillage définitif des deux ports
-	grid_board.set_port_occupied(source_device, source_port_id)
-	grid_board.set_port_occupied(target_device, target_port_id)
+	grid_board.set_port_occupied(final_from_device, final_from_port)
+	grid_board.set_port_occupied(final_to_device, final_to_port)
 	
 	# 8. Nettoyage de la sélection
 	_reset_selection()
