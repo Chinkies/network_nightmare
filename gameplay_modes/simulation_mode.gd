@@ -1,11 +1,23 @@
-extends Node
+class_name SimulationMode
+extends BaseMode
 
+@export var grid_board: GridBoard
+@export var simulation: SimulationRunner
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	assert(grid_board != null, "[SimulationMode] Erreur critique : Gridboard non assigné !")
+	assert(simulation != null, "[SimulationMode] Erreur critique : SimulationRunner non assigné !")
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func enter_mode() -> void:
+	# Désactivation des intéractions ports et drops
+	grid_board.set_all_ports_interaction_active(false)
+
+	# Lancement de la simulation
+	simulation.start()
+	print("[SimulationMode] Entrée en mode Simulation. Édition verrouillée.")
+
+func exit_mode() -> void:
+	#Arrêt de la simumation
+	simulation.stop()
+	print("[SimulationMode] Sortie du mode Simulation.")

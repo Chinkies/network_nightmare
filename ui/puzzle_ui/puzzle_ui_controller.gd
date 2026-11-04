@@ -2,16 +2,20 @@ class_name PuzzleUiController
 extends Control
 
 ## Signaux émis vers le chef d'orchestre (Main ou LevelManager)
-signal simulation_started
-signal simulation_stopped
-signal hint_requested
+signal simulation_started #old
+signal simulation_stopped #old
+signal hint_requested #old
+
+signal wiring_button_pressed
+signal delete_button_pressed
+signal edit_button_pressed
 
 ## Liste des items disponibles
 @export var available_devices: Array[NetworkDeviceData] = []
 
 ## Références aux composants enfants
-@onready var start_button: Button = %StartButton
-@onready var stop_button: Button = %StopButton
+@onready var start_button: TextureButton = %StartButton
+@onready var stop_button: TextureButton = %StopButton
 @onready var hint_button: Button = %HintButton
 
 
@@ -56,3 +60,13 @@ func _setup_menu_with_resources() -> void:
 		print("[UI] Menu peuplé avec %d devices." % available_devices.size())
 	else:
 		push_warning("[UI] Impossible de trouver le nœud UIMenuDeviceSelection via %UIMenuDeviceSelection")
+
+func update_mode_buttons(active_mode: BaseMode) -> void:
+	return
+
+# ==================================
+# ===== EMMISSION DES SIGNAUX ======
+# ==================================
+
+func _on_btn_wiring_pressed() -> void:
+	wiring_button_pressed.emit()

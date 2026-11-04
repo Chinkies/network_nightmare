@@ -6,13 +6,15 @@ extends Node
 # ===== ATTRIBUTS ======
 # ======================
 
+signal mode_changed(new_mode: BaseMode)
+
 var current_mode: BaseMode
 var previous_mode: BaseMode
 
 @onready var edit_mode = $EditMode
 @onready var wiring_mode = $WiringMode
 #@onready var delete_mode = $DeleteMode
-#@onready var simulation_mode = $SimulationMode
+@onready var simulation_mode = $SimulationMode
 
 
 # =====================
@@ -45,6 +47,8 @@ func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 	
 	if current_mode:
 		current_mode.enter_mode()
+
+	mode_changed.emit(current_mode)
 
 
 func switch_to_previous_mode() -> void:
