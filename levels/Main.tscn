@@ -53,8 +53,9 @@ grid_board = NodePath("../GridBoard")
 [node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
 script = ExtResource("8_ko617")
 
-[node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190]
+[node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190 node_paths=PackedStringArray("grid_board")]
 script = ExtResource("7_bvijt")
+grid_board = NodePath("../GridBoard")
 
 [node name="EditMode" type="Node" parent="LevelManager/ModeManager" unique_id=347286240 node_paths=PackedStringArray("grid_board", "grid_view", "simulation")]
 script = ExtResource("8_3mabw")

@@ -1,6 +1,11 @@
 class_name GridBoard
 extends Node
 
+# --- Signaux ---
+
+signal item_interaction_started(item: Variant)
+signal item_interaction_ended(item: Variant)
+
 
 # =====================
 # ===== ATTRIBUTS =====
@@ -47,32 +52,36 @@ func get_port_global_position(device: NetworkDevice, port_id: int) -> Vector2:
 
 
 
-# ----------------------------------------------
-# --- Enregistrement / Libération de cellule ---
-# ----------------------------------------------
+# ------------------------------------------
+# --- Enregistrement / Libération d'item ---
+# ------------------------------------------
 
-## Passe une cellule de la grille en "occupied"
-func set_cell_occupied(cell: Vector2i, network_item: Variant) -> void:
-	_occupied_cells[cell] = network_item
+## Enregistre un Device sur la cellule qu'il occupe
+func register_device(device: NetworkDevice) -> void:
+	if device == null:
+		return
+	_occupied_cells[device.grid_position] = device
 
-## Libère une cellule occupée de la grille
-func free_cell(cell: Vector2i) -> void:
-	_occupied_cells.erase(cell)
+## Libère la cellule occupée par un device
+func unregister_device(device: NetworkDevice) -> void:
+	if device == null:
+		return
+	_occupied_cells.erase(device.grid_position)
 
 
 ## Enregistre comme "occupied" toutes les cellules par lesquelles passe un Wire
-func register_wire_cells(wire: NetworkWire) -> void:
+func register_wire(wire: NetworkWire) -> void:
 	if wire == null or wire.occupied_cells.size() == 0:
 		return
 	for cell in wire.occupied_cells:
-		set_cell_occupied(cell, wire)
+		_occupied_cells[cell] = wire
 
 ## Libère toutes les cellules occupées par un Wire
-func unregister_wire_cells(wire: NetworkWire) -> void:
+func unregister_wire(wire: NetworkWire) -> void:
 	if wire == null or wire.occupied_cells.size() == 0:
 		return
 	for cell in wire.occupied_cells:
-		free_cell(cell)
+		_occupied_cells.erase(cell)
 
 
 

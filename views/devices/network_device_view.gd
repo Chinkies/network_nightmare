@@ -10,6 +10,10 @@ extends Node2D
 ## Relaye l'instance logique et l'identifiant du port vers le gestionnaire de modes.
 signal port_interaction_requested(device: NetworkDevice, local_port_id: int)
 
+# Signaux relatifs aux clics sur le device
+signal interaction_started(logic_item: Variant)
+signal interaction_ended(logic_item: Variant)
+
 
 # =====================
 # ===== ATTRIBUTS =====
@@ -26,9 +30,13 @@ const TEX_STATIC = preload("res://views/ports/assets/static_flow_shape.png")
 @onready var visual_sprite: Sprite2D = $Sprite2D
 ## Référence sur le container des ports pour instancier dynamiquement les ports
 @onready var ports_container = $PortsContainer
+## Référence sur l'Area2D
+@onready var click_area: Area2D = $ClickArea
 
 ## La référence vers l'objet logique qui tourne en mémoire
 var logic_device: NetworkDevice
+
+var is_pressed: bool = false
 
 
 # ====================
@@ -92,6 +100,10 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 			
 			# On masque le port de base
 			port_instance.set_interaction_active(false)
+			
+	# On lie l'Area2D à nos signaux
+	click_area.input_event.connect(_on_input_event)
+	click_area.mouse_exited.connect(_on_mouse_exited)
 
 
 # ------------------------------------------
@@ -184,3 +196,24 @@ func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
 ## jusqu'au ModeManager via le signal port_interaction_requested.
 func _on_port_clicked(local_port_id: int) -> void:
 	port_interaction_requested.emit(logic_device, local_port_id)
+
+
+# ---------------------------------
+# --- Feedbacks de la ClickArea ---
+# ---------------------------------
+
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			is_pressed = true
+			interaction_started.emit(logic_device)
+		elif is_pressed: # Clic relâché
+			is_pressed = false
+			interaction_ended.emit(logic_device)
+
+
+func _on_mouse_exited() -> void:
+	# Si la souris sort de la zone de collision, on annule l'action en cours
+	if is_pressed:
+		is_pressed = false
+		interaction_ended.emit(logic_device)

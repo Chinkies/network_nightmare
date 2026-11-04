@@ -11,8 +11,10 @@ var previous_mode: BaseMode
 
 @onready var edit_mode = $EditMode
 @onready var wiring_mode = $WiringMode
-#@onready var delete_mode = $DeleteMode
+@onready var delete_mode = $DeleteMode
 #@onready var simulation_mode = $SimulationMode
+
+@export var grid_board: GridBoard
 
 
 # =====================
@@ -24,7 +26,11 @@ func _ready() -> void:
 	for child in get_children():
 		if child is BaseMode:
 			child.mode_manager = self
-			
+	
+	# Traitement des signaux émis par les items de la GridBoard
+	grid_board.item_interaction_started.connect(on_item_interaction_started)
+	grid_board.item_interaction_ended.connect(on_item_interaction_ended)
+	
 	# État initial au lancement
 	call_deferred("switch_mode", edit_mode)
 
@@ -62,18 +68,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				# Si on est déjà en train de câbler, on range l'outil (retour édition)
 				if current_mode == wiring_mode:
 					switch_mode(edit_mode)
-					print("[ModeManager] Toggle : Retour à CREATE (EditMode)")
+					print("[ModeManager] Toggle : Retour au EDIT")
 				else:
 					switch_mode(wiring_mode)
 					print("[ModeManager] Bascule : WIRING")
 					
 			KEY_X:
 				# Si on est déjà en train de supprimer, on annule et on reprend ce qu'on faisait
-				# if current_mode == delete_mode:
-					# switch_to_previous_mode()
-					# print("[ModeManager] Toggle : Annulation DELETE")
-				# else:
-					# switch_mode(delete_mode, true) # On sauvegarde l'historique
+				if current_mode == delete_mode:
+					switch_to_previous_mode()
+					print("[ModeManager] Toggle : Sortie du mode DELETE")
+				else:
+					switch_mode(delete_mode, true) # On sauvegarde l'historique
 					print("[ModeManager] Bascule : DELETE")
 					
 			KEY_R:
@@ -104,3 +110,13 @@ func on_port_interaction_requested(device: NetworkDevice, local_port_id: int) ->
 	# Seul le WiringMode (et éventuellement DeleteMode plus tard si tu veux cliquer sur un port pour supprimer son câble) réagira.
 	if current_mode and current_mode.has_method("handle_port_click"):
 		current_mode.handle_port_click(device, local_port_id)
+
+
+func on_item_interaction_started(item: Variant) -> void:
+	if current_mode and current_mode.has_method("handle_item_interaction_started"):
+		current_mode.handle_item_interaction_started(item)
+
+
+func on_item_interaction_ended(item: Variant) -> void:
+	if current_mode and current_mode.has_method("handle_item_interaction_ended"):
+		current_mode.handle_item_interaction_ended(item)
