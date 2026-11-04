@@ -1173,8 +1173,8 @@ speed_05_textures = {
 "pressed": ExtResource("24_0vpv5")
 }
 
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1297426158]
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1075811242]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1183,46 +1183,59 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FoldableContainer" type="FoldableContainer" parent="HBoxContainer" unique_id=641946065]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2" unique_id=1075811242]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/FoldableContainer" unique_id=1198708450]
+[node name="FoldableContainer" type="FoldableContainer" parent="HBoxContainer2/HBoxContainer" unique_id=641946065]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer2/HBoxContainer/FoldableContainer" unique_id=1198708450]
 custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
 
-[node name="DeviceSelectionMenu" type="GridContainer" parent="HBoxContainer/FoldableContainer/ScrollContainer" unique_id=617299613]
+[node name="DeviceSelectionMenu" type="GridContainer" parent="HBoxContainer2/HBoxContainer/FoldableContainer/ScrollContainer" unique_id=617299613]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 400)
 propagate_maximum_size = false
 layout_mode = 2
 columns = 2
-script = ExtResource("4_ow60c")
-slot_scene = ExtResource("5_xul0j")
+script = ExtResource("7_7rt4c")
+slot_scene = ExtResource("8_kijq7")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1323848207]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2" unique_id=781652344]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 alignment = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer" unique_id=744753387]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer2/VBoxContainer" unique_id=1590243911]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/PanelContainer" unique_id=1540924263]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer" unique_id=1937968507]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=199015613]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer" unique_id=111758252]
 layout_mode = 2
-theme_override_constants/separation = 10
 alignment = 2
 
-[node name="HintButton" type="Button" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1545421254]
+[node name="HintContainer" type="PanelContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=663456003]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jsphu")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/HintContainer" unique_id=528928049]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HintButton" type="Button" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/HintContainer/MarginContainer" unique_id=1545421254]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 theme = SubResource("Theme_pdk13")
 
@@ -1293,8 +1306,9 @@ texture_normal = ExtResource("9_kawcb")
 texture_pressed = ExtResource("18_q3g77")
 texture_hover = ExtResource("19_if15r")
 
-[node name="MarginReset2" type="MarginContainer" parent="HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1854532766]
-custom_minimum_size = Vector2(64, 64)
+[node name="MarginReset" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=102865564]
+texture_filter = 1
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
