@@ -9,6 +9,9 @@ extends Node
 @export var puzzle_ui: PuzzleUiController
 @export var simulation: SimulationRunner
 
+@export var grid_board: GridBoard
+@export var grid_view: GridView
+
 # Références directes aux modes (pour que le LevelManager sache quoi demander au ModeManager)
 @export var edit_mode: EditMode
 @export var delete_mode: DeleteMode
@@ -19,6 +22,11 @@ extends Node
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
 var current_speed_index: int = 0
 
+@export_category("Test & Debug - Mock Level Setup")
+## Ressource du transmitter de test à placer au lancement (pour le dev)
+@export var debug_transmitter_data: NetworkTransmitterData
+@export var debug_transmitter_cell: Vector2i = Vector2i(0, 2)
+
 # ====================
 # ===== METHODES =====
 # ====================
@@ -28,6 +36,9 @@ func _ready() -> void:
 	if puzzle_ui:
 		puzzle_ui.set_reset_button_enabled(false)
 		puzzle_ui.set_simulation_button_state(false)
+
+	call_deferred("_debug_spawn_transmitter")
+
 
 func _connect_signals() -> void:
 	# Connexion des signaux provenant de l'UI
@@ -60,6 +71,9 @@ func _on_simulation_requested() -> void:
 		if puzzle_ui:
 			puzzle_ui.set_simulation_button_state(true)  # Passe l'icône à "Pause"
 			puzzle_ui.set_reset_button_enabled(true)     # Active le bouton Reset
+			puzzle_ui.set_edit_button_enabled(false)
+			puzzle_ui.set_wiring_button_enabled(false)
+			puzzle_ui.set_delete_button_enabled(false)
 			
 		print("[LevelManager] Simulation lancée.")
 	else:
@@ -86,6 +100,9 @@ func _on_reset_requested() -> void:
 	if puzzle_ui:
 		puzzle_ui.set_simulation_button_state(false)
 		puzzle_ui.set_reset_button_enabled(false)
+		puzzle_ui.set_edit_button_enabled(true)
+		puzzle_ui.set_wiring_button_enabled(true)
+		puzzle_ui.set_delete_button_enabled(true)
 		
 	print("[LevelManager] Simulation réinitialisée.")
 
@@ -154,16 +171,19 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 			KEY_W:
-				_on_wiring_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_wiring_requested()
+					get_viewport().set_input_as_handled()
 					
 			KEY_X:
-				_on_delete_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_delete_requested()
+					get_viewport().set_input_as_handled()
 
 			KEY_E:
-				_on_edit_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_edit_requested()
+					get_viewport().set_input_as_handled()
 					
 			KEY_R:
 				if simulation.has_started:
@@ -181,3 +201,54 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_H:
 				_on_hint_requested()
 				get_viewport().set_input_as_handled()
+
+
+## Fonction debug pour placer le transmitter
+func _debug_spawn_transmitter() -> void:
+	if not debug_transmitter_data:
+		return
+		
+	if not grid_board or not grid_view or not simulation:
+		push_error("[LevelManager] Références manquantes (grid_board, grid_view ou simulation) pour le spawn de debug !")
+		return
+		
+	var cell = debug_transmitter_cell
+	
+	if not grid_board.is_cell_inside_grid(cell):
+		push_error("[LevelManager] Cellule de debug %s hors de la grille !" % cell)
+		return
+		
+	if grid_board.is_cell_occupied(cell):
+		print("[LevelManager] Cellule %s déjà occupée, spawn de debug ignoré." % cell)
+		return
+
+	# 1. Création de la machine logique
+	var unique_id = "%s_%d_%d" % [debug_transmitter_data.device_id_template, cell.x, cell.y]
+	var logic_device = debug_transmitter_data.instantiate_device(unique_id)
+	logic_device.grid_position = cell
+
+	# 2. Création de la machine visuelle
+	if not debug_transmitter_data.device_scene:
+		push_error("[LevelManager] Aucune device_scene définie dans la ressource de debug !")
+		return
+		
+	var view_node = debug_transmitter_data.device_scene.instantiate() as NetworkDeviceView
+	if not view_node:
+		push_error("[LevelManager] La scène de debug n'a pas le script NetworkDeviceView attaché !")
+		return
+
+	view_node.global_position = grid_view.cell_to_world_center(cell)
+	grid_view.add_child(view_node)
+	
+	# 3. Liaison vue / logique
+	view_node.setup(logic_device, debug_transmitter_data.texture, float(grid_view.cell_size))
+
+	# === CORRECTION : Enregistrement de la vue dans le GridView pour que les ports s'affichent ===
+	grid_view.register_device_view(logic_device, view_node)
+
+	if not view_node.port_interaction_requested.is_connected(mode_manager.on_port_interaction_requested):
+		view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
+
+	# 4. Enregistrements croisés via le GridBoard et le SimulationRunner
+	grid_board.register_device(logic_device)
+	simulation.register_device(logic_device)

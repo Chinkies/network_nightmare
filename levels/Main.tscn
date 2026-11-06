@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://core/simulation/simulation_runner.gd" id="4_3mabw"]
 [ext_resource type="Script" uid="uid://cd6ku4d1qpfmt" path="res://core/level_manager.gd" id="4_3pm0d"]
 [ext_resource type="Script" uid="uid://bt1dvknldftfd" path="res://core/grid/grid_board.gd" id="5_3vw7n"]
+[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="5_n3j8x"]
 [ext_resource type="Script" uid="uid://d1wlenpatmk2l" path="res://views/grid/grid_view.gd" id="6_vmibe"]
 [ext_resource type="Script" uid="uid://xj50lgcqr33r" path="res://gameplay_modes/mode_manager.gd" id="7_bvijt"]
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
@@ -30,15 +31,19 @@ script = ExtResource("2_vmibe")
 [node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
 unique_name_in_owner = true
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "puzzle_ui", "simulation", "edit_mode", "delete_mode", "wiring_mode", "simulation_mode")]
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "puzzle_ui", "simulation", "grid_board", "grid_view", "edit_mode", "delete_mode", "wiring_mode", "simulation_mode")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 simulation = NodePath("SimulationRunner")
+grid_board = NodePath("GridBoard")
+grid_view = NodePath("GridView")
 edit_mode = NodePath("ModeManager/EditMode")
 delete_mode = NodePath("ModeManager/DeleteMode")
 wiring_mode = NodePath("ModeManager/WiringMode")
 simulation_mode = NodePath("ModeManager/SimulationMode")
+debug_transmitter_data = ExtResource("5_n3j8x")
+debug_transmitter_cell = Vector2i(2, 2)
 
 [node name="SimulationRunner" type="Node" parent="LevelManager" unique_id=61842431]
 unique_name_in_owner = true
