@@ -236,6 +236,7 @@ func _calculate_valid_segment(
 				for port_id in device.port_types:
 					if device == source_device and port_id == source_port_id:
 						continue
+					
 					if not device.is_port_available(port_id):
 						continue
 
@@ -286,7 +287,7 @@ func _calculate_valid_segment(
 
 
 func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> void:
-	# 1. Revalidation logique indépendante de l'état visuel des ports
+	# 1. Revalidation logique indépendante de l'état des ports
 	if source_device == target_device and source_port_id == target_port_id:
 		print("[WiringMode] Erreur : Impossible de relier un port à lui-même.")
 		_reset_selection()
