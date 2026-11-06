@@ -1,0 +1,74 @@
+[gd_resource type="Resource" script_class="NetworkTransmitterData" format=3 uid="uid://v1lqj4w5l7fq"]
+
+[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://views/devices/network_device_view.tscn" id="1_5yvq2"]
+[ext_resource type="Script" uid="uid://cil0ws5dyw4l2" path="res://core/resource_definitions/schedule_event.gd" id="1_gmn0c"]
+[ext_resource type="Script" uid="uid://p614kjuagoim" path="res://core/resource_definitions/network_transmitter_data.gd" id="2_6sxq6"]
+[ext_resource type="Texture2D" uid="uid://di0175aq4cdc1" path="res://views/devices/assets/Transmitter.png" id="2_gmn0c"]
+[ext_resource type="Script" uid="uid://etua5m2qnltd" path="res://core/resource_definitions/network_packet_data.gd" id="3_o37q7"]
+
+[sub_resource type="Resource" id="Resource_5bnwv"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_84il1"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_5bnwv")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_38pqs"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_mbe5c"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_38pqs")
+delay = 2.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_p6qos"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_tw0k6"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_p6qos")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_ui2nk"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_0emy8"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_ui2nk")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_w64c7"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_2liv8"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_w64c7")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_ka4mw"]
+script = ExtResource("3_o37q7")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_2ans7"]
+script = ExtResource("1_gmn0c")
+packet = SubResource("Resource_ka4mw")
+delay = 4.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[resource]
+script = ExtResource("2_6sxq6")
+emission_schedule = Array[ExtResource("1_gmn0c")]([SubResource("Resource_84il1"), SubResource("Resource_mbe5c"), SubResource("Resource_tw0k6"), SubResource("Resource_0emy8"), SubResource("Resource_2liv8"), SubResource("Resource_2ans7")])
+texture = ExtResource("2_gmn0c")
+device_scene = ExtResource("1_5yvq2")
+metadata/_custom_type_script = "uid://p614kjuagoim"

@@ -1173,7 +1173,6 @@ speed_05_textures = {
 "pressed": ExtResource("24_0vpv5")
 }
 
-
 [node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=1297426158]
 layout_mode = 1
 anchors_preset = 15
