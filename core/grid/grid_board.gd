@@ -1,11 +1,6 @@
 class_name GridBoard
 extends Node
 
-# --- Signaux ---
-
-signal item_interaction_started(item: Variant)
-signal item_interaction_ended(item: Variant)
-
 
 # =====================
 # ===== ATTRIBUTS =====

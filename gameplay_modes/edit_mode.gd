@@ -58,5 +58,7 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	
 	# 5. Abonnement dynamique : on connecte les signaux du device au ModeManager
 	device_view.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
+	device_view.interaction_started.connect(mode_manager.on_item_interaction_started)
+	device_view.interaction_ended.connect(mode_manager.on_item_interaction_ended)
 	
 	print("[EditMode] Appareil posé avec succès : ", unique_id)

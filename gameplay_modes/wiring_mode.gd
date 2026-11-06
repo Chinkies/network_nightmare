@@ -373,6 +373,8 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 	# 7. Instanciation de la vue définitive
 	var wire_view = network_wire_view_scene.instantiate() as NetworkWireView
 	ghost_wire_view.get_parent().add_child(wire_view)
+	wire_view.interaction_started.connect(mode_manager.on_item_interaction_started)
+	wire_view.interaction_ended.connect(mode_manager.on_item_interaction_ended)
 	wire_view.setup_wire(new_wire, grid_view)
 	grid_view.register_wire_view(new_wire, wire_view)
 	

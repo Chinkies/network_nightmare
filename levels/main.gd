@@ -8,8 +8,6 @@ extends Node2D
 @onready var camera: PanZoomCamera = $Camera2D
 @onready var grid_view: GridView = %GridView
 @onready var grid_board: GridBoard = %GridBoard
-@onready var puzzle_ui: PuzzleUiController = %PuzzleUi
-@onready var simulation: SimulationRunner = %SimulationRunner
 
 
 # ====================

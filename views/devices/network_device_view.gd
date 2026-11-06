@@ -46,6 +46,7 @@ var is_pressed: bool = false
 ## Fonction d'initialisation appelée par le GridManager juste après le drop
 func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float) -> void:
 	logic_device = p_logic_device
+	_resize_click_area(cell_size)
 	
 	# On applique la texture
 	if p_texture and visual_sprite:
@@ -104,6 +105,22 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 	# On lie l'Area2D à nos signaux
 	click_area.input_event.connect(_on_input_event)
 	click_area.mouse_exited.connect(_on_mouse_exited)
+
+
+## Redimensionne la CollisionShape2D par rapport à la taille d'une cellule
+func _resize_click_area(cell_size: float) -> void:
+	var collision_shape := click_area.get_node("CollisionShape2D") as CollisionShape2D
+	if collision_shape == null:
+		push_error("[NetworkDeviceView] CollisionShape2D manquante.")
+		return
+
+	var rectangle := collision_shape.shape as RectangleShape2D
+	if rectangle == null:
+		rectangle = RectangleShape2D.new()
+		collision_shape.shape = rectangle
+
+	rectangle.size = Vector2(cell_size, cell_size)
+	collision_shape.scale = Vector2.ONE
 
 
 # ------------------------------------------

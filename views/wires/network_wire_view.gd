@@ -68,6 +68,10 @@ func setup_wire(wire: NetworkWire, grid_view: GridView) -> void:
 
 ## Génère la CollisionShape d'un câble en créant un RectangleShape2D pour chaque segment du câble
 func _generate_collisions() -> void:
+	if click_area == null:
+		push_error("[NetworkWireView] Impossible de générer les collisions : click_area n'est pas initialisé.")
+		return
+
 	# Nettoyage d'anciennes collisions si on recycle la vue
 	for child in click_area.get_children():
 		child.queue_free()

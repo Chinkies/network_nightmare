@@ -5,8 +5,7 @@
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_27gwp"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_mkcf6"]
-radius = 1.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b1ca2"]
 
 [node name="NetworkDeviceView" type="Node2D" unique_id=336253877]
 script = ExtResource("1_1e4gy")
@@ -20,5 +19,4 @@ texture = SubResource("PlaceholderTexture2D_27gwp")
 [node name="ClickArea" type="Area2D" parent="." unique_id=248356895]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=1956714239]
-scale = Vector2(0.5, 0.5)
-shape = SubResource("CircleShape2D_mkcf6")
+shape = SubResource("RectangleShape2D_b1ca2")
