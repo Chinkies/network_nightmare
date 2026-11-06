@@ -71,6 +71,9 @@ func _on_simulation_requested() -> void:
 		if puzzle_ui:
 			puzzle_ui.set_simulation_button_state(true)  # Passe l'icône à "Pause"
 			puzzle_ui.set_reset_button_enabled(true)     # Active le bouton Reset
+			puzzle_ui.set_edit_button_enabled(false)
+			puzzle_ui.set_wiring_button_enabled(false)
+			puzzle_ui.set_delete_button_enabled(false)
 			
 		print("[LevelManager] Simulation lancée.")
 	else:
@@ -97,6 +100,9 @@ func _on_reset_requested() -> void:
 	if puzzle_ui:
 		puzzle_ui.set_simulation_button_state(false)
 		puzzle_ui.set_reset_button_enabled(false)
+		puzzle_ui.set_edit_button_enabled(true)
+		puzzle_ui.set_wiring_button_enabled(true)
+		puzzle_ui.set_delete_button_enabled(true)
 		
 	print("[LevelManager] Simulation réinitialisée.")
 
@@ -165,16 +171,19 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 			KEY_W:
-				_on_wiring_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_wiring_requested()
+					get_viewport().set_input_as_handled()
 					
 			KEY_X:
-				_on_delete_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_delete_requested()
+					get_viewport().set_input_as_handled()
 
 			KEY_E:
-				_on_edit_requested()
-				get_viewport().set_input_as_handled()
+				if not simulation.has_started:
+					_on_edit_requested()
+					get_viewport().set_input_as_handled()
 					
 			KEY_R:
 				if simulation.has_started:

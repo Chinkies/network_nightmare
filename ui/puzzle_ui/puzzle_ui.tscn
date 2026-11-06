@@ -39,6 +39,9 @@
 [ext_resource type="Texture2D" uid="uid://d1mwfe5h157v0" path="res://resources/ui/start/startPressed.tres" id="24_l0lmg"]
 [ext_resource type="Texture2D" uid="uid://cf35ee1g7xjbv" path="res://resources/ui/start/startHover.tres" id="25_mxk3m"]
 [ext_resource type="Texture2D" uid="uid://dkdsla0dmtwmx" path="res://resources/ui/speed/speed05Hover.tres" id="25_wbjex"]
+[ext_resource type="Texture2D" uid="uid://b6cw80bqbxk8g" path="res://resources/ui/delete/deleteDisable.tres" id="32_p0i88"]
+[ext_resource type="Texture2D" uid="uid://bu2k4drp0my45" path="res://resources/ui/edit/editDisable.tres" id="36_0vpv5"]
+[ext_resource type="Texture2D" uid="uid://ca4mg25ggv5du" path="res://resources/ui/wiring/wiringDisableDisable.tres" id="37_wbjex"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jsphu"]
 bg_color = Color(0.20080861, 0.20080864, 0.2008085, 1)
@@ -1270,6 +1273,7 @@ toggle_mode = true
 texture_normal = ExtResource("8_pdk13")
 texture_pressed = ExtResource("15_dp221")
 texture_hover = ExtResource("16_y3cch")
+texture_disabled = ExtResource("32_p0i88")
 
 [node name="MarginEdit" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=370063749]
 custom_minimum_size = Vector2(48, 48)
@@ -1287,6 +1291,7 @@ toggle_mode = true
 texture_normal = ExtResource("8_tot04")
 texture_pressed = ExtResource("9_2uvxc")
 texture_hover = ExtResource("10_cxewn")
+texture_disabled = ExtResource("36_0vpv5")
 
 [node name="MarginWiring" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=223956886]
 custom_minimum_size = Vector2(48, 48)
@@ -1304,6 +1309,7 @@ toggle_mode = true
 texture_normal = ExtResource("9_kawcb")
 texture_pressed = ExtResource("18_q3g77")
 texture_hover = ExtResource("19_if15r")
+texture_disabled = ExtResource("37_wbjex")
 
 [node name="MarginReset" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=102865564]
 texture_filter = 1

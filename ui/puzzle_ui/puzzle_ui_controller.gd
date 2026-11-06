@@ -114,6 +114,14 @@ func set_speed_button_state(speed: float) -> void:
 func set_reset_button_enabled(is_enabled: bool) -> void:
 	reset_button.disabled = not is_enabled
 
+func set_edit_button_enabled(is_enabled: bool) -> void:
+	edit_button.disabled = not is_enabled
+
+func set_wiring_button_enabled(is_enabled: bool) -> void:
+	wiring_button.disabled = not is_enabled
+
+func set_delete_button_enabled(is_enabled: bool) -> void:
+	delete_button.disabled = not is_enabled
 
 ## Utilitaire pour appliquer un dictionnaire de textures (normal, hover, pressed) à un TextureButton
 func _apply_textures(btn: TextureButton, textures: Dictionary) -> void:
