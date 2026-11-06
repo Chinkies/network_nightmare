@@ -11,9 +11,9 @@
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
 [ext_resource type="Script" uid="uid://4d4b2mhkij6n" path="res://views/wires/ghost_wire_view.gd" id="8_ko617"]
 [ext_resource type="Script" uid="uid://cw3g35nhnqyps" path="res://gameplay_modes/wiring_mode.gd" id="9_3mabw"]
-[ext_resource type="PackedScene" uid="uid://dfgh0pe1hwa38" path="res://views/wires/network_wire_view.tscn" id="12_owvkk"]
 [ext_resource type="Script" uid="uid://ks110jpoehyv" path="res://gameplay_modes/simulation_mode.gd" id="11_ko617"]
 [ext_resource type="Script" uid="uid://dd0l88lwk5plk" path="res://gameplay_modes/delete_mode.gd" id="11_owvkk"]
+[ext_resource type="PackedScene" uid="uid://dfgh0pe1hwa38" path="res://views/wires/network_wire_view.tscn" id="12_owvkk"]
 
 [node name="Main" type="Node2D" unique_id=872985249]
 script = ExtResource("1_3vw7n")
@@ -70,8 +70,9 @@ grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 simulation = NodePath("../../SimulationRunner")
 
-[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("grid_board", "grid_view", "ghost_wire_view")]
+[node name="WiringMode" type="Node" parent="LevelManager/ModeManager" unique_id=2000767018 node_paths=PackedStringArray("simulation", "grid_board", "grid_view", "ghost_wire_view")]
 script = ExtResource("9_3mabw")
+simulation = NodePath("../../SimulationRunner")
 grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 ghost_wire_view = NodePath("../../GridView/GhostWire")
@@ -80,9 +81,8 @@ network_wire_view_scene = ExtResource("12_owvkk")
 [node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816]
 script = ExtResource("11_owvkk")
 
-[node name="SimulationMode" type="Node" parent="LevelManager/ModeManager" unique_id=803302157 node_paths=PackedStringArray("grid_board", "simulation")]
+[node name="SimulationMode" type="Node" parent="LevelManager/ModeManager" unique_id=803302157 node_paths=PackedStringArray("simulation")]
 script = ExtResource("11_ko617")
-grid_board = NodePath("../../GridBoard")
 simulation = NodePath("../../SimulationRunner")
 
 [connection signal="device_drop_requested" from="LevelManager/GridView" to="LevelManager/ModeManager" method="on_device_drop_requested"]

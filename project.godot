@@ -17,10 +17,20 @@ config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=1440
-window/size/viewport_height=810
+window/size/viewport_width=2560
+window/size/viewport_height=1600
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[file_customization]
+
+folder_colors={
+"res://core/": "red",
+"res://gameplay_modes/": "orange",
+"res://resources/": "pink",
+"res://ui/": "teal",
+"res://views/": "green"
+}
 
 [input]
 

@@ -1,5 +1,5 @@
 class_name NetworkDevice
-extends RefCounted
+extends NetworkItem
 
 # Signaux pour la logique du rendu et du son
 signal packet_received(port: int, packet: NetworkPacket)
@@ -42,8 +42,6 @@ var port_types: Dictionary = {
 	2: PortType.BLOCKED,
 	3: PortType.BLOCKED
 }
-var max_input_ports: int = 0
-var max_output_ports: int = 0
 
 # --- Connexions réelles (index de port -> NetworkWire) ---
 var input_wires: Dictionary[int, NetworkWire] = {}
@@ -70,47 +68,60 @@ func _init(p_id: String, p_capacity: int = 5, p_rate: float = 2.0) -> void:
 	processing_rate = p_rate
 
 
+# -------------------------
+# --- Gestion des ports ---
+# -------------------------
+
+## Renvoie true si un port existe est n'est occupé par aucun câble
+func is_port_available(port_id: int) -> bool:
+	return (
+		port_types.has(port_id)
+		and port_types[port_id] != PortType.BLOCKED
+		and not input_wires.has(port_id)
+		and not output_wires.has(port_id)
+	)
+
+
+## Renvoie true si les deux ports existent et sont compatbiles
+func are_ports_compatible(port_id: int, other: NetworkDevice, other_port_id: int) -> bool:
+	# Vérification de l'existance des ports et qu'ils ne sont pas bloqués
+	if (
+		not port_types.has(port_id)
+		or port_types[port_id] == PortType.BLOCKED
+		or (not other.port_types.has(other_port_id))
+		or other.port_types[other_port_id] == PortType.BLOCKED
+	):
+		return false
+	
+	# Vérification de la compatibilité
+	if (
+		port_types.get(port_id) == other.port_types.get(other_port_id)
+		and port_types.get(port_id) != PortType.DYNAMIC
+		and other.port_types.get(other_port_id) != PortType.DYNAMIC
+	):
+		return false
+	
+	return true
+
+
+
+# ------------------------------
 # --- Gestion des Connexions ---
+# ------------------------------
 
 ## Vérifie si on peut brancher un câble ENTRANT sur cette face locale
-func can_connect_input(local_port: int) -> bool:
-	if not port_types.has(local_port): return false
-	var type: int = port_types[local_port]
-	
-	if type == PortType.BLOCKED or type == PortType.STATIC_OUTPUT:
-		return false
-	if input_wires.has(local_port):
-		return false # Déjà un câble entrant ici
-		
-	# Règle universelle anti-collision (Full-duplex interdit sur une même face)
-	if output_wires.has(local_port):
-		return false 
-		
-	# Vérification stricte de la limite matérielle
-	if input_wires.size() >= max_input_ports:
-		return false
-		
-	return true
+func can_connect_input(port_id: int) -> bool:
+	return (
+		is_port_available(port_id) 
+		and port_types.get(port_id) != PortType.STATIC_OUTPUT
+	)
 
 ## Vérifie si on peut brancher un câble SORTANT sur cette face locale
-func can_connect_output(local_port: int) -> bool:
-	if not port_types.has(local_port): return false
-	var type: int = port_types[local_port]
-	
-	if type == PortType.BLOCKED or type == PortType.STATIC_INPUT:
-		return false
-	if output_wires.has(local_port):
-		return false # Déjà un câble sortant ici
-		
-	# Règle universelle anti-collision (Full-duplex interdit sur une même face)
-	if input_wires.has(local_port):
-		return false 
-		
-	# Vérification stricte de la limite matérielle
-	if output_wires.size() >= max_output_ports:
-		return false
-		
-	return true
+func can_connect_output(port_id: int) -> bool:
+	return (
+		is_port_available(port_id) 
+		and port_types.get(port_id) != PortType.STATIC_INPUT
+	)
 
 
 ## Tente de connecter un câble à un port donné
@@ -130,15 +141,19 @@ func connect_output(local_port: int, wire: NetworkWire) -> bool:
 
 ## Déconnecte le câble branché sur un port d'entrée donné
 func disconnect_input(port: int) -> void:
-	input_wires.erase(port)
+	if input_wires.has(port):
+		input_wires.erase(port)
 
 ## Déconnecte le câble branché sur un port de sortie donné
 func disconnect_output(port: int) -> void:
-	output_wires.erase(port)
+	if output_wires.has(port):
+		output_wires.erase(port)
 
 
 
+# --------------------------------
 # --- Utilitaires géométriques ---
+# --------------------------------
 
 const LOCAL_DIRECTIONS = {
 	0: Vector2i(0, -1), # Haut
@@ -163,7 +178,9 @@ func get_output_target_cell(local_port: int) -> Vector2i:
 
 
 
+# ------------------------------
 # --- Traitement des paquets ---
+# ------------------------------
 
 ## Vérifie si le port d'entrée existe et si le buffer interne a de la place + machine not broken
 func can_receive_packet(port: int) -> bool:

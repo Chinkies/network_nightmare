@@ -22,6 +22,7 @@ class ValidSegmentResult:
 # ===== ATTRIBUTS =====
 # =====================
 
+@export var simulation: SimulationRunner
 @export var grid_board: GridBoard
 @export var grid_view: GridView
 @export var ghost_wire_view: GhostWireView
@@ -44,6 +45,7 @@ var initial_axis: Vector2i = Vector2i.ZERO
 # =====================
 
 func _ready() -> void:
+	assert(simulation != null, "[WiringMode] Erreur critique : SimulationRunner non assigné !")
 	assert(grid_board != null, "[WiringMode] Erreur critique : GridBoard non assigné !")
 	assert(grid_view != null, "[WiringMode] Erreur critique : GridView non assigné !")
 	assert(ghost_wire_view != null, "[WiringMode] Erreur critique : GhostWireView non assignée !")
@@ -53,11 +55,11 @@ func _ready() -> void:
 # --- Entrée et sortie du mode ---
 
 func enter_mode() -> void:
-	grid_board.set_all_ports_interaction_active(true)
+	grid_view.display_all_ports(true)
 	_reset_selection()
 
 func exit_mode() -> void:
-	grid_board.set_all_ports_interaction_active(false)
+	grid_view.display_all_ports(false)
 	_reset_selection()
 
 
@@ -92,8 +94,8 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 		# Le tableau contient le point de départ, et un second point (flottant) pour la souris
 		current_path = [start_cell, start_cell]
 		
-		ghost_wire_view.update_preview(current_path, grid_board, grid_view, source_device, source_port_id)
-		grid_board.preview_wiring_compatibility(source_device, source_port_id)
+		ghost_wire_view.update_preview(current_path, grid_view, source_device, source_port_id)
+		grid_view.preview_wiring_compatibility(source_device, source_port_id)
 		
 	# CAS 2 : On clique sur le MÊME port -> On annule la sélection
 	elif source_device == device and source_port_id == local_port_id:
@@ -113,7 +115,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	# On calcule la position brute pour rejeter les clics hors grille
 	var mouse_world_pos = grid_view.get_global_mouse_position()
 	var raw_cell = grid_view.local_to_cell(mouse_world_pos - grid_view.global_position)
-	var is_inside = grid_board.is_inside_grid(raw_cell)
+	var is_inside = grid_board.is_cell_inside_grid(raw_cell)
 	
 	# On calcule une version bornée uniquement pour le mouvement fluide de la souris
 	var motion_cell = raw_cell
@@ -126,7 +128,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		current_path[-1] = result.cell
 		
 		ghost_wire_view.update_preview(
-			current_path, grid_board, grid_view, 
+			current_path, grid_view, 
 			source_device, source_port_id, 
 			result.target_device, result.target_port_id
 		)
@@ -175,7 +177,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				allowed_axis = Vector2i(1 - arriving_axis.x, 1 - arriving_axis.y)
 				strict_direction = Vector2i.ZERO
 				
-			ghost_wire_view.update_preview(current_path, grid_board, grid_view, source_device, source_port_id)
+			ghost_wire_view.update_preview(current_path, grid_view, source_device, source_port_id)
 		else:
 			cancel_action()
 
@@ -219,34 +221,45 @@ func _calculate_valid_segment(
 	while current_cell != constrained_cell:
 		var next_cell = current_cell + dir
 		
-		if not grid_board.is_inside_grid(next_cell):
+		if not grid_board.is_cell_inside_grid(next_cell):
 			break
-			
-		# Une machine cible est autorisée uniquement si le câble arrive par la
-		# face du port demandé. Elle doit être testée avant l'auto-collision :
-		# une connexion vers le device source peut revenir sur sa case.
+		
 		if grid_board.is_cell_occupied(next_cell):
-			var item = grid_board.get_cell_item(next_cell)
+			var item: NetworkItem = grid_board.get_cell_item(next_cell)
 			
-			if item is NetworkDeviceView:
-				var expected_port_dir = Vector2i(-dir.x, -dir.y) 
+			# Si l'item recontré est un device, 
+			# on vérifie s'il possède un port compatible dans la direction attendue
+			if item is NetworkDevice:
 				var compatible_port_id := -1
+				var device: NetworkDevice = item
 				
-				for child in item.ports_container.get_children():
-					if child is NetworkPortView:
-						var port_dir = item.logic_device.get_port_global_direction(child.port_id)
-						var is_available = child.current_state == NetworkPortView.PortState.AVAILABLE
-						var is_requested = (
-							expected_target_device == item.logic_device
-							and expected_target_port_id == child.port_id
-						)
-						var is_allowed_target = expected_target_device == null or is_requested
-						if port_dir == expected_port_dir and is_available and is_allowed_target:
-							compatible_port_id = child.port_id
-							break
-							
+				for port_id in device.port_types:
+					if device == source_device and port_id == source_port_id:
+						continue
+					if not device.is_port_available(port_id):
+						continue
+
+					if not source_device.are_ports_compatible(
+						source_port_id,
+						device,
+						port_id
+					):
+						continue
+
+					if device.get_port_global_direction(port_id) != -dir:
+						continue
+
+					if expected_target_device != null and (
+						device != expected_target_device
+						or port_id != expected_target_port_id
+					):
+						continue
+
+					compatible_port_id = port_id
+					break
+
 				if compatible_port_id != -1:
-					return ValidSegmentResult.new(next_cell, item.logic_device, compatible_port_id)
+					return ValidSegmentResult.new(next_cell, device, compatible_port_id)
 			break # Obstacle rencontré
 
 		# Vérification d'auto-collision avec les segments précédents
@@ -273,10 +286,22 @@ func _calculate_valid_segment(
 
 
 func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> void:
-	# 1. Vérification logique basique (Interdire de boucler sur le même port)
+	# 1. Revalidation logique indépendante de l'état visuel des ports
 	if source_device == target_device and source_port_id == target_port_id:
 		print("[WiringMode] Erreur : Impossible de relier un port à lui-même.")
 		_reset_selection()
+		return
+
+	if (
+		not source_device.is_port_available(source_port_id)
+		or not target_device.is_port_available(target_port_id)
+		or not source_device.are_ports_compatible(
+			source_port_id,
+			target_device,
+			target_port_id
+		)
+	):
+		print("[WiringMode] Erreur : Les ports ne sont plus disponibles ou compatibles.")
 		return
 	
 	var target_cell = target_device.grid_position
@@ -316,33 +341,65 @@ func _attempt_connection(target_device: NetworkDevice, target_port_id: int) -> v
 		final_path.reverse()
 	
 	# 4. Création de l'objet logique NetworkWire
-	var new_wire = NetworkWire.new(
+	var new_wire: NetworkWire = NetworkWire.new(
 		final_from_device, final_from_port, 
 		final_to_device, final_to_port, 
 		final_path
 	)
 	
-	# 5. Enregistrement physique dans la grille
-	grid_board.register_wire_cells(new_wire)
-	print("[WiringMode] SUCCÈS : Câble créé avec ", final_path.size(), " points. Cases bloquées : ", new_wire.occupied_cells)
+	# 5. Connexions dans les devices logiques
+	if not final_from_device.connect_output(final_from_port, new_wire):
+		print("[WiringMode] Erreur lors de la création du Wire : la connexion sur le from_device a échoué.")
+		_reset_selection()
+		return
+
+	if not final_to_device.connect_input(final_to_port, new_wire):
+		final_from_device.disconnect_output(final_from_port)
+		print("[WiringMode] Erreur lors de la création du Wire : la connexion sur le to_device a échoué.")
+		_reset_selection()
+		return
 	
-	# 6. Instanciation de la vue définitive
+	# 6. Enregistrement dans les registres de GridBoard et SimulationRunner
+	if not grid_board.register_wire(new_wire):
+		final_from_device.disconnect_output(final_from_port)
+		final_to_device.disconnect_input(final_to_port)
+		print("[WiringMode] Erreur lors de la création du Wire : le wire n'a pas pu être enregistré dans le GridBoard.")
+		_reset_selection()
+		return
+	
+	simulation.register_wire(new_wire)
+	
+	# 7. Instanciation de la vue définitive
 	var wire_view = network_wire_view_scene.instantiate() as NetworkWireView
 	ghost_wire_view.get_parent().add_child(wire_view)
-	wire_view.setup_wire(new_wire, grid_board, grid_view)
+	wire_view.setup_wire(new_wire, grid_view)
+	grid_view.register_wire_view(new_wire, wire_view)
 	
-	# 7. Verrouillage définitif des deux ports
-	grid_board.set_port_occupied(final_from_device, final_from_port)
-	grid_board.set_port_occupied(final_to_device, final_to_port)
+	# 8. Changement de l'état visuel des ports
+	var from_port_view_updated: bool = grid_view.set_port_occupied(final_from_device, final_from_port)
+	var final_port_view_updated: bool = grid_view.set_port_occupied(final_to_device, final_to_port)
 	
-	# 8. Nettoyage de la sélection
+	if not from_port_view_updated or not final_port_view_updated:
+		final_from_device.disconnect_output(final_from_port)
+		final_to_device.disconnect_input(final_to_port)
+		grid_board.unregister_wire(new_wire)
+		grid_view.unregister_wire_view(new_wire)
+		grid_view.set_port_available(final_from_device, final_from_port)
+		grid_view.set_port_available(final_to_device, final_to_port)
+		simulation.unregister_wire(new_wire)
+		wire_view.queue_free()
+		print("[WiringMode] Erreur lors de la création du Wire : la view d'un des deux ports n'a pas pu être mis à jour.")
+		_reset_selection()
+		return
+	
+	# 9. Nettoyage de la sélection
 	_reset_selection()
 
 
 ## Remet à zéro l'ensemble des paramètres de la sélection en cours (annulation ou validation)
 func _reset_selection() -> void:
 	if source_device != null:
-		grid_board.reset_wiring_preview()
+		grid_view.reset_wiring_preview()
 		
 	source_device = null
 	source_port_id = -1

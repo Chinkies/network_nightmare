@@ -23,7 +23,7 @@ func _ready() -> void:
 
 
 ## Initialise et dessine le câble définitif à partir de son modèle logique
-func setup_wire(wire: NetworkWire, grid_board: GridBoard, grid_view: GridView) -> void:
+func setup_wire(wire: NetworkWire, grid_view: GridView) -> void:
 	logic_wire = wire
 	clear_points()
 	
@@ -37,12 +37,12 @@ func setup_wire(wire: NetworkWire, grid_board: GridBoard, grid_view: GridView) -
 		
 		# Point de départ sur le port source
 		if i == 0:
-			add_point(grid_board.get_port_global_position(logic_wire.from_device, logic_wire.from_port))
+			add_point(grid_view.get_port_global_position(logic_wire.from_device, logic_wire.from_port))
 			continue
 			
 		# Point d'arrivée sur le port cible
 		if i == path.size() - 1:
-			add_point(grid_board.get_port_global_position(logic_wire.to_device, logic_wire.to_port))
+			add_point(grid_view.get_port_global_position(logic_wire.to_device, logic_wire.to_port))
 			continue
 			
 		# Coudes ancrés au centre géométrique des cases
