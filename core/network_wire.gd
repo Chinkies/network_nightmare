@@ -1,5 +1,5 @@
 class_name NetworkWire
-extends RefCounted
+extends NetworkItem
 
 # Signaux pour la logique du rendu et du son
 signal packet_dropped(packet: NetworkPacket, reason: String)

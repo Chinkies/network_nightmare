@@ -6,13 +6,15 @@ extends Node
 # ===== ATTRIBUTS ======
 # ======================
 
+signal mode_changed(new_mode: BaseMode)
+
 var current_mode: BaseMode
 var previous_mode: BaseMode
 
 @onready var edit_mode = $EditMode
 @onready var wiring_mode = $WiringMode
 @onready var delete_mode = $DeleteMode
-#@onready var simulation_mode = $SimulationMode
+@onready var simulation_mode = $SimulationMode
 
 @export var grid_board: GridBoard
 
@@ -52,39 +54,13 @@ func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 	if current_mode:
 		current_mode.enter_mode()
 
+	mode_changed.emit(current_mode)
+
 
 func switch_to_previous_mode() -> void:
 	if previous_mode:
 		switch_mode(previous_mode, false)
 		previous_mode = null
-
-
-# --- Gestion des évènements ---
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_W:
-				# Si on est déjà en train de câbler, on range l'outil (retour édition)
-				if current_mode == wiring_mode:
-					switch_mode(edit_mode)
-					print("[ModeManager] Toggle : Retour au EDIT")
-				else:
-					switch_mode(wiring_mode)
-					print("[ModeManager] Bascule : WIRING")
-					
-			KEY_X:
-				# Si on est déjà en train de supprimer, on annule et on reprend ce qu'on faisait
-				if current_mode == delete_mode:
-					switch_to_previous_mode()
-					print("[ModeManager] Toggle : Sortie du mode DELETE")
-				else:
-					switch_mode(delete_mode, true) # On sauvegarde l'historique
-					print("[ModeManager] Bascule : DELETE")
-					
-			KEY_R:
-				# switch_mode(simulation_mode)
-				print("[ModeManager] Bascule : RUN (Simulation)")
 
 
 ## Tente d'annuler l'action du mode courant. Retourne true si le signal a été consommé.

@@ -17,15 +17,11 @@ func _init(p_id: String, p_capacity: int = 10, p_rate: float = 2.0) -> void:
 	
 	# Les 4 faces sont dynamiques
 	port_types = {
-		0: PortType.DYNAMIC,
+		0: PortType.STATIC_OUTPUT,
 		1: PortType.DYNAMIC,
-		2: PortType.DYNAMIC,
+		2: PortType.STATIC_INPUT,
 		3: PortType.DYNAMIC
 	}
-	
-	# Les limites mathématiques imposent les 3 schémas possibles
-	max_input_ports = 3
-	max_output_ports = 3
 
 
 ## Surcharge : Aiguillage conditionnel basé sur la table

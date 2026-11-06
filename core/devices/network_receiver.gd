@@ -30,8 +30,6 @@ func _init(p_id: String, p_color: NetworkPacket.PacketColor, p_number: int, p_ca
 		2: PortType.STATIC_INPUT,
 		3: PortType.BLOCKED
 	}
-	max_input_ports = 1
-	max_output_ports = 0
 
 
 ## Surcharge : Un Receiver ne transfère pas, il consomme et valide

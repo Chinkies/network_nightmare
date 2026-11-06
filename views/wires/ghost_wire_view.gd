@@ -25,7 +25,6 @@ func _ready() -> void:
 ## Met à jour le tracé visuel à partir des coordonnées mathématiques de la grille
 func update_preview(
 	path_cells: Array[Vector2i], 
-	grid_board: GridBoard, 
 	grid_view: GridView,
 	source_device: NetworkDevice, 
 	source_port_id: int, 
@@ -49,12 +48,12 @@ func update_preview(
 		
 		# Point de départ : centre du port source
 		if i == 0 and source_device != null:
-			add_point(grid_board.get_port_global_position(source_device, source_port_id))
+			add_point(grid_view.get_port_global_position(source_device, source_port_id))
 			continue
 			
 		# Point d'arrivée : centre du port cible s'il y en a un
 		if i == path_cells.size() - 1 and target_device != null:
-			add_point(grid_board.get_port_global_position(target_device, target_port_id))
+			add_point(grid_view.get_port_global_position(target_device, target_port_id))
 			continue
 			
 		# Coudes et trajet normal : on s'ancre au centre géométrique des cases

@@ -42,20 +42,21 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 		push_error("[EditMode] Scène visuelle manquante dans la ressource !")
 		return
 		
-	var view_node = device_data.device_scene.instantiate() as NetworkDeviceView
+	var device_view = device_data.device_scene.instantiate() as NetworkDeviceView
 	
 	# On demande au GridView de calculer le centre géométrique
-	view_node.global_position = grid_view.cell_to_world_center(cell)
+	device_view.global_position = grid_view.cell_to_world_center(cell)
 	
 	# Le GridView sert de conteneur d'affichage
-	grid_view.add_child(view_node)
-	view_node.setup(logic_device, device_data.texture, float(grid_view.cell_size))
+	grid_view.add_child(device_view)
+	device_view.setup(logic_device, device_data.texture, float(grid_view.cell_size))
 
 	# 4. Enregistrement dans les systèmes
-	grid_board.set_cell_occupied(cell, view_node)
+	grid_board.register_device(logic_device)
+	grid_view.register_device_view(logic_device, device_view)
 	simulation.register_device(logic_device)
 	
 	# 5. Abonnement dynamique : on connecte les signaux du device au ModeManager
-	view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
+	device_view.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
 	
 	print("[EditMode] Appareil posé avec succès : ", unique_id)
