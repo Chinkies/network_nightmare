@@ -5,27 +5,28 @@ extends Node
 # ===== ATTRIBUTS =====
 # =====================
 
+@export_category("Registres, Grid & Simulation")
 @export var mode_manager: ModeManager
-@export var puzzle_ui: PuzzleUiController
 @export var simulation: SimulationRunner
-
 @export var grid_board: GridBoard
 @export var grid_view: GridView
+@export var puzzle_ui: PuzzleUiController
 
 # Références directes aux modes (pour que le LevelManager sache quoi demander au ModeManager)
+@export_category("Gameplay Modes")
 @export var edit_mode: EditMode
 @export var delete_mode: DeleteMode
 @export var wiring_mode: WiringMode
 @export var simulation_mode: SimulationMode
 
+## Ressource du transmitter de test à placer au lancement (pour le dev)
+@export_category("Test & Debug - Mock Level Setup")
+@export var debug_transmitter_data: NetworkTransmitterData
+@export var debug_transmitter_cell: Vector2i = Vector2i(0, 2)
+
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
 var current_speed_index: int = 0
-
-@export_category("Test & Debug - Mock Level Setup")
-## Ressource du transmitter de test à placer au lancement (pour le dev)
-@export var debug_transmitter_data: NetworkTransmitterData
-@export var debug_transmitter_cell: Vector2i = Vector2i(0, 2)
 
 # ====================
 # ===== METHODES =====

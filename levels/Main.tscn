@@ -31,13 +31,13 @@ script = ExtResource("2_vmibe")
 [node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
 unique_name_in_owner = true
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "puzzle_ui", "simulation", "grid_board", "grid_view", "edit_mode", "delete_mode", "wiring_mode", "simulation_mode")]
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui", "edit_mode", "delete_mode", "wiring_mode", "simulation_mode")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
-puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 simulation = NodePath("SimulationRunner")
 grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
+puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 edit_mode = NodePath("ModeManager/EditMode")
 delete_mode = NodePath("ModeManager/DeleteMode")
 wiring_mode = NodePath("ModeManager/WiringMode")
