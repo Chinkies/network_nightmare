@@ -58,31 +58,24 @@ func simulate(delta: float) -> void:
 	# Elle gérera d'elle-même le cooldown, l'expiration TTL et appellera _process_next_packet()
 	super(delta)
 
-## Tente d'injecter le paquet programmé dans un câble de sortie disponible
-func _try_emit_scheduled_packet(packet_data: NetworkPacketData) -> void:
-	var target_wire: NetworkWire = null
+func _process_next_packet() -> void:
+	if output_wires.is_empty():
+		return
+		
+	# On cherche un câble de sortie valide parmi tous les ports connectés
+	var wire: NetworkWire = null
 	for port in output_wires.keys():
-		target_wire = output_wires[port]
-		if target_wire != null:
+		if output_wires[port] != null:
+			wire = output_wires[port]
 			break
-
-	#TODO Changer à return quand les wires sont prêt	
-	if target_wire == null:
-		var test: Array[Vector2i] = []
-		test.append(Vector2i(5,2))
-		target_wire = NetworkWire.new(null,0,null,0, test)
-	#	return
-
-	var new_packet = NetworkPacket.new(
-		packet_data.id,
-		packet_data.target_number,
-		packet_data.color,
-		packet_data.shape,
-		packet_data.ttl
-		)
-	
-	if target_wire.push_packet(new_packet):
-		schedule_index += 1
-		emission_timer = 0.0
-		packet_processed.emit(new_packet)
-		print("[Transmitter] Paquet émis (Couleur: %s, Numéro: %d)" % [packet_data.color, packet_data.id])
+			
+	if wire == null:
+		return
+		
+	# Tentative d'injection sur le câble
+	var packet: NetworkPacket = buffer.front()
+	if packet != null and wire.push_packet(packet):
+		buffer.pop_front()
+		processing_cooldown = 1.0 / processing_rate
+		print("[Transmitter] Paquet emit")
+		packet_processed.emit(packet)

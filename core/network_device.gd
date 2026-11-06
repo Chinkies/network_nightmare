@@ -232,10 +232,10 @@ func simulate(delta: float) -> void:
 
 # Méthode virtuelle : surchargée par chaque type d'appareil
 ## Implémentation par défaut : tente d'évacuer le premier paquet sur le port 0
+
 func _process_next_packet() -> void:
 	# On cherche le câble branché sur le port de sortie 0
 	if output_wires.is_empty():
-		print("[Device] Merde")
 		return
 	var wire: NetworkWire = output_wires.get(0, null)
 	if wire == null:
@@ -247,4 +247,3 @@ func _process_next_packet() -> void:
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
 		packet_processed.emit(packet)
-		print("[Device] Paquet emit")
