@@ -10,7 +10,7 @@ signal packet_dropped(packet: NetworkPacket, reason: String)
 ## Types de machines pour JSON, UI et Factory
 enum Type {
 	GENERIC,
-	EMITTER,
+	TRANSMITTER,
 	RECEIVER,
 	SWITCH
 }
