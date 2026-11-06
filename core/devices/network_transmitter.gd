@@ -21,14 +21,13 @@ func _init(p_id: String, p_schedule: Array[ScheduleEvent], p_capacity: int = 5, 
 		2: PortType.STATIC_OUTPUT,
 		3: PortType.STATIC_OUTPUT
 	}
-	max_input_ports = 0
-	max_output_ports = 4
 
 ## Surcharge de simulate pour gérer le calendrier d'émission de paquets
 func simulate(delta: float) -> void:
 	if is_broken:
 		return
 		
+	# 1. Gestion du calendrier d'émission : on alimente le buffer interne du transmitter
 	if schedule_index < emission_schedule.size():
 		emission_timer += delta
 		var current_event = emission_schedule[schedule_index]
@@ -36,11 +35,28 @@ func simulate(delta: float) -> void:
 		if current_event == null or current_event.packet == null:
 			push_error("[NetworkTransmitter] Event n°%s sans paquets !", schedule_index)
 			schedule_index += 1
-			return
+			emission_timer = 0.0
+		elif emission_timer >= current_event.delay:
+			# Si le buffer a de la place, on instancie et on pousse le paquet dedans
+			if buffer.size() < buffer_capacity:
+				var packet_data = current_event.packet
+				var new_packet = NetworkPacket.new(
+					packet_data.id,
+					packet_data.target_number,
+					packet_data.color,
+					packet_data.shape,
+					packet_data.ttl
+				)
+				
+				buffer.push_back(new_packet)
+				print("[Transmitter] Paquet injecté dans le buffer (Couleur: %s, Numéro: %d)" % [packet_data.color, packet_data.id])
+				
+				schedule_index += 1
+				emission_timer = 0.0
 
-		if emission_timer >= current_event.delay:
-			_try_emit_scheduled_packet(current_event.packet)
-
+	# 2. Exécution de la logique de la classe mère : 
+	# Elle gérera d'elle-même le cooldown, l'expiration TTL et appellera _process_next_packet()
+	super(delta)
 
 ## Tente d'injecter le paquet programmé dans un câble de sortie disponible
 func _try_emit_scheduled_packet(packet_data: NetworkPacketData) -> void:

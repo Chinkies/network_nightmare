@@ -205,7 +205,7 @@ func _debug_spawn_transmitter() -> void:
 		
 	var cell = debug_transmitter_cell
 	
-	if not grid_board.is_inside_grid(cell):
+	if not grid_board.is_cell_inside_grid(cell):
 		push_error("[LevelManager] Cellule de debug %s hors de la grille !" % cell)
 		return
 		
@@ -228,15 +228,18 @@ func _debug_spawn_transmitter() -> void:
 		push_error("[LevelManager] La scène de debug n'a pas le script NetworkDeviceView attaché !")
 		return
 
-	# On place le visuel au centre de la case via le GridView
 	view_node.global_position = grid_view.cell_to_world_center(cell)
 	grid_view.add_child(view_node)
 	
 	# 3. Liaison vue / logique
 	view_node.setup(logic_device, debug_transmitter_data.texture, float(grid_view.cell_size))
 
-	# 4. Enregistrements croisés
-	grid_board.set_cell_occupied(cell, view_node)
-	simulation.register_device(logic_device)
+	# === CORRECTION : Enregistrement de la vue dans le GridView pour que les ports s'affichent ===
+	grid_view.register_device_view(logic_device, view_node)
 
-	print("[LevelManager] Transmitter de test instancié et enregistré en cellule %s" % cell)
+	if not view_node.port_interaction_requested.is_connected(mode_manager.on_port_interaction_requested):
+		view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
+
+	# 4. Enregistrements croisés via le GridBoard et le SimulationRunner
+	grid_board.register_device(logic_device)
+	simulation.register_device(logic_device)
