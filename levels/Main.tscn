@@ -61,10 +61,12 @@ script = ExtResource("6_vmibe")
 grid_board = NodePath("../GridBoard")
 
 [node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
+z_index = 1
 script = ExtResource("8_ko617")
 
 [node name="DeleteProgressBar" parent="LevelManager/GridView" unique_id=1294964939 instance=ExtResource("10_ujns5")]
 layout_mode = 0
+offset_bottom = 27.0
 
 [node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190]
 script = ExtResource("7_bvijt")

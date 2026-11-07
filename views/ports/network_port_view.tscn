@@ -9,6 +9,7 @@
 radius = 64.0
 
 [node name="NetworkPortView" type="Area2D" unique_id=1844478943]
+z_index = 3
 scale = Vector2(0.125, 0.125)
 script = ExtResource("1_5vrgp")
 static_flow_texture = ExtResource("2_8hcms")

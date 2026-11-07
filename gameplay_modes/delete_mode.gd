@@ -31,7 +31,7 @@ func _ready() -> void:
 	
 	# Création du chronomètre interne
 	delete_timer = Timer.new()
-	delete_timer.wait_time = 2.0
+	delete_timer.wait_time = 1.5
 	delete_timer.one_shot = true
 	delete_timer.timeout.connect(_on_delete_timeout)
 	add_child(delete_timer)
@@ -67,26 +67,19 @@ func handle_item_interaction_started(item: NetworkItem) -> void:
 
 	target_item = item
 	delete_timer.start()
-	print("[DeleteMode] Suppression commencée... Maintenez le clic.")
 	
-	if delete_bar_ui != null:
-		# On demande à la vue ou placer la barre
-		var mouse_pos = grid_view.get_global_mouse_position()
-		var target_pos = grid_view.get_delete_bar_placement(mouse_pos)
-		
-		# On place l'UI et on lance l'animation
-		delete_bar_ui.set_centered_position(target_pos)
-		delete_bar_ui.start_loading(delete_timer.wait_time)
+	# On demande à la vue ou placer la barre
+	var mouse_pos = grid_view.get_global_mouse_position()
+	var target_pos = grid_view.get_delete_bar_placement(mouse_pos)
+	
+	# On place l'UI et on lance l'animation
+	delete_bar_ui.set_centered_position(target_pos)
+	delete_bar_ui.start_loading(delete_timer.wait_time)
 
 
 func handle_item_interaction_ended(item: NetworkItem) -> void:
 	if target_item == item:
 		_stop_deletion()
-		
-		if delete_bar_ui != null:
-			delete_bar_ui.cancel_loading()
-		
-		print("[DeleteMode] Suppression annulée.")
 
 
 # ----------------------
@@ -96,7 +89,7 @@ func handle_item_interaction_ended(item: NetworkItem) -> void:
 func _stop_deletion() -> void:
 	delete_timer.stop()
 	target_item = null
-	# TODO plus tard : Stopper le feedback visuel
+	delete_bar_ui.cancel_loading()
 
 
 ## Déclenche la suppression de l'item séléctionné

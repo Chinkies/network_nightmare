@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bo2kapiqevdo4" path="res://views/packet/network_packet_view.tscn" id="2_i0hkd"]
 
 [node name="NetworkWireView" type="Line2D" unique_id=2141481003]
+z_index = 2
 script = ExtResource("1_6j7ub")
 packet_view_scene = ExtResource("2_i0hkd")
 metadata/_custom_type_script = "uid://ommcybqgaqjs"

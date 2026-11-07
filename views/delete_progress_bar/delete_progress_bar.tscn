@@ -17,6 +17,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [node name="DeleteProgressBar" type="ProgressBar" unique_id=1294964939]
+z_index = 10
 offset_right = 40.0
 offset_bottom = 4.0
 theme_override_styles/background = SubResource("StyleBoxFlat_x67dk")
