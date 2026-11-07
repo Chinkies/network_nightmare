@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://dfgh0pe1hwa38"]
 
 [ext_resource type="Script" uid="uid://ommcybqgaqjs" path="res://views/wires/network_wire_view.gd" id="1_6j7ub"]
+[ext_resource type="PackedScene" uid="uid://bo2kapiqevdo4" path="res://views/packet/network_packet_view.tscn" id="2_i0hkd"]
 
 [node name="NetworkWireView" type="Line2D" unique_id=2141481003]
 script = ExtResource("1_6j7ub")
+packet_view_scene = ExtResource("2_i0hkd")
 metadata/_custom_type_script = "uid://ommcybqgaqjs"

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bo2kapiqevdo4"]
+
+[ext_resource type="Script" uid="uid://dwewyq3kiod1" path="res://views/packet/network_packet_view.gd" id="1_stryy"]
+[ext_resource type="Texture2D" uid="uid://kxurg8hp8kv" path="res://resources/packet/circle.tres" id="2_c7wfn"]
+[ext_resource type="Texture2D" uid="uid://4dhn3lksh4qu" path="res://resources/packet/square.tres" id="3_1h6di"]
+[ext_resource type="Texture2D" uid="uid://d07xpy3t43yot" path="res://resources/packet/triangle.tres" id="4_ybw18"]
+
+[node name="NetworkPacketView" type="Node2D" unique_id=718559304]
+script = ExtResource("1_stryy")
+texture_circle = ExtResource("2_c7wfn")
+texture_square = ExtResource("3_1h6di")
+texture_triangle = ExtResource("4_ybw18")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1302408029]
+
+[node name="Label" type="Label" parent="." unique_id=2027800547]
+modulate = Color(0, 0, 0, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -12.0
+offset_right = 16.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true

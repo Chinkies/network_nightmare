@@ -12,13 +12,6 @@ extends Node
 @export var grid_view: GridView
 @export var puzzle_ui: PuzzleUiController
 
-# Références directes aux modes (pour que le LevelManager sache quoi demander au ModeManager)
-@export_category("Gameplay Modes")
-@export var edit_mode: EditMode
-@export var delete_mode: DeleteMode
-@export var wiring_mode: WiringMode
-@export var simulation_mode: SimulationMode
-
 ## Ressource du transmitter de test à placer au lancement (pour le dev)
 @export_category("Test & Debug - Mock Level Setup")
 @export var debug_transmitter_data: NetworkTransmitterData
@@ -66,8 +59,8 @@ func _on_simulation_requested() -> void:
 	if not simulation.is_running:
 		# --- LANCEMENT DE LA SIMULATION / REPRISE ---
 		simulation.start()
-		if mode_manager and simulation_mode:
-			mode_manager.switch_mode(simulation_mode)
+		if mode_manager:
+			mode_manager.switch_mode_by_enum(ModeManager.GameMode.SIMULATION)
 			
 		if puzzle_ui:
 			puzzle_ui.set_simulation_button_state(true)  # Passe l'icône à "Pause"
@@ -94,8 +87,8 @@ func _on_reset_requested() -> void:
 	current_speed_index = 0
 	
 	# Retour forcé en mode édition
-	if mode_manager and edit_mode:
-		mode_manager.switch_mode(edit_mode)
+	if mode_manager:
+		mode_manager.switch_mode_by_enum(ModeManager.GameMode.EDIT)
 		
 	# Remise à zéro de l'UI
 	if puzzle_ui:
@@ -108,16 +101,16 @@ func _on_reset_requested() -> void:
 	print("[LevelManager] Simulation réinitialisée.")
 
 func _on_wiring_requested() -> void:
-	if mode_manager and wiring_mode:
-		mode_manager.switch_mode(wiring_mode)
+	if mode_manager:
+		mode_manager.switch_mode_by_enum(ModeManager.GameMode.WIRING)
 
 func _on_edit_requested() -> void:
-	if mode_manager and edit_mode:
-		mode_manager.switch_mode(edit_mode)
+	if mode_manager:
+		mode_manager.switch_mode_by_enum(ModeManager.GameMode.EDIT)
 
 func _on_delete_requested() -> void:
-	if mode_manager and delete_mode:
-		mode_manager.switch_mode(delete_mode)
+	if mode_manager:
+		mode_manager.switch_mode_by_enum(ModeManager.GameMode.DELETE)
 
 func _on_speed_requested() -> void:
 	# Boucle cyclique sur les vitesses
@@ -140,12 +133,13 @@ func _on_hint_requested() -> void:
 func _on_mode_changed(new_mode: BaseMode) -> void:
 	print("[LevelManager] Changement de mode détecté : ", new_mode.name)
 	
-	var is_wiring = (new_mode == wiring_mode)
+	# On compare directement avec le nœud simulation_mode stocké dans le mode_manager si besoin, 
+	# ou on vérifie si le mode est de type SimulationMode
+	var is_wiring = (new_mode == mode_manager.wiring_mode)
 	if puzzle_ui:
 		puzzle_ui.update_mode_buttons(new_mode, is_wiring)
 		
-	# Si on quitte le mode simulation par un autre biais, on stoppe le runner et met l'UI à jour
-	if simulation and new_mode != simulation_mode and simulation.is_running:
+	if simulation and new_mode != mode_manager.simulation_mode and simulation.is_running:
 		simulation.stop()
 		if puzzle_ui:
 			puzzle_ui.set_simulation_button_state(false)
@@ -186,16 +180,16 @@ func _unhandled_input(event: InputEvent) -> void:
 					_on_edit_requested()
 					get_viewport().set_input_as_handled()
 					
-			KEY_R:
+			KEY_T:
 				if simulation.has_started:
 					_on_reset_requested()
 					get_viewport().set_input_as_handled()
 
-			KEY_S:
+			KEY_R:
 				_on_simulation_requested()
 				get_viewport().set_input_as_handled()
 
-			KEY_Z:
+			KEY_F:
 				_on_speed_requested()
 				get_viewport().set_input_as_handled()
 

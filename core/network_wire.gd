@@ -3,6 +3,8 @@ extends NetworkItem
 
 # Signaux pour la logique du rendu et du son
 signal packet_dropped(packet: NetworkPacket, reason: String)
+signal packet_entered(transit: WireTransit)
+signal packet_exited(transit: WireTransit)
 
 # =====================
 # ===== STRUCTURE =====
@@ -113,8 +115,11 @@ func push_packet(packet: NetworkPacket) -> bool:
 		if (transit_queue.back().distance < min_packet_spacing):
 			return false
 	# On peut faire entrer le paquet
-	transit_queue.push_back(WireTransit.new(packet))
+	var transit = WireTransit.new(packet)
+	transit_queue.push_back(transit)
 	injection_cooldown = 1.0/max_rate
+	packet_entered.emit(transit)
+
 	return true
 
 
@@ -133,6 +138,7 @@ func simulate(delta: float) -> void:
 		if transit.packet.is_expired:
 			var dropped: NetworkPacket = transit.packet
 			transit_queue.remove_at(i)
+			packet_exited.emit(transit)
 			packet_dropped.emit(dropped, "TTL expired")
 	
 	if transit_queue.is_empty():
@@ -168,7 +174,7 @@ func _update_packet_positions(delta: float) -> void:
 		var legal_closeness_distance: float = minf(raw_new_distance, max_distance)
 		
 		# On fait avancer le paquet en l'empêchant de reculer
-		cur_pack.distance = maxf(cur_pack.distance, legal_closeness_distance)
+		cur_pack.distance = maxf(0.0, maxf(cur_pack.distance, legal_closeness_distance))
 
 
 ## Tente de faire entrer le paquet arrivé au bout dans le to_device
@@ -179,5 +185,6 @@ func _deliver_arrived_packet() -> void:
 	else:
 		# On vérifie si le device peut acceuillir le paquet
 		if to_device.can_receive_packet(to_port):
-			var delivered_packet = transit_queue.pop_front().packet
-			to_device.receive_packet(to_port, delivered_packet)
+			var transit = transit_queue.pop_front()
+			packet_exited.emit(transit)
+			to_device.receive_packet(to_port, transit.packet)

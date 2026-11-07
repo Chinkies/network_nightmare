@@ -16,10 +16,7 @@ func _init(p_id: String, p_schedule: Array[ScheduleEvent], p_capacity: int = 5, 
 	emission_schedule = p_schedule
 
 	port_types = {
-		0: PortType.STATIC_OUTPUT,
-		1: PortType.STATIC_OUTPUT,
-		2: PortType.STATIC_OUTPUT,
-		3: PortType.STATIC_OUTPUT
+		2: PortType.STATIC_OUTPUT
 	}
 
 ## Surcharge de simulate pour gérer le calendrier d'émission de paquets
