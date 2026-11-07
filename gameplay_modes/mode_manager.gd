@@ -104,18 +104,22 @@ func cancel_action() -> bool:
 
 
 func on_device_drop_requested(cell: Vector2i, device_data: Variant) -> void:
-	# Seuls les modes qui possèdent explicitement cette méthode (Edition, Wiring, Delete) la recevront.
-	if current_mode and current_mode.has_method("handle_device_drop"):
+	# 1. On bloque catégoriquement le drag & drop si la simulation tourne
+	if current_mode == simulation_mode:
+		print("[ModeManager] Drop ignoré, impossible de modifier la grille en pleine simulation.")
+		return
+		
+	# 2. Si on n'est pas en EditMode (ex: WiringMode ou DeleteMode), on force la bascule
+	if current_mode != edit_mode:
+		print("[ModeManager] Bascule automatique en EditMode pour placer l'appareil.")
+		_switch_mode(edit_mode)
+		
+	# 3. Maintenant on est certain que le EditMode est actif, on lui délègue le drop
+	if current_mode == edit_mode and current_mode.has_method("handle_device_drop"):
 		current_mode.handle_device_drop(cell, device_data)
-	else:
-		print("[ModeManager] Drop ignoré, mode inadapté.")
-		pass
 
 
 func on_port_interaction_requested(device: NetworkDevice, local_port_id: int) -> void:
-	print("[ModeManager] Clic détecté sur le port ", local_port_id, " de l'appareil ", device.id)
-	
-	# Seul le WiringMode (et éventuellement DeleteMode plus tard si tu veux cliquer sur un port pour supprimer son câble) réagira.
 	if current_mode and current_mode.has_method("handle_port_click"):
 		current_mode.handle_port_click(device, local_port_id)
 
