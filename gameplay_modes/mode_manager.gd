@@ -41,7 +41,9 @@ func _ready() -> void:
 	call_deferred("switch_mode", edit_mode)
 
 
+# -------------------------
 # --- Gestion des modes ---
+# -------------------------
 
 func switch_mode_by_enum(mode_enum: GameMode, save_history: bool = false) -> void:
 	var target_mode: BaseMode = null
@@ -57,9 +59,10 @@ func switch_mode_by_enum(mode_enum: GameMode, save_history: bool = false) -> voi
 			target_mode = simulation_mode
 			
 	if target_mode:
-		switch_mode(target_mode, save_history)
+		_switch_mode(target_mode, save_history)
 
-func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
+
+func _switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 	if current_mode == new_mode:
 		return
 		
@@ -79,8 +82,18 @@ func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 
 func switch_to_previous_mode() -> void:
 	if previous_mode:
-		switch_mode(previous_mode, false)
+		_switch_mode(previous_mode, false)
 		previous_mode = null
+
+
+
+# ------------------------------------
+# --- Fonctions relatives au modes ---
+# ------------------------------------
+
+func _unhandled_input(event: InputEvent) -> void:
+	if current_mode and current_mode.has_method("handle_unhandled_input"):
+		current_mode.handle_unhandled_input(event)
 
 
 ## Tente d'annuler l'action du mode courant. Retourne true si le signal a été consommé.
@@ -95,8 +108,7 @@ func on_device_drop_requested(cell: Vector2i, device_data: Variant) -> void:
 	if current_mode and current_mode.has_method("handle_device_drop"):
 		current_mode.handle_device_drop(cell, device_data)
 	else:
-		# Optionnel : log de debug pour vérifier que le drop est bien bloqué en mode simulation
-		# print("[ModeManager] Drop ignoré, mode inadapté.")
+		print("[ModeManager] Drop ignoré, mode inadapté.")
 		pass
 
 

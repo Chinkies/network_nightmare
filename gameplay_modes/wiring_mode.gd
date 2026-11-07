@@ -106,9 +106,7 @@ func handle_port_click(device: NetworkDevice, local_port_id: int) -> void:
 		_attempt_connection(device, local_port_id)
 
 
-# --- Méthodes privées ---
-
-func _unhandled_input(event: InputEvent) -> void:
+func handle_unhandled_input(event: InputEvent) -> void:
 	if source_device == null:
 		return
 		
@@ -181,6 +179,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			cancel_action()
 
+
+
+# --- Méthodes privées ---
 
 ## Calcule la position finale valide d'un segment de câble en appliquant 
 ## les contraintes d'axe, de sens, le magnétisme et les collisions.

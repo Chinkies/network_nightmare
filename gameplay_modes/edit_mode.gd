@@ -34,6 +34,17 @@ func exit_mode() -> void:
 # --- INTERFACE PUBLIQUE ---
 # --------------------------
 
+func handle_unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# 1. On récupère la position locale de la souris par rapport au GridView
+		var local_pos = grid_view.get_local_mouse_position()
+		var cell = grid_view.local_to_cell(local_pos)
+		
+		# 2. Interrogation du Modèle : si la case est hors grille ou vide, on désélectionne
+		if not grid_board.is_cell_inside_grid(cell) or not grid_board.is_cell_occupied(cell):
+			_deselect_current()
+
+
 func handle_item_interaction_started(item: Variant) -> void:
 	if item is NetworkDevice:
 		_select_device(item)

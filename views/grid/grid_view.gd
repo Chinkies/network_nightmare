@@ -21,7 +21,7 @@ signal device_drop_requested(cell: Vector2i, device_data: Variant)
 @export var background_color: Color = Color(0.08, 0.1, 0.14, 1.0)
 @export var border_color: Color = Color(0.35, 0.45, 0.6, 0.8)
 
-## Highlight des cells pour le drop
+# Highlight des cells pour le drop
 @export var highlight_valid_color: Color = Color(0.1, 0.8, 0.3, 0.35)   # Vert translucide
 @export var highlight_invalid_color: Color = Color(0.9, 0.2, 0.2, 0.35) # Rouge translucide
 
