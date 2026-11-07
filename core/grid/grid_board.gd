@@ -58,7 +58,14 @@ func get_wire_at(cell: Vector2i) -> NetworkWire:
 		return item
 	
 	return null
-
+	
+## Retourne la liste des câbles uniques placés sur la grille
+func get_wires() -> Array[NetworkWire]:
+	var wires: Array[NetworkWire] = []
+	for item in _occupied_cells.values():
+		if item is NetworkWire and not wires.has(item):
+			wires.append(item)
+	return wires
 
 ## Retourne la liste des devices uniques placés sur la grille
 func get_devices() -> Array[NetworkDevice]:

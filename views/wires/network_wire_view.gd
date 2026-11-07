@@ -163,7 +163,13 @@ func _generate_collisions() -> void:
 		
 		click_area.add_child(col_shape)
 
-
+## Supprime et nettoie toutes les vues de paquets en transit sur ce câble
+func reset_state() -> void:
+	for view in packet_views.values():
+		if is_instance_valid(view):
+			view.queue_free()
+	packet_views.clear()
+	
 
 # ================================
 # ===== GESTION DE LA SOURIS =====
