@@ -1,6 +1,16 @@
 class_name ModeManager
 extends Node
 
+# =====================
+# ===== ENUMS =========
+# =====================
+
+enum GameMode {
+	EDIT,
+	WIRING,
+	DELETE,
+	SIMULATION
+}
 
 # ======================
 # ===== ATTRIBUTS ======
@@ -32,6 +42,22 @@ func _ready() -> void:
 
 
 # --- Gestion des modes ---
+
+func switch_mode_by_enum(mode_enum: GameMode, save_history: bool = false) -> void:
+	var target_mode: BaseMode = null
+	
+	match mode_enum:
+		GameMode.EDIT:
+			target_mode = edit_mode
+		GameMode.WIRING:
+			target_mode = wiring_mode
+		GameMode.DELETE:
+			target_mode = delete_mode
+		GameMode.SIMULATION:
+			target_mode = simulation_mode
+			
+	if target_mode:
+		switch_mode(target_mode, save_history)
 
 func switch_mode(new_mode: BaseMode, save_history: bool = false) -> void:
 	if current_mode == new_mode:
