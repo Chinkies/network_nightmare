@@ -76,3 +76,10 @@ func _process_next_packet() -> void:
 		processing_cooldown = 1.0 / processing_rate
 		print("[Transmitter] Paquet emit")
 		packet_processed.emit(packet)
+
+## Surcharge pour réinitialiser le calendrier d'émission du transmitter
+func reset_state() -> void:
+	super()
+	schedule_index = 0
+	emission_timer = 0.0
+	print("[Transmitter] Réinitialisé à l'état d'origine.")

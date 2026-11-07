@@ -188,3 +188,8 @@ func _deliver_arrived_packet() -> void:
 			var transit = transit_queue.pop_front()
 			packet_exited.emit(transit)
 			to_device.receive_packet(to_port, transit.packet)
+
+## Réinitialise l'état du câble (vide la file de transit et les cooldowns)
+func reset_state() -> void:
+	transit_queue.clear()
+	injection_cooldown = 0.0

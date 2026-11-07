@@ -76,12 +76,17 @@ func toggle() -> void:
 # Reset le runner de simulation
 func reset_runner() -> void:
 	stop()
-	devices.clear()
-	_device_map.clear()
-	wires.clear()
 	ephemeral_packets.clear()
 	simulation_speed = 1.0
 	has_started = false
+	
+	for device in devices:
+		if device.has_method("reset_state"):
+			device.reset_state()
+			
+	for wire in wires:
+		if wire.has_method("reset_state"):
+			wire.reset_state()
 
 # --- Boucle principale ---
 

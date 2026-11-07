@@ -247,3 +247,9 @@ func _process_next_packet() -> void:
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
 		packet_processed.emit(packet)
+
+# Reset l'état du device
+func reset_state() -> void:
+	buffer.clear()
+	is_broken = false
+	processing_cooldown = 0.0

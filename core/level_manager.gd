@@ -84,6 +84,12 @@ func _on_reset_requested() -> void:
 	if simulation:
 		simulation.reset_runner()
 		
+	if grid_board and grid_view:
+		for wire in grid_board.get_wires():
+			var wire_view = grid_view.get_wire_view(wire)
+			if wire_view and wire_view.has_method("reset_state"):
+				wire_view.reset_state()
+
 	current_speed_index = 0
 	
 	# Retour forcé en mode édition
