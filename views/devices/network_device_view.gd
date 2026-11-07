@@ -36,15 +36,21 @@ const TEX_STATIC = preload("res://views/ports/assets/static_flow_shape.png")
 ## La référence vers l'objet logique qui tourne en mémoire
 var logic_device: NetworkDevice
 
+# --- Attributs visuels ---
 var is_pressed: bool = false
+var is_selected: bool = false
+var _cell_size: float = 64.0
 
 
 # ====================
 # ===== METHODES =====
 # ====================
 
+# --- Setup et Draw ---
+
 ## Fonction d'initialisation appelée par le GridManager juste après le drop
 func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float) -> void:
+	_cell_size = cell_size
 	logic_device = p_logic_device
 	_resize_click_area(cell_size)
 	
@@ -121,6 +127,25 @@ func _resize_click_area(cell_size: float) -> void:
 
 	rectangle.size = Vector2(cell_size, cell_size)
 	collision_shape.scale = Vector2.ONE
+
+
+## Fonction native Godot pour le dessin 2D
+func _draw() -> void:
+	if is_selected:
+		# On dessine un contour jaune aligné sur les dimensions de la case, centré sur le sprite
+		var rect = Rect2(Vector2(-_cell_size / 2.0, -_cell_size / 2.0), Vector2(_cell_size, _cell_size))
+		draw_rect(rect, Color.YELLOW, false, 1.0)
+
+
+
+# --------------------------------------
+# --- Gestion de l'état de sélection ---
+# --------------------------------------
+
+## Modifie l'état de sélection et force la vue à se redessiner
+func set_selected(active: bool) -> void:
+	is_selected = active
+	queue_redraw()
 
 
 # ------------------------------------------

@@ -41,9 +41,6 @@ func _ready() -> void:
 # --- Entrée et sortie du mode ---
 # --------------------------------
 
-func enter_mode() -> void:
-	print("[DeleteMode] Prêt à détruire.")
-
 func exit_mode() -> void:
 	cancel_action()
 

@@ -6,9 +6,13 @@ extends BaseMode
 # ===== ATTRIBUTS =====
 # =====================
 
+# --- Dépendances --- 
 @export var grid_board: GridBoard
 @export var grid_view: GridView
 @export var simulation: SimulationRunner
+
+# --- Sélection de device --- 
+var selected_device: NetworkDevice = null
 
 
 # =====================
@@ -22,10 +26,20 @@ func _ready() -> void:
 	assert(simulation != null, "[EditMode] Erreur critique : SimulationRunner non assigné !")
 
 
-# ----------------------------------------
-# --- METHODES SPECIFIQUES AU EDITMODE ---
-# ----------------------------------------
+func exit_mode() -> void:
+	_deselect_current()
 
+
+# --------------------------
+# --- INTERFACE PUBLIQUE ---
+# --------------------------
+
+func handle_item_interaction_started(item: Variant) -> void:
+	if item is NetworkDevice:
+		_select_device(item)
+
+
+## Au drop d'un device sélectionné depuis le menu de sélection, place ce device sur la grille si la position est valide
 func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	# 1. Vérification dans le Modèle
 	if grid_board.is_cell_occupied(cell):
@@ -62,3 +76,31 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	device_view.interaction_ended.connect(mode_manager.on_item_interaction_ended)
 	
 	print("[EditMode] Appareil posé avec succès : ", unique_id)
+	
+	_select_device(logic_device)
+
+
+
+# ----------------------
+# --- LOGIQUE PRIVEE --- 
+# ----------------------
+
+func _select_device(device: NetworkDevice) -> void:
+	if selected_device == device:
+		return
+		
+	_deselect_current()
+	
+	selected_device = device
+	var view = grid_view.get_device_view(selected_device)
+	if view != null:
+		view.set_selected(true)
+	print("[EditMode] Appareil sélectionné : ", selected_device.id)
+
+
+func _deselect_current() -> void:
+	if selected_device != null:
+		var view = grid_view.get_device_view(selected_device)
+		if view != null:
+			view.set_selected(false)
+		selected_device = null
