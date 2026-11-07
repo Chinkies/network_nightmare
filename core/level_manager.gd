@@ -180,16 +180,16 @@ func _unhandled_input(event: InputEvent) -> void:
 					_on_edit_requested()
 					get_viewport().set_input_as_handled()
 					
-			KEY_R:
+			KEY_T:
 				if simulation.has_started:
 					_on_reset_requested()
 					get_viewport().set_input_as_handled()
 
-			KEY_F:
+			KEY_R:
 				_on_simulation_requested()
 				get_viewport().set_input_as_handled()
 
-			KEY_A:
+			KEY_F:
 				_on_speed_requested()
 				get_viewport().set_input_as_handled()
 
