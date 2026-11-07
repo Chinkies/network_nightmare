@@ -32,6 +32,8 @@ var wire_views: Dictionary[NetworkWire, NetworkWireView] = {}
 var _is_dragging_over: bool = false
 var _current_drag_cell: Vector2i = Vector2i(-1, -1)
 var _is_current_cell_valid: bool = false
+var _is_device_selected: bool = false
+var _selected_cell: Vector2i = Vector2i(-1, -1)
 
 
 # ====================
@@ -39,18 +41,17 @@ var _is_current_cell_valid: bool = false
 # ====================
 
 func _ready() -> void:
+	assert(grid_board != null, "[GridView] Erreur critique : GridBoard non assigné !")
+	
 	# La vue s'adapte automatiquement à la taille dictée par le modèle
-	if grid_board:
-		custom_minimum_size = Vector2(grid_board.grid_width * cell_size, grid_board.grid_height * cell_size)
-		size = custom_minimum_size
+	custom_minimum_size = Vector2(grid_board.grid_width * cell_size, grid_board.grid_height * cell_size)
+	size = custom_minimum_size
 
 
 func _draw() -> void:
-	if not grid_board:
-		return
-		
 	var total_size := size
 	
+	# 1. Dessin de la grille
 	draw_rect(Rect2(Vector2.ZERO, total_size), background_color, true)
 
 	for x in range(grid_board.grid_width + 1):
@@ -64,7 +65,16 @@ func _draw() -> void:
 		draw_line(from, to, line_color, 1.0)
 
 	draw_rect(Rect2(Vector2.ZERO, total_size), border_color, false, 2.0)
+	
+	# 2. Dessin de la sélection (carré jaune)
+	if _is_device_selected and grid_board.is_cell_inside_grid(_selected_cell):
+		var rect := Rect2(
+			Vector2(_selected_cell.x * cell_size, _selected_cell.y * cell_size),
+			Vector2(cell_size, cell_size)
+		)
+		draw_rect(rect, Color.YELLOW, false, 1.0)
 
+	# 3. Dessin du Drag & Drop (carré vert/rouge)
 	if _is_dragging_over and grid_board.is_cell_inside_grid(_current_drag_cell):
 		var rect := Rect2(
 			Vector2(_current_drag_cell.x * cell_size, _current_drag_cell.y * cell_size),
@@ -221,6 +231,20 @@ func set_port_available(device: NetworkDevice, port_id: int) -> bool:
 # -------------------------------------------------------------
 # --- Gestion du Drag & Drop Manuel (déplacement de device) ---
 # -------------------------------------------------------------
+
+## Affiche le contour jaune de sélection sur une case donnée
+func set_selection_highlight(cell: Vector2i) -> void:
+	if not _is_device_selected or _selected_cell != cell:
+		_is_device_selected = true
+		_selected_cell = cell
+		queue_redraw()
+
+## Masque le contour jaune de sélection
+func clear_selection_highlight() -> void:
+	if _is_device_selected:
+		_is_device_selected = false
+		queue_redraw()
+
 
 ## Force l'affichage du survol (vert/rouge) sur une cellule précise
 func set_drag_highlight(cell: Vector2i, is_valid: bool) -> void:

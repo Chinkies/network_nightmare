@@ -138,19 +138,15 @@ func _select_device(device: NetworkDevice) -> void:
 		return
 		
 	_deselect_current()
-	
 	selected_device = device
-	var view = grid_view.get_device_view(selected_device)
-	if view != null:
-		view.set_selected(true)
+	
+	grid_view.set_selection_highlight(selected_device.grid_position)
 
 
 ## Réinitialise la sélection
 func _deselect_current() -> void:
 	if selected_device != null:
-		var view = grid_view.get_device_view(selected_device)
-		if view != null:
-			view.set_selected(false)
+		grid_view.clear_selection_highlight()
 		selected_device = null
 
 
@@ -200,3 +196,6 @@ func _end_drag() -> void:
 	if view != null:
 		var tween = create_tween()
 		tween.tween_property(view, "global_position", target_pos, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	
+	# NOUVEAU : On met à jour la case sélectionnée
+	grid_view.set_selection_highlight(selected_device.grid_position)
