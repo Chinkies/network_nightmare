@@ -8,6 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_5bnwv"]
 script = ExtResource("3_o37q7")
+color = 1
 metadata/_custom_type_script = "uid://etua5m2qnltd"
 
 [sub_resource type="Resource" id="Resource_84il1"]
@@ -28,6 +29,8 @@ metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_p6qos"]
 script = ExtResource("3_o37q7")
+color = 3
+shape = 1
 metadata/_custom_type_script = "uid://etua5m2qnltd"
 
 [sub_resource type="Resource" id="Resource_tw0k6"]
@@ -38,6 +41,8 @@ metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_ui2nk"]
 script = ExtResource("3_o37q7")
+color = 2
+shape = 2
 metadata/_custom_type_script = "uid://etua5m2qnltd"
 
 [sub_resource type="Resource" id="Resource_0emy8"]
@@ -48,6 +53,8 @@ metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_w64c7"]
 script = ExtResource("3_o37q7")
+color = 1
+shape = 2
 metadata/_custom_type_script = "uid://etua5m2qnltd"
 
 [sub_resource type="Resource" id="Resource_2liv8"]

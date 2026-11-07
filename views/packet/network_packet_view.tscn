@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bo2kapiqevdo4"]
+
+[ext_resource type="Script" uid="uid://dwewyq3kiod1" path="res://views/packet/network_packet_view.gd" id="1_stryy"]
+[ext_resource type="Texture2D" uid="uid://kxurg8hp8kv" path="res://resources/packet/circle.tres" id="2_c7wfn"]
+[ext_resource type="Texture2D" uid="uid://4dhn3lksh4qu" path="res://resources/packet/square.tres" id="3_1h6di"]
+[ext_resource type="Texture2D" uid="uid://d07xpy3t43yot" path="res://resources/packet/triangle.tres" id="4_ybw18"]
+
+[node name="NetworkPacketView" type="Sprite2D" unique_id=1130013530]
+script = ExtResource("1_stryy")
+texture_circle = ExtResource("2_c7wfn")
+texture_square = ExtResource("3_1h6di")
+texture_triangle = ExtResource("4_ybw18")
