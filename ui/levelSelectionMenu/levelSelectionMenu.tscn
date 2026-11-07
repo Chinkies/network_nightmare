@@ -1,0 +1,120 @@
+[gd_scene format=3 uid="uid://defsx4in2glgw"]
+
+[ext_resource type="Script" uid="uid://c4rpfwhmk85m" path="res://ui/levelSelectionMenu/levelSelectionMenu.gd" id="1_2lye0"]
+[ext_resource type="Script" uid="uid://d1c3ygvugah2e" path="res://ui/levelSelectionMenu/path_lines.gd" id="2_y1sm7"]
+[ext_resource type="Texture2D" uid="uid://nfeovtlc4dkl" path="res://resources/ui/levelSelectionMenu/level/5/level5.tres" id="3_pgeke"]
+[ext_resource type="Texture2D" uid="uid://crx55357khlov" path="res://resources/ui/levelSelectionMenu/level/5/level5Pressed.tres" id="4_2a5du"]
+[ext_resource type="Texture2D" uid="uid://ct26qy8najniq" path="res://resources/ui/levelSelectionMenu/level/5/level5Hover.tres" id="5_0d1hw"]
+[ext_resource type="Texture2D" uid="uid://csnyhhhptck6m" path="res://resources/ui/levelSelectionMenu/level/5/level5Disable.tres" id="6_8j836"]
+[ext_resource type="Texture2D" uid="uid://dx4rvt721d7p2" path="res://resources/ui/levelSelectionMenu/level/4/level4.tres" id="7_2kf5g"]
+[ext_resource type="Texture2D" uid="uid://dsmljymw5qwcl" path="res://resources/ui/levelSelectionMenu/level/4/level4Pressed.tres" id="8_giiov"]
+[ext_resource type="Texture2D" uid="uid://bkxcyvr0bmdgs" path="res://resources/ui/levelSelectionMenu/level/4/level4Hover.tres" id="9_ck80p"]
+[ext_resource type="Texture2D" uid="uid://b6wwvigkrlpkm" path="res://resources/ui/levelSelectionMenu/level/4/level4Disable.tres" id="10_1f84b"]
+[ext_resource type="Texture2D" uid="uid://c0cms1bpg31ve" path="res://resources/ui/levelSelectionMenu/level/3/level3.tres" id="11_d04y8"]
+[ext_resource type="Texture2D" uid="uid://bpbyoy1mkq6ki" path="res://resources/ui/levelSelectionMenu/level/3/level3Pressed.tres" id="12_yqpft"]
+[ext_resource type="Texture2D" uid="uid://de14vj2rt117c" path="res://resources/ui/levelSelectionMenu/level/3/level3Hover.tres" id="13_t4e4j"]
+[ext_resource type="Texture2D" uid="uid://qs6s6ou7yf88" path="res://resources/ui/levelSelectionMenu/level/3/level3Disable.tres" id="14_ai51s"]
+[ext_resource type="Texture2D" uid="uid://ddd6dfj83xyow" path="res://resources/ui/levelSelectionMenu/level/2/level2.tres" id="15_gl2en"]
+[ext_resource type="Texture2D" uid="uid://c1x7bb1f6ajx0" path="res://resources/ui/levelSelectionMenu/level/2/level2Pressed.tres" id="16_cheuk"]
+[ext_resource type="Texture2D" uid="uid://dsopsg4ori7yd" path="res://resources/ui/levelSelectionMenu/level/2/level2Hover.tres" id="17_na41b"]
+[ext_resource type="Texture2D" uid="uid://ccixsx0sd13iu" path="res://resources/ui/levelSelectionMenu/level/2/level2Disable.tres" id="18_n6ojy"]
+[ext_resource type="Texture2D" uid="uid://snqhs01isk28" path="res://resources/ui/levelSelectionMenu/level/1/level1.tres" id="19_rocjv"]
+[ext_resource type="Texture2D" uid="uid://boo6i2qr1j87e" path="res://resources/ui/levelSelectionMenu/level/1/level1Pressed.tres" id="20_s4qyl"]
+[ext_resource type="Texture2D" uid="uid://dm46vwjh2k2m6" path="res://resources/ui/levelSelectionMenu/level/1/level1Hover.tres" id="21_2l8ah"]
+[ext_resource type="Texture2D" uid="uid://lrmjycsiwwpe" path="res://resources/ui/levelSelectionMenu/level/1/level1Disable.tres" id="22_0x057"]
+
+[node name="LevelSelectionMenu" type="Control" unique_id=1182528442]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2lye0")
+first_level_scene = "uid://t7qhd72rywme"
+
+[node name="Background" type="ColorRect" parent="." unique_id=1121171427]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1533812, 0.21121883, 0.5070216, 1)
+
+[node name="PathLines" type="Control" parent="." unique_id=1309451317 node_paths=PackedStringArray("buttons_container")]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_y1sm7")
+buttons_container = NodePath("../LevelButtonsContainer")
+line_color = Color(0.73333335, 0.73333335, 0.93333334, 1)
+
+[node name="LevelButtonsContainer" type="Control" parent="." unique_id=731549303]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="buttonLevel5" type="TextureButton" parent="LevelButtonsContainer" unique_id=1104532126]
+texture_filter = 1
+layout_mode = 0
+offset_left = 599.0
+offset_top = 183.0
+offset_right = 657.0
+offset_bottom = 237.0
+disabled = true
+texture_normal = ExtResource("3_pgeke")
+texture_pressed = ExtResource("4_2a5du")
+texture_hover = ExtResource("5_0d1hw")
+texture_disabled = ExtResource("6_8j836")
+
+[node name="buttonLevel4" type="TextureButton" parent="LevelButtonsContainer" unique_id=2089299465]
+texture_filter = 1
+layout_mode = 0
+offset_left = 694.0
+offset_top = 264.0
+offset_right = 752.0
+offset_bottom = 318.0
+disabled = true
+texture_normal = ExtResource("7_2kf5g")
+texture_pressed = ExtResource("8_giiov")
+texture_hover = ExtResource("9_ck80p")
+texture_disabled = ExtResource("10_1f84b")
+
+[node name="buttonLevel3" type="TextureButton" parent="LevelButtonsContainer" unique_id=131739754]
+texture_filter = 1
+layout_mode = 0
+offset_left = 533.0
+offset_top = 330.0
+offset_right = 591.0
+offset_bottom = 384.0
+disabled = true
+texture_normal = ExtResource("11_d04y8")
+texture_pressed = ExtResource("12_yqpft")
+texture_hover = ExtResource("13_t4e4j")
+texture_disabled = ExtResource("14_ai51s")
+
+[node name="buttonLevel2" type="TextureButton" parent="LevelButtonsContainer" unique_id=62590853]
+texture_filter = 1
+layout_mode = 0
+offset_left = 691.0
+offset_top = 424.0
+offset_right = 749.0
+offset_bottom = 478.0
+disabled = true
+texture_normal = ExtResource("15_gl2en")
+texture_pressed = ExtResource("16_cheuk")
+texture_hover = ExtResource("17_na41b")
+texture_disabled = ExtResource("18_n6ojy")
+
+[node name="buttonLevel1" type="TextureButton" parent="LevelButtonsContainer" unique_id=1620803690]
+texture_filter = 1
+layout_mode = 0
+offset_left = 583.0
+offset_top = 496.0
+offset_right = 641.0
+offset_bottom = 550.0
+texture_normal = ExtResource("19_rocjv")
+texture_pressed = ExtResource("20_s4qyl")
+texture_hover = ExtResource("21_2l8ah")
+texture_disabled = ExtResource("22_0x057")
