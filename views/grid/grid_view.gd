@@ -21,8 +21,17 @@ signal device_drop_requested(cell: Vector2i, device_data: Variant)
 @export var background_color: Color = Color(0.08, 0.1, 0.14, 1.0)
 @export var border_color: Color = Color(0.35, 0.45, 0.6, 0.8)
 
+## Highlight des cells pour le drop
+@export var highlight_valid_color: Color = Color(0.1, 0.8, 0.3, 0.35)   # Vert translucide
+@export var highlight_invalid_color: Color = Color(0.9, 0.2, 0.2, 0.35) # Rouge translucide
+
 var device_views: Dictionary[NetworkDevice, NetworkDeviceView] = {}
 var wire_views: Dictionary[NetworkWire, NetworkWireView] = {}
+
+## État actuel du Drag & Drop pour le highlight
+var _is_dragging_over: bool = false
+var _current_drag_cell: Vector2i = Vector2i(-1, -1)
+var _is_current_cell_valid: bool = false
 
 
 # ====================
@@ -55,6 +64,15 @@ func _draw() -> void:
 		draw_line(from, to, line_color, 1.0)
 
 	draw_rect(Rect2(Vector2.ZERO, total_size), border_color, false, 2.0)
+
+	if _is_dragging_over and grid_board.is_cell_inside_grid(_current_drag_cell):
+		var rect := Rect2(
+			Vector2(_current_drag_cell.x * cell_size, _current_drag_cell.y * cell_size),
+			Vector2(cell_size, cell_size)
+		)
+		var color = highlight_valid_color if _is_current_cell_valid else highlight_invalid_color
+		draw_rect(rect, color, true)
+		draw_rect(rect, color.lightened(0.4), false, 2.0)
 
 
 
@@ -205,12 +223,38 @@ func set_port_available(device: NetworkDevice, port_id: int) -> bool:
 # ------------------------------------
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	if not grid_board: return false
-	if typeof(data) != TYPE_DICTIONARY or not data.has("device_data"): return false
+	if not grid_board: 
+		return false
+	if typeof(data) != TYPE_DICTIONARY or not data.has("device_data"): 
+		return false
 	
 	var cell := local_to_cell(at_position)
-	return grid_board.is_cell_inside_grid(cell) and not grid_board.is_cell_occupied(cell)
+	var is_valid = grid_board.is_cell_inside_grid(cell) and not grid_board.is_cell_occupied(cell)
+	
+	# On active le mode de survol et on met à jour la cellule ciblée en temps réel
+	if not _is_dragging_over or _current_drag_cell != cell or _is_current_cell_valid != is_valid:
+		_is_dragging_over = true
+		_current_drag_cell = cell
+		_is_current_cell_valid = is_valid
+		queue_redraw() # Force le redessin du highlight
+		
+	return is_valid
+
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
+	_is_dragging_over = false
+	queue_redraw()
+	
 	var cell := local_to_cell(at_position)
 	device_drop_requested.emit(cell, data["device_data"])
+
+# ------------------------------------
+# --- Prévisualisation Drag & Drop ---
+# ------------------------------------
+
+func _notification(what: int) -> void:
+	# Si le drag se termine ou sort de la zone sans être lâché sur un drop valide
+	if what == NOTIFICATION_DRAG_END:
+		if _is_dragging_over:
+			_is_dragging_over = false
+			queue_redraw()
