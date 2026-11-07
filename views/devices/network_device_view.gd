@@ -82,15 +82,15 @@ func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float
 			
 			# On déduit la texture et l'angle
 			match port_type:
-				NetworkDevice.PortType.STATIC_OUTPUT:
-					port_texture = TEX_STATIC
-					port_angle = port_direction.angle()
+				NetworkDevice.PortType.STATIC_OUTPUT, NetworkDevice.PortType.DYNAMIC:
+					port_texture = TEX_STATIC if port_type == NetworkDevice.PortType.STATIC_OUTPUT else TEX_DYNAMIC
+					# Les deux pointent vers l'extérieur
+					port_angle = port_direction.angle() 
+					
 				NetworkDevice.PortType.STATIC_INPUT:
 					port_texture = TEX_STATIC
-					# On inverse le vecteur pour que la flèche rentre dans la machine
+					# On inverse le vecteur pour que la flèche rentre
 					port_angle = (-port_direction).angle()
-				NetworkDevice.PortType.DYNAMIC:
-					port_texture = TEX_DYNAMIC
 			
 			# Instanciation et rattachement à la scène
 			var port_instance = port_view_scene.instantiate() as NetworkPortView
@@ -146,6 +146,40 @@ func _draw() -> void:
 func set_selected(active: bool) -> void:
 	is_selected = active
 	queue_redraw()
+
+
+# ------------------------------
+# --- Gestion de la rotation ---
+# ------------------------------
+
+## Anime la rotation visuelle de la machine et met à jour instantanément les ports
+func update_rotation(direction: int, cell_size: float) -> void:
+	# 1. Calcul de l'angle relatif (ajoute +/- 90° à la rotation actuelle du sprite)
+	var target_angle = visual_sprite.rotation + (direction * PI / 2.0)
+	
+	# Rotation fluide uniquement sur la texture de la machine
+	var tween = create_tween()
+	tween.tween_property(visual_sprite, "rotation", target_angle, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	
+	# 2. Mise à jour instantanée des ports (puisqu'ils sont invisibles)
+	for child in ports_container.get_children():
+		if child is NetworkPortView:
+			var port_id = child.port_id
+			var port_direction: Vector2 = logic_device.get_port_global_direction(port_id)
+			var port_angle: float = 0.0
+			
+			match logic_device.port_types[port_id]:
+				NetworkDevice.PortType.STATIC_OUTPUT, NetworkDevice.PortType.DYNAMIC:
+					port_angle = port_direction.angle()
+				NetworkDevice.PortType.STATIC_INPUT:
+					port_angle = (-port_direction).angle()
+					
+			# On déplace le port à sa nouvelle position spatiale instantanément
+			child.position = port_direction * (cell_size * 0.35)
+			
+			# On met à jour les données internes du port (l'icône tournera toute seule)
+			child.update_internal_rotation(port_angle, port_direction)
+
 
 
 # ------------------------------------------

@@ -20,7 +20,7 @@ var selected_device: NetworkDevice = null
 # =====================
 
 func _ready() -> void:
-	# Vérification des composants
+	# Vérification des dépendances
 	assert(grid_board != null, "[EditMode] Erreur critique : GridBoard non assigné !")
 	assert(grid_view != null, "[EditMode] Erreur critique : GridView non assigné !")
 	assert(simulation != null, "[EditMode] Erreur critique : SimulationRunner non assigné !")
@@ -87,8 +87,24 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	device_view.interaction_ended.connect(mode_manager.on_item_interaction_ended)
 	
 	print("[EditMode] Appareil posé avec succès : ", unique_id)
+
+
+func handle_rotate_requested(direction: int) -> void:
+	if selected_device == null:
+		return
+		
+	# On ne peut pas tourner une machine déjà connectée à des câbles
+	if not selected_device.input_wires.is_empty() or not selected_device.output_wires.is_empty():
+		print("[EditMode] Impossible de tourner une machine connectée.")
+		return
+		
+	selected_device.rotate(direction)
 	
-	_select_device(logic_device)
+	var view = grid_view.get_device_view(selected_device)
+	if view != null:
+		view.update_rotation(direction, grid_view.cell_size)
+		
+	print("[EditMode] Appareil tourné : ", selected_device.id)
 
 
 

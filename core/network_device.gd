@@ -177,6 +177,13 @@ func get_output_target_cell(local_port: int) -> Vector2i:
 	return grid_position + get_port_global_direction(local_port)
 
 
+## Tourne la machine logiquement (direction : 1 = horaire, -1 = anti-horaire)
+func rotate(direction: int) -> void:
+	rotation_quadrants = (rotation_quadrants + direction) % 4
+	if rotation_quadrants < 0:
+		rotation_quadrants += 4
+
+
 
 # ------------------------------
 # --- Traitement des paquets ---

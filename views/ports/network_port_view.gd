@@ -172,9 +172,28 @@ func _draw() -> void:
 		draw_arc(Vector2.ZERO, radius, 0, TAU, 32, outline_color, 8.0, true)
 
 
-# ------------------------------------
-# --- LOGIQUE D'ANIMATION (PROCESS) --
-# ------------------------------------
+
+# ------------------------------
+# --- GESTION DE LA ROTATION ---
+# ------------------------------
+
+## Met à jour les variables internes suite à une rotation de la machine
+func update_internal_rotation(p_rotation: float, p_output_direction: Vector2) -> void:
+	origin_rotation = p_rotation
+	output_direction = p_output_direction
+	
+	# Rafraîchissement direct de l'icône selon l'état actuel
+	if current_state == PortState.OCCUPIED_INPUT:
+		icon.rotation = (-output_direction).angle()
+	elif current_state == PortState.OCCUPIED_OUTPUT:
+		icon.rotation = output_direction.angle()
+	else:
+		icon.rotation = origin_rotation
+
+
+# -------------------------------------
+# --- LOGIQUE D'ANIMATION (PROCESS) ---
+# -------------------------------------
 
 func _process(_delta: float) -> void:
 	# On ne modifie pas l'échelle via _process si la souris est dessus (le Tween prend le relais)

@@ -38,7 +38,7 @@ func _ready() -> void:
 			child.mode_manager = self
 	
 	# État initial au lancement
-	call_deferred("switch_mode", edit_mode)
+	call_deferred("_switch_mode", edit_mode)
 
 
 # -------------------------
@@ -128,3 +128,8 @@ func on_item_interaction_started(item: Variant) -> void:
 func on_item_interaction_ended(item: Variant) -> void:
 	if current_mode and current_mode.has_method("handle_item_interaction_ended"):
 		current_mode.handle_item_interaction_ended(item)
+
+
+func on_rotate_requested(direction: int) -> void:
+	if current_mode and current_mode.has_method("handle_rotate_requested"):
+		current_mode.handle_rotate_requested(direction)
