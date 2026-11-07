@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Network Nightmare"
-run/main_scene="uid://t7qhd72rywme"
+run/main_scene="uid://defsx4in2glgw"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
