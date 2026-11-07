@@ -9,6 +9,7 @@ extends BaseMode
 @export var grid_board: GridBoard
 @export var grid_view: GridView
 @export var simulation: SimulationRunner
+@export var delete_bar_ui: DeleteProgressBar
 
 var delete_timer: Timer
 var target_item: NetworkItem = null 
@@ -23,6 +24,10 @@ func _ready() -> void:
 	assert(simulation != null, "[DeleteMode] Erreur critique : SimulationRunner non assigné !")
 	assert(grid_board != null, "[DeleteMode] Erreur critique : GridBoard non assigné !")
 	assert(grid_view != null, "[DeleteMode] Erreur critique : GridView non assigné !")
+	assert(delete_bar_ui != null, "[DeleteMode] Erreur critique : DeleteProgressBar non assigné !")
+	
+	# Ajustement de la taille de la barre de suppression
+	delete_bar_ui.setup_size(grid_view.cell_size)
 	
 	# Création du chronomètre interne
 	delete_timer = Timer.new()
@@ -64,12 +69,23 @@ func handle_item_interaction_started(item: NetworkItem) -> void:
 	delete_timer.start()
 	print("[DeleteMode] Suppression commencée... Maintenez le clic.")
 	
-	# TODO plus tard : Déclencher un feedback visuel (barre de chargement, clignotement rouge, etc.)
+	if delete_bar_ui != null:
+		# On demande à la vue ou placer la barre
+		var mouse_pos = grid_view.get_global_mouse_position()
+		var target_pos = grid_view.get_delete_bar_placement(mouse_pos)
+		
+		# On place l'UI et on lance l'animation
+		delete_bar_ui.set_centered_position(target_pos)
+		delete_bar_ui.start_loading(delete_timer.wait_time)
 
 
 func handle_item_interaction_ended(item: NetworkItem) -> void:
 	if target_item == item:
 		_stop_deletion()
+		
+		if delete_bar_ui != null:
+			delete_bar_ui.cancel_loading()
+		
 		print("[DeleteMode] Suppression annulée.")
 
 

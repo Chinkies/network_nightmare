@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
 [ext_resource type="Script" uid="uid://4d4b2mhkij6n" path="res://views/wires/ghost_wire_view.gd" id="8_ko617"]
 [ext_resource type="Script" uid="uid://cw3g35nhnqyps" path="res://gameplay_modes/wiring_mode.gd" id="9_3mabw"]
+[ext_resource type="PackedScene" uid="uid://c2wkqupjeppxg" path="res://views/delete_progress_bar/delete_progress_bar.tscn" id="10_ujns5"]
 [ext_resource type="Script" uid="uid://ks110jpoehyv" path="res://gameplay_modes/simulation_mode.gd" id="11_ko617"]
 [ext_resource type="Script" uid="uid://dd0l88lwk5plk" path="res://gameplay_modes/delete_mode.gd" id="11_owvkk"]
 [ext_resource type="PackedScene" uid="uid://dfgh0pe1hwa38" path="res://views/wires/network_wire_view.tscn" id="12_owvkk"]
@@ -31,17 +32,13 @@ script = ExtResource("2_vmibe")
 [node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
 unique_name_in_owner = true
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui", "edit_mode", "delete_mode", "wiring_mode", "simulation_mode")]
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
 simulation = NodePath("SimulationRunner")
 grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
-edit_mode = NodePath("ModeManager/EditMode")
-delete_mode = NodePath("ModeManager/DeleteMode")
-wiring_mode = NodePath("ModeManager/WiringMode")
-simulation_mode = NodePath("ModeManager/SimulationMode")
 debug_transmitter_data = ExtResource("5_n3j8x")
 debug_transmitter_cell = Vector2i(2, 2)
 
@@ -66,6 +63,9 @@ grid_board = NodePath("../GridBoard")
 [node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
 script = ExtResource("8_ko617")
 
+[node name="DeleteProgressBar" parent="LevelManager/GridView" unique_id=1294964939 instance=ExtResource("10_ujns5")]
+layout_mode = 0
+
 [node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190]
 script = ExtResource("7_bvijt")
 
@@ -83,11 +83,12 @@ grid_view = NodePath("../../GridView")
 ghost_wire_view = NodePath("../../GridView/GhostWire")
 network_wire_view_scene = ExtResource("12_owvkk")
 
-[node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816 node_paths=PackedStringArray("grid_board", "grid_view", "simulation")]
+[node name="DeleteMode" type="Node" parent="LevelManager/ModeManager" unique_id=1672343816 node_paths=PackedStringArray("grid_board", "grid_view", "simulation", "delete_bar_ui")]
 script = ExtResource("11_owvkk")
 grid_board = NodePath("../../GridBoard")
 grid_view = NodePath("../../GridView")
 simulation = NodePath("../../SimulationRunner")
+delete_bar_ui = NodePath("../../GridView/DeleteProgressBar")
 
 [node name="SimulationMode" type="Node" parent="LevelManager/ModeManager" unique_id=803302157 node_paths=PackedStringArray("simulation")]
 script = ExtResource("11_ko617")

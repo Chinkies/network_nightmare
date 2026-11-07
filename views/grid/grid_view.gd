@@ -91,6 +91,21 @@ func snap_world_to_center(world_pos: Vector2) -> Vector2:
 	return cell_to_world_center(cell)
 
 
+## Calcule la position idéale (pixels globaux) pour afficher une UI au-dessus de la case pointée
+func get_delete_bar_placement(mouse_global_pos: Vector2) -> Vector2:
+	# 1. On trouve la case visée
+	var local_pos = mouse_global_pos - global_position
+	var cell = local_to_cell(local_pos)
+	
+	# 2. On trouve le centre global de cette case
+	var cell_center = cell_to_world_center(cell)
+	
+	# 3. On applique l'offset visuel vers le haut (axe Y négatif)
+	var visual_offset = Vector2(0, -cell_size * 0.4)
+	
+	return cell_center + visual_offset
+
+
 
 # ----------------------------------------
 # --- Gestion des registres Model/View ---
