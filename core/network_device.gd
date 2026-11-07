@@ -109,6 +109,10 @@ func are_ports_compatible(port_id: int, other: NetworkDevice, other_port_id: int
 # --- Gestion des Connexions ---
 # ------------------------------
 
+## Renvoie true si le device a au moins un port branché
+func is_wired() -> bool:
+	return not input_wires.is_empty() and not output_wires.is_empty()
+
 ## Vérifie si on peut brancher un câble ENTRANT sur cette face locale
 func can_connect_input(port_id: int) -> bool:
 	return (

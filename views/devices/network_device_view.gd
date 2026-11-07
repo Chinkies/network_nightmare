@@ -241,7 +241,7 @@ func _on_packet_received(_port: int, _packet: NetworkPacket) -> void:
 
 func _on_packet_processed(_packet: NetworkPacket) -> void:
 	# Plus tard : petite animation de succès
-	pass
+	print("[Vue] Paquet ", _packet.shape, " ", _packet.color, " ", _packet.target_number, " bien reçu !")
 
 func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
 	# Feedback immédiat pour le prototype : le carré devient rouge un instant

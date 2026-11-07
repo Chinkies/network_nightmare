@@ -14,6 +14,10 @@ extends BaseMode
 # --- Sélection de device --- 
 var selected_device: NetworkDevice = null
 
+# --- Drag & Drop ---
+var is_dragging: bool = false
+var drag_start_cell: Vector2i = Vector2i.ZERO
+
 
 # =====================
 # ===== METHODES  =====
@@ -27,6 +31,8 @@ func _ready() -> void:
 
 
 func exit_mode() -> void:
+	if is_dragging:
+		_end_drag()
 	_deselect_current()
 
 
@@ -35,19 +41,33 @@ func exit_mode() -> void:
 # --------------------------
 
 func handle_unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		# 1. On récupère la position locale de la souris par rapport au GridView
-		var local_pos = grid_view.get_local_mouse_position()
-		var cell = grid_view.local_to_cell(local_pos)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		
-		# 2. Interrogation du Modèle : si la case est hors grille ou vide, on désélectionne
-		if not grid_board.is_cell_inside_grid(cell) or not grid_board.is_cell_occupied(cell):
-			_deselect_current()
+		# 1. CLIC ENFONCÉ dans le vide (Désélection)
+		if event.pressed:
+			var local_pos = grid_view.get_local_mouse_position()
+			var cell = grid_view.local_to_cell(local_pos)
+			if not grid_board.is_cell_inside_grid(cell) or not grid_board.is_cell_occupied(cell):
+				_deselect_current()
+				
+		# 2. CLIC RELÂCHÉ (Fin du Drag)
+		elif not event.pressed and is_dragging:
+			_end_drag()
 
 
-func handle_item_interaction_started(item: Variant) -> void:
+## Au clic d'un device, s'il n'est pas déjà séléctionné le sélectionne. 
+## S'il n'est pas sélectionné et qu'il n'est pas branché commence le drag
+func handle_item_interaction_started(item: NetworkItem) -> void:
 	if item is NetworkDevice:
-		_select_device(item)
+		var device: NetworkDevice = item
+		
+		if device != selected_device:
+			_select_device(item)
+		else:
+			# Si le device est sélectionné et non connecté, on démarre le Drag & Drop
+			if not device.is_wired():
+				is_dragging = true
+				drag_start_cell = item.grid_position
 
 
 ## Au drop d'un device sélectionné depuis le menu de sélection, place ce device sur la grille si la position est valide
@@ -94,7 +114,7 @@ func handle_rotate_requested(direction: int) -> void:
 		return
 		
 	# On ne peut pas tourner une machine déjà connectée à des câbles
-	if not selected_device.input_wires.is_empty() or not selected_device.output_wires.is_empty():
+	if selected_device.is_wired():
 		print("[EditMode] Impossible de tourner une machine connectée.")
 		return
 		
@@ -112,6 +132,7 @@ func handle_rotate_requested(direction: int) -> void:
 # --- LOGIQUE PRIVEE --- 
 # ----------------------
 
+## Enregistre un device comme sélectionné et créé un feedback visuel, s'il ne l'est pas déjà
 func _select_device(device: NetworkDevice) -> void:
 	if selected_device == device:
 		return
@@ -122,12 +143,60 @@ func _select_device(device: NetworkDevice) -> void:
 	var view = grid_view.get_device_view(selected_device)
 	if view != null:
 		view.set_selected(true)
-	print("[EditMode] Appareil sélectionné : ", selected_device.id)
 
 
+## Réinitialise la sélection
 func _deselect_current() -> void:
 	if selected_device != null:
 		var view = grid_view.get_device_view(selected_device)
 		if view != null:
 			view.set_selected(false)
 		selected_device = null
+
+
+## Gère le déplacement en direct lors du drag
+func _process(_delta: float) -> void:
+	if is_dragging and selected_device != null:
+		var mouse_pos = grid_view.get_global_mouse_position()
+		var cell = grid_view.local_to_cell(mouse_pos - grid_view.global_position)
+		
+		# 1. On déplace visuellement la machine sous la souris (centrée)
+		grid_view.set_device_visual_position(selected_device, mouse_pos)
+		
+		# 2. On calcule si la case survolée est valide
+		var is_valid = false
+		if grid_board.is_cell_inside_grid(cell):
+			if not grid_board.is_cell_occupied(cell) or cell == drag_start_cell:
+				is_valid = true
+				
+		# 3. On ordonne le highlight vert/rouge
+		grid_view.set_drag_highlight(cell, is_valid)
+
+
+## Met fin au drag. Si la case finale est valide, enregistre le déplacement, sinon replace le device à la cellule de départ
+func _end_drag() -> void:
+	is_dragging = false
+	grid_view.clear_drag_highlight()
+	
+	if selected_device == null:
+		return
+		
+	var mouse_pos = grid_view.get_global_mouse_position()
+	var cell = grid_view.local_to_cell(mouse_pos - grid_view.global_position)
+	
+	# Vérification de la validité du placement
+	if grid_board.is_cell_inside_grid(cell) and (not grid_board.is_cell_occupied(cell) or cell == drag_start_cell):
+		# Déplacement valide (Logique)
+		grid_board.unregister_device(selected_device)
+		selected_device.grid_position = cell
+		grid_board.register_device(selected_device)
+	else:
+		# Déplacement invalide : on restaure la case de départ
+		cell = drag_start_cell
+
+	# On ordonne l'animation de la Vue pour s'aimanter (snap) proprement au centre de la case finale
+	var target_pos = grid_view.cell_to_world_center(cell)
+	var view = grid_view.get_device_view(selected_device)
+	if view != null:
+		var tween = create_tween()
+		tween.tween_property(view, "global_position", target_pos, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)

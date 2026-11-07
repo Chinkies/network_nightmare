@@ -218,9 +218,35 @@ func set_port_available(device: NetworkDevice, port_id: int) -> bool:
 
 
 
-# ------------------------------------
-# --- Gestion du Drag & Drop natif ---
-# ------------------------------------
+# -------------------------------------------------------------
+# --- Gestion du Drag & Drop Manuel (déplacement de device) ---
+# -------------------------------------------------------------
+
+## Force l'affichage du survol (vert/rouge) sur une cellule précise
+func set_drag_highlight(cell: Vector2i, is_valid: bool) -> void:
+	if _current_drag_cell != cell or _is_current_cell_valid != is_valid or not _is_dragging_over:
+		_is_dragging_over = true
+		_current_drag_cell = cell
+		_is_current_cell_valid = is_valid
+		queue_redraw()
+
+## Cache le survol
+func clear_drag_highlight() -> void:
+	if _is_dragging_over:
+		_is_dragging_over = false
+		queue_redraw()
+
+## Place visuellement un appareil à une position spatiale (utilisé pendant le drag)
+func set_device_visual_position(device: NetworkDevice, global_pos: Vector2) -> void:
+	var view = get_device_view(device)
+	if view != null:
+		view.global_position = global_pos
+
+
+
+# -----------------------------------------------------
+# --- Gestion du Drag & Drop natif (pose de device) ---
+# -----------------------------------------------------
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not grid_board: 

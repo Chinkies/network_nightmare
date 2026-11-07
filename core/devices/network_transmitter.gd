@@ -33,6 +33,7 @@ func simulate(delta: float) -> void:
 			push_error("[NetworkTransmitter] Event n°%s sans paquets !", schedule_index)
 			schedule_index += 1
 			emission_timer = 0.0
+		
 		elif emission_timer >= current_event.delay:
 			# Si le buffer a de la place, on instancie et on pousse le paquet dedans
 			if buffer.size() < buffer_capacity:
@@ -75,7 +76,7 @@ func _process_next_packet() -> void:
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
 		print("[Transmitter] Paquet emit")
-		packet_processed.emit(packet)
+		# packet_processed.emit(packet)
 
 ## Surcharge pour réinitialiser le calendrier d'émission du transmitter
 func reset_state() -> void:
