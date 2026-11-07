@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://8rwb8mt8yiuu" path="res://levels/main.gd" id="1_3vw7n"]
 [ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://views/camera/pan_zoom_camera.gd" id="2_vmibe"]
+[ext_resource type="PackedScene" uid="uid://dqg20wubu8que" path="res://ui/pause_menu/pause_menu.tscn" id="3_3lbvr"]
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://ui/puzzle_ui/puzzle_ui.tscn" id="3_bvijt"]
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://core/simulation/simulation_runner.gd" id="4_3mabw"]
 [ext_resource type="Script" uid="uid://cd6ku4d1qpfmt" path="res://core/level_manager.gd" id="4_3pm0d"]
@@ -29,16 +30,19 @@ script = ExtResource("2_vmibe")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
 
+[node name="PauseMenu" parent="CanvasLayer" unique_id=1230819823 instance=ExtResource("3_3lbvr")]
+
 [node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
 unique_name_in_owner = true
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui")]
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui", "pause_menu")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
 simulation = NodePath("SimulationRunner")
 grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
+pause_menu = NodePath("../CanvasLayer/PauseMenu")
 debug_transmitter_data = ExtResource("5_n3j8x")
 debug_transmitter_cell = Vector2i(2, 2)
 
