@@ -185,11 +185,11 @@ func _unhandled_input(event: InputEvent) -> void:
 					_on_reset_requested()
 					get_viewport().set_input_as_handled()
 
-			KEY_S:
+			KEY_F:
 				_on_simulation_requested()
 				get_viewport().set_input_as_handled()
 
-			KEY_Z:
+			KEY_A:
 				_on_speed_requested()
 				get_viewport().set_input_as_handled()
 
