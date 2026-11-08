@@ -16,3 +16,10 @@ margin = Vector2(20, 20)
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2084630119]
 layout_mode = 0
 stretch_mode = 2
+
+[node name="StockLabel" type="Label" parent="." unique_id=841359991]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 18

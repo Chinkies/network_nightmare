@@ -14,6 +14,10 @@ signal hint_button_pressed
 ## Liste des items disponibles
 @export var available_devices: Array[NetworkDeviceData] = []
 
+# Stocke les limites maximales et les quantités restantes { "device_id": nombre_restant }
+var device_limits: Dictionary = {}
+var remaining_stocks: Dictionary = {}
+
 # --- RÉFÉRENCES AUX 7 BOUTONS ---
 @onready var simulation_button: TextureButton = %SimulationButton
 @onready var reset_button: TextureButton = %ResetButton
@@ -54,15 +58,83 @@ func _ready() -> void:
 
 	call_deferred("_setup_menu_with_resources")
 
+## Initialise les quotas du niveau
+func initialize_device_limits(limits: Dictionary) -> void:
+	device_limits = limits.duplicate()
+	remaining_stocks.clear()
+	
+	for device_data in available_devices:
+		if device_data:
+			# Si aucune limite n'est définie pour ce device dans le niveau, on met un quota par défaut (ex: infini ou 99)
+			var key = device_data.device_id_template # Ou l'identifiant que tu utilises pour tes devices
+			remaining_stocks[key] = device_limits.get(key, 99)
 
-## Création du menu des appareils disponibles
+
+## Consomme 1 exemplaire du stock lors du placement
+func consume_device_stock(device: NetworkDevice) -> void:
+	var key = _get_device_stock_key(device)
+	if remaining_stocks.has(key):
+		remaining_stocks[key] = max(0, remaining_stocks[key] - 1)
+		_update_menu_display()
+
+
+## Restaure 1 exemplaire du stock lors de la suppression
+func restore_device_stock(device: NetworkDevice) -> void:
+	var key = _get_device_stock_key(device)
+	if remaining_stocks.has(key):
+		var max_limit = device_limits.get(key, 99)
+		remaining_stocks[key] = min(max_limit, remaining_stocks[key] + 1)
+		_update_menu_display()
+
+## Utilitaire unifié pour récupérer la clé de stock d'un device
+func _get_device_stock_key(device: NetworkDevice) -> String:
+	match device.device_type:
+		NetworkDevice.Type.SWITCH:
+			return "switch"
+		NetworkDevice.Type.RECEIVER:
+			return "receiver"
+		NetworkDevice.Type.GENERIC:
+			return "generic"
+		_:
+			return ""
+
+func _update_menu_display() -> void:
+	if has_node("%DeviceSelectionMenu"):
+		%DeviceSelectionMenu.update_stocks(remaining_stocks)
+
+
+## Création du menu des appareils disponibles (en ignorant les Transmitters)
 func _setup_menu_with_resources() -> void:
 	if has_node("%DeviceSelectionMenu"):
-		%DeviceSelectionMenu.setup_menu(available_devices)
-		print("[UI] Menu peuplé avec %d devices." % available_devices.size())
+		# On filtre pour exclure les Transmitters du menu de sélection
+		var placeable_devices: Array[NetworkDeviceData] = []
+		for device_data in available_devices:
+			if device_data and device_data.device_type != NetworkDevice.Type.TRANSMITTER:
+				placeable_devices.append(device_data)
+				
+				# Initialisation de la clé de stock associée
+				var key = _get_data_stock_key(device_data)
+				if not remaining_stocks.has(key):
+					remaining_stocks[key] = device_limits.get(key, 99)
+		
+		%DeviceSelectionMenu.setup_menu(placeable_devices, remaining_stocks)
+		print("[UI] Menu peuplé avec %d devices plaçables." % placeable_devices.size())
 	else:
-		push_warning("[UI] Impossible de trouver le nœud UIMenuDeviceSelection via %UIMenuDeviceSelection")
+		push_warning("[UI] Impossible de trouver le nœud UIMenuDeviceSelection")
 
+
+func _get_data_stock_key(data: NetworkDeviceData) -> String:
+	match data.device_type:
+		NetworkDevice.Type.SWITCH:
+			return "switch"
+		NetworkDevice.Type.RECEIVER:
+			return "receiver"
+		NetworkDevice.Type.GENERIC:
+			return "generic"
+		_:
+			return ""
+
+			
 # ==========================================
 # ===== METHODES DE MISE À JOUR VISUELLE ===
 # ==========================================

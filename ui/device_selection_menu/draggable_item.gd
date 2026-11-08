@@ -5,13 +5,22 @@ extends Control
 @export var margin: Vector2
 
 var device_data: NetworkDeviceData
+var current_stock: int = 99
 
 #pas sur de ça, c'est pour la texture dans l'ui mais ça sera surement récup via le networkDevice
 @onready var device_visual: TextureRect = $TextureRect
+@onready var stock_label: Label = $StockLabel
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_update_visuals()
+
+func set_stock(stock: int) -> void:
+	current_stock = stock
+	if stock_label:
+		stock_label.text = "x%d" % current_stock
+		#Grise la device si y'a plus rien
+		modulate.a = 0.5 if current_stock <= 0 else 1.0
 
 ## Attribue la texture et ajuste sa taille
 func _update_visuals() -> void:
@@ -38,7 +47,7 @@ func _update_visuals() -> void:
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	
-	if not device_data:
+	if not device_data or current_stock <= 0:
 		return null
 		
 	## Création du control node avec la texture
