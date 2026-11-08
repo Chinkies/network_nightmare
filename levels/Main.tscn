@@ -30,10 +30,10 @@ script = ExtResource("2_vmibe")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
 
-[node name="PauseMenu" parent="CanvasLayer" unique_id=1230819823 instance=ExtResource("3_3lbvr")]
-
 [node name="PuzzleUi" parent="CanvasLayer" unique_id=843734891 instance=ExtResource("3_bvijt")]
 unique_name_in_owner = true
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=1230819823 instance=ExtResource("3_3lbvr")]
 
 [node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui", "pause_menu")]
 script = ExtResource("4_3pm0d")
