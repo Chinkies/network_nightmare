@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://b1vbd0e5cmo3b"]
+
+[node name="TooltipManager" type="CanvasLayer" unique_id=1784647373]
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=213366643]
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Panel" unique_id=1850499488]
+layout_mode = 2
+autowrap_mode = 2

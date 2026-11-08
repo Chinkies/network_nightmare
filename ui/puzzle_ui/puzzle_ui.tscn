@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://dacb2cdaf1703"]
 
+[ext_resource type="Theme" uid="uid://b7clmriaof56q" path="res://resources/theme/tooltip.tres" id="1_0vpv5"]
 [ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://ui/puzzle_ui/puzzle_ui_controller.gd" id="1_kijq7"]
 [ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://core/resource_definitions/network_device_data.gd" id="2_8hbgh"]
 [ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="3_8hbgh"]
@@ -1138,6 +1139,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("1_0vpv5")
 script = ExtResource("1_kijq7")
 available_devices = Array[ExtResource("2_8hbgh")]([ExtResource("3_8hbgh"), ExtResource("4_5p8q3")])
 wiring_disable_textures = {
@@ -1240,6 +1242,7 @@ theme_override_constants/margin_bottom = 5
 [node name="HintButton" type="Button" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/HintContainer/MarginContainer" unique_id=1545421254]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Hint : Show an hint for the puzzle"
 theme = SubResource("Theme_pdk13")
 
 [node name="MarginDelete" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=776137563]
@@ -1254,6 +1257,7 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Delete mode : delete wires and devices"
 toggle_mode = true
 texture_normal = ExtResource("8_pdk13")
 texture_pressed = ExtResource("15_dp221")
@@ -1272,6 +1276,7 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Wiring mode : connect the device to each other"
 toggle_mode = true
 texture_normal = ExtResource("9_kawcb")
 texture_pressed = ExtResource("18_q3g77")
@@ -1290,6 +1295,7 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Edit mode : place and edit the device on the grid"
 toggle_mode = true
 texture_normal = ExtResource("8_tot04")
 texture_pressed = ExtResource("9_2uvxc")
@@ -1300,6 +1306,7 @@ texture_disabled = ExtResource("36_0vpv5")
 texture_filter = 1
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+tooltip_text = "Arrête et "
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
@@ -1308,6 +1315,7 @@ theme_override_constants/margin_bottom = 5
 [node name="ResetButton" type="TextureButton" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginReset" unique_id=796788466]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Reset the simulation"
 disabled = true
 texture_normal = ExtResource("38_p0i88")
 texture_pressed = ExtResource("39_0vpv5")
@@ -1326,6 +1334,7 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Start the simulation"
 texture_normal = SubResource("AtlasTexture_kawcb")
 texture_pressed = ExtResource("24_l0lmg")
 texture_hover = ExtResource("25_mxk3m")
@@ -1343,6 +1352,7 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Change the simulation speed"
 texture_normal = ExtResource("8_kawcb")
 texture_pressed = ExtResource("12_ni558")
 texture_hover = ExtResource("13_i5nrg")
