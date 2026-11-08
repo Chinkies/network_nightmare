@@ -12,6 +12,9 @@ extends Node
 @export var grid_view: GridView
 @export var puzzle_ui: PuzzleUiController
 
+@export_category("UI & Menus")
+@export var pause_menu: PauseMenu
+
 ## Ressource du transmitter de test à placer au lancement (pour le dev)
 @export_category("Test & Debug - Mock Level Setup")
 @export var debug_transmitter_data: NetworkTransmitterData
@@ -94,8 +97,6 @@ func _on_reset_requested() -> void:
 		var wire_view = grid_view.get_wire_view(wire)
 		if wire_view and wire_view.has_method("reset_state"):
 			wire_view.reset_state()
-
-	current_speed_index = 0
 	
 	# Retour forcé en mode édition
 	mode_manager.switch_mode_by_enum(ModeManager.GameMode.EDIT)
@@ -157,16 +158,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_ESCAPE:
-				# 1. On demande d'abord au ModeManager s'il a une action en cours à annuler (ex: quitter le mode wiring)
 				if mode_manager.cancel_action():
 					get_viewport().set_input_as_handled()
 					return
 					
-				# 2. Plus tard : Fermer les fenêtres de l'UI
-				
-				# 3. Sinon : Menu Pause
-				print("[LevelManager] Rien à annuler : Ouverture du menu de Pause (TODO)")
-				get_viewport().set_input_as_handled()
+				if pause_menu:
+					pause_menu.open()
+					get_viewport().set_input_as_handled()
+				else:
+					push_warning("[LevelManager] La référence 'pause_menu' n'est pas assignée !")
 
 			KEY_W:
 				if not simulation.has_started:
