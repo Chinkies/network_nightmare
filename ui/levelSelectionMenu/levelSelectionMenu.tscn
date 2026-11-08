@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://defsx4in2glgw"]
 
 [ext_resource type="Script" uid="uid://c4rpfwhmk85m" path="res://ui/levelSelectionMenu/levelSelectionMenu.gd" id="1_2lye0"]
-[ext_resource type="Resource" path="res://levels/definitions/level_01.tres" id="2_0d1hw"]
+[ext_resource type="Resource" uid="uid://quotpy3ltltf" path="res://levels/definitions/level_01.tres" id="2_0d1hw"]
+[ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="2_8j836"]
 [ext_resource type="Script" uid="uid://d1c3ygvugah2e" path="res://ui/levelSelectionMenu/path_lines.gd" id="2_y1sm7"]
 [ext_resource type="Texture2D" uid="uid://nfeovtlc4dkl" path="res://resources/ui/levelSelectionMenu/level/5/level5.tres" id="3_pgeke"]
 [ext_resource type="Texture2D" uid="uid://crx55357khlov" path="res://resources/ui/levelSelectionMenu/level/5/level5Pressed.tres" id="4_2a5du"]
@@ -27,7 +28,7 @@
 [ext_resource type="StyleBox" uid="uid://hr21uhagd84l" path="res://resources/style/styleButtonPauseHover.tres" id="24_0d1hw"]
 [ext_resource type="StyleBox" uid="uid://cgt7qxbcidluo" path="res://resources/style/styleButtonPausePressed.tres" id="25_8j836"]
 
-[node name="LevelSelectionMenu" type="Control" unique_id=1182528442 node_paths=PackedStringArray("level_button_1", "main_menu_button")]
+[node name="LevelSelectionMenu" type="Control" unique_id=1182528442 node_paths=PackedStringArray("level_buttons", "main_menu_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,8 +37,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2lye0")
 main_menu_scene = "uid://c1gsg2ri04juw"
-level_definition_1 = ExtResource("2_0d1hw")
-level_button_1 = NodePath("LevelButtonsContainer/buttonLevel1")
+level_definitions = Array[ExtResource("2_8j836")]([ExtResource("2_0d1hw")])
+level_buttons = [NodePath("LevelButtonsContainer/buttonLevel1")]
 main_menu_button = NodePath("MarginContainer/buttonMainMenu")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1121171427]
