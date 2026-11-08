@@ -43,6 +43,10 @@ grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 pause_menu = NodePath("../CanvasLayer/PauseMenu")
+level_device_limits = {
+"receiver": 2,
+"switch": 3
+}
 debug_transmitter_data = ExtResource("5_n3j8x")
 debug_transmitter_cell = Vector2i(2, 2)
 
