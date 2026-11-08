@@ -18,6 +18,8 @@ extends Node
 ## Niveau de test par défaut si la scène est lancée directement depuis l'éditeur
 @export var fallback_default_level: LevelDefinition
 
+var is_loading_level: bool = false
+
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
 var current_speed_index: int = 0
@@ -66,6 +68,7 @@ func _connect_signals() -> void:
 
 ## Charge la configuration du niveau depuis le LevelContext
 func _load_current_level() -> void:
+	is_loading_level = true
 	var level_def: LevelDefinition = null
 	
 	# Vérifie si le LevelContext existe en tant qu'autoload
@@ -80,6 +83,7 @@ func _load_current_level() -> void:
 		
 	if not level_def:
 		push_error("[LevelManager] Erreur critique : Aucun LevelDefinition valide trouvé pour initialiser le niveau !")
+		is_loading_level = false
 		return
 
 	print("[LevelManager] Chargement du niveau : ", level_def.level_id)
@@ -141,10 +145,17 @@ func _load_current_level() -> void:
 			view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
 
 		# Enregistrement dans les systèmes
-		grid_board.register_device(logic_device)
-		simulation.register_device(logic_device)
+		var registered := grid_board.register_device(logic_device)
+
+		if not registered:
+			push_error("[LevelManager] Impossible d'enregistrer le device '%s' à la cellule %s." % [unique_id, cell])
+			view_node.queue_free()
+			continue
 		
+	is_loading_level = false
 	print("[LevelManager] Niveau initialisé avec succès.")
+
+
 
 # ============================================
 # ===== CALLBACKS : UI -> LOGIQUE DE JEU =====
@@ -209,12 +220,15 @@ func _on_speed_requested() -> void:
 	
 	puzzle_ui.set_speed_button_state(new_speed)
 
+
 func _on_hint_requested() -> void:
 	print("[LevelManager] Demande d'indice reçue.")
 
+
 func _on_device_placed_on_grid(device: NetworkDevice) -> void:
 	simulation.register_device(device)
-	if puzzle_ui:
+	
+	if not is_loading_level:
 		puzzle_ui.consume_device_stock(device)
 
 
@@ -235,11 +249,11 @@ func _on_mode_changed(new_mode: BaseMode) -> void:
 		simulation.stop()
 		puzzle_ui.set_simulation_button_state(false)
 
+
+
 # ==========================================
 # ===== GESTION DES INPUTS GLOBAUX =========
 # ==========================================
-
-# Pour le moment j'y ai pas touché c'est la vielle gestion de l'échap
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

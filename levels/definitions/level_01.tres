@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://quotpy3ltltf"]
+[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://cy0f4pas87ahm"]
 
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="1_level"]
 [ext_resource type="Script" uid="uid://cil0ws5dyw4l2" path="res://core/resource_definitions/schedule_event.gd" id="1_y4ixx"]
