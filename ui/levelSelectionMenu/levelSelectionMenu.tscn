@@ -22,8 +22,11 @@
 [ext_resource type="Texture2D" uid="uid://boo6i2qr1j87e" path="res://resources/ui/levelSelectionMenu/level/1/level1Pressed.tres" id="20_s4qyl"]
 [ext_resource type="Texture2D" uid="uid://dm46vwjh2k2m6" path="res://resources/ui/levelSelectionMenu/level/1/level1Hover.tres" id="21_2l8ah"]
 [ext_resource type="Texture2D" uid="uid://lrmjycsiwwpe" path="res://resources/ui/levelSelectionMenu/level/1/level1Disable.tres" id="22_0x057"]
+[ext_resource type="StyleBox" uid="uid://ch0ss5nyr6co3" path="res://resources/style/styleButtonPause.tres" id="23_2a5du"]
+[ext_resource type="StyleBox" uid="uid://hr21uhagd84l" path="res://resources/style/styleButtonPauseHover.tres" id="24_0d1hw"]
+[ext_resource type="StyleBox" uid="uid://cgt7qxbcidluo" path="res://resources/style/styleButtonPausePressed.tres" id="25_8j836"]
 
-[node name="LevelSelectionMenu" type="Control" unique_id=1182528442]
+[node name="LevelSelectionMenu" type="Control" unique_id=1182528442 node_paths=PackedStringArray("level_button_1", "main_menu_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,6 +35,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2lye0")
 first_level_scene = "uid://t7qhd72rywme"
+main_menu_scene = "uid://c1gsg2ri04juw"
+level_button_1 = NodePath("LevelButtonsContainer/buttonLevel1")
+main_menu_button = NodePath("MarginContainer/buttonMainMenu")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1121171427]
 layout_mode = 1
@@ -118,3 +124,21 @@ texture_normal = ExtResource("19_rocjv")
 texture_pressed = ExtResource("20_s4qyl")
 texture_hover = ExtResource("21_2l8ah")
 texture_disabled = ExtResource("22_0x057")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=627310922]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="buttonMainMenu" type="Button" parent="MarginContainer" unique_id=264891607]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("23_2a5du")
+theme_override_styles/pressed = ExtResource("24_0d1hw")
+theme_override_styles/hover = ExtResource("25_8j836")
+text = "Return to Main Menu"

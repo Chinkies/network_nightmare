@@ -6,6 +6,7 @@ extends Control
 @export var main_menu_button: Button
 
 @export_file("*.tscn") var level_selection_path: String
+@export_file("*.tscn") var main_menu_path: String
 
 
 func _ready() -> void:
@@ -39,4 +40,8 @@ func go_to_level_selection() -> void:
 
 
 func go_to_main_menu() -> void:
-	go_to_level_selection()
+	get_tree().paused = false
+	if not main_menu_path.is_empty():
+		get_tree().change_scene_to_file(main_menu_path)
+	else:
+		push_error("[PauseMenu] Chemin du main menu non défini !")
