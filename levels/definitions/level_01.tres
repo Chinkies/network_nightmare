@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resource_definitions/level_definition.gd" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+level_id = "level_01"
+display_name = "Niveau 1"
+description = "Premier niveau de routage."
+grid_width = 10
+grid_height = 6
+device_limits = {
+"receiver": 1,
+"switch": 1
+}

@@ -15,6 +15,10 @@ run/main_scene="uid://c1gsg2ri04juw"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+LevelContext="*res://autoload/level_context.gd"
+
 [display]
 
 window/size/viewport_width=1440
@@ -25,8 +29,10 @@ window/stretch/aspect="expand"
 [file_customization]
 
 folder_colors={
+"res://autoload/": "yellow",
 "res://core/": "red",
-"res://gameplay_modes/": "orange",
+"res://gameplay_modes/": "blue",
+"res://levels/": "yellow",
 "res://resources/": "pink",
 "res://ui/": "teal",
 "res://views/": "green"

@@ -1,4 +1,4 @@
-class_name Main
+class_name LevelScene
 extends Node2D
 
 # =====================

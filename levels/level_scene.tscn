@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://t7qhd72rywme"]
 
-[ext_resource type="Script" uid="uid://8rwb8mt8yiuu" path="res://levels/main.gd" id="1_3vw7n"]
+[ext_resource type="Script" uid="uid://8rwb8mt8yiuu" path="res://levels/level_scene.gd" id="1_3vw7n"]
 [ext_resource type="Script" uid="uid://cto2cje5uq5ol" path="res://views/camera/pan_zoom_camera.gd" id="2_vmibe"]
 [ext_resource type="PackedScene" uid="uid://dqg20wubu8que" path="res://ui/pause_menu/pause_menu.tscn" id="3_3lbvr"]
 [ext_resource type="PackedScene" uid="uid://dacb2cdaf1703" path="res://ui/puzzle_ui/puzzle_ui.tscn" id="3_bvijt"]
