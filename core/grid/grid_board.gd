@@ -2,6 +2,15 @@ class_name GridBoard
 extends Node
 
 
+# --- Signaux ---
+
+signal device_registered(device: NetworkDevice)
+signal device_unregistered(device: NetworkDevice)
+
+signal wire_registered(wire: NetworkWire)
+signal wire_unregistered(wire: NetworkWire)
+
+
 # =====================
 # ===== ATTRIBUTS =====
 # =====================
@@ -94,6 +103,7 @@ func register_device(device: NetworkDevice) -> bool:
 		return false
 	
 	_occupied_cells[cell] = device
+	device_registered.emit(device)
 	return true
 
 ## Libère la cellule occupée par un device
@@ -104,6 +114,7 @@ func unregister_device(device: NetworkDevice) -> void:
 	var cell = device.grid_position
 	if _occupied_cells.get(cell) == device:
 		_occupied_cells.erase(cell)
+		device_unregistered.emit(device)
 
 
 ## Enregistre un wire et passe en "occupied" toutes les cellules qu'il occupe.
@@ -124,12 +135,16 @@ func register_wire(wire: NetworkWire) -> bool:
 	for cell in wire.occupied_cells:
 		_occupied_cells[cell] = wire
 	
+	wire_registered.emit(wire)
 	return true
 
 ## Libère toutes les cellules occupées par un Wire
 func unregister_wire(wire: NetworkWire) -> void:
 	if wire == null or wire.occupied_cells.size() == 0:
 		return
+	
 	for cell in wire.occupied_cells:
 		if _occupied_cells.get(cell) == wire:
 			_occupied_cells.erase(cell)
+	
+	wire_unregistered.emit(wire)

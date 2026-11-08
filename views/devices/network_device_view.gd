@@ -11,8 +11,9 @@ extends Node2D
 signal port_interaction_requested(device: NetworkDevice, local_port_id: int)
 
 # Signaux relatifs aux clics sur le device
-signal interaction_started(logic_item: Variant)
-signal interaction_ended(logic_item: Variant)
+signal interaction_started(logic_item: NetworkItem)
+signal interaction_ended(logic_item: NetworkItem)
+signal configuration_requested(device: NetworkDevice)
 
 
 # =====================
@@ -248,12 +249,18 @@ func _on_port_clicked(local_port_id: int) -> void:
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		# --- CLIC GAUCHE (Sélection / Drag) ---
 		if event.pressed:
 			is_pressed = true
 			interaction_started.emit(logic_device)
 		elif is_pressed: # Clic relâché
 			is_pressed = false
 			interaction_ended.emit(logic_device)
+		
+		# --- CLIC DROIT (Configuration) ---
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			get_viewport().set_input_as_handled()
+			configuration_requested.emit(logic_device)
 
 
 func _on_mouse_exited() -> void:

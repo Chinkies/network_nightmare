@@ -37,6 +37,10 @@ func _ready() -> void:
 		if child is BaseMode:
 			child.mode_manager = self
 	
+	# Connection au signaux de GridView
+	var grid_view = get_node("../GridView")
+	grid_view.device_view_registered.connect(_on_new_device_view_registered)
+	
 	# État initial au lancement
 	call_deferred("_switch_mode", edit_mode)
 
@@ -87,6 +91,19 @@ func switch_to_previous_mode() -> void:
 
 
 
+# ------------------------------------------
+# --- Gestion des signaux des DeviceView ---
+# ------------------------------------------
+
+## Appelée lorsqu'une NetworkDeviceView est enregistrée dans la GridView
+## Connecte tous les signaux de la View aux fonctions du ModeManager
+func _on_new_device_view_registered(view: NetworkDeviceView) -> void:
+	view.port_interaction_requested.connect(on_port_interaction_requested)
+	view.interaction_started.connect(on_item_interaction_started)
+	view.interaction_ended.connect(on_item_interaction_ended)
+	view.configuration_requested.connect(on_configuration_requested)
+
+
 # ------------------------------------
 # --- Fonctions relatives au modes ---
 # ------------------------------------
@@ -132,6 +149,14 @@ func on_item_interaction_started(item: Variant) -> void:
 func on_item_interaction_ended(item: Variant) -> void:
 	if current_mode and current_mode.has_method("handle_item_interaction_ended"):
 		current_mode.handle_item_interaction_ended(item)
+
+
+func on_configuration_requested(device: NetworkDevice) -> void:
+	if not device.is_configurable:
+		print("[Configuration] Cet appareil n'a pas de paramètres modifiables.")
+		return
+		
+	print("[Configuration] Ouverture de l'interface pour l'appareil : ", device.id)
 
 
 func on_rotate_requested(direction: int) -> void:

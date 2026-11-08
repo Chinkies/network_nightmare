@@ -61,6 +61,11 @@ func cancel_action() -> bool:
 func handle_item_interaction_started(item: NetworkItem) -> void:
 	if item == null or not delete_timer.is_stopped():
 		return
+	
+	# Vérification des droits de suppression
+	if not item.is_deletable:
+		print("[DeleteMode] Cet objet est verrouillé par le niveau, suppression interdite.")
+		return
 
 	target_item = item
 	delete_timer.start()

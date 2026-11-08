@@ -41,7 +41,7 @@ func _ready() -> void:
 
 
 func _connect_signals() -> void:
-	# Connexion des signaux provenant de l'UI
+	# Connexion des signaux de l'ui
 	puzzle_ui.simulation_button_pressed.connect(_on_simulation_requested)
 	puzzle_ui.reset_button_pressed.connect(_on_reset_requested)
 	puzzle_ui.wiring_button_pressed.connect(_on_wiring_requested)
@@ -50,7 +50,14 @@ func _connect_signals() -> void:
 	puzzle_ui.speed_button_pressed.connect(_on_speed_requested)
 	puzzle_ui.hint_button_pressed.connect(_on_hint_requested)
 
+	# Connexion des signaux du ModeManager
 	mode_manager.mode_changed.connect(_on_mode_changed)
+	
+	# Connexion des signaux du GridBoard
+	grid_board.device_registered.connect(simulation.register_device)
+	grid_board.device_unregistered.connect(simulation.unregister_device)
+	grid_board.wire_registered.connect(simulation.register_wire)
+	grid_board.wire_unregistered.connect(simulation.unregister_wire)
 
 # ============================================
 # ===== CALLBACKS : UI -> LOGIQUE DE JEU =====
@@ -238,12 +245,6 @@ func _debug_spawn_transmitter() -> void:
 	# 3. Liaison vue / logique
 	view_node.setup(logic_device, debug_transmitter_data.texture, float(grid_view.cell_size))
 
-	# === CORRECTION : Enregistrement de la vue dans le GridView pour que les ports s'affichent ===
-	grid_view.register_device_view(logic_device, view_node)
-
-	if not view_node.port_interaction_requested.is_connected(mode_manager.on_port_interaction_requested):
-		view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
-
-	# 4. Enregistrements croisés via le GridBoard et le SimulationRunner
+	# 4. Enregistrement dans les systèmes
 	grid_board.register_device(logic_device)
-	simulation.register_device(logic_device)
+	grid_view.register_device_view(logic_device, view_node)

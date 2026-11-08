@@ -64,6 +64,11 @@ func handle_item_interaction_started(item: NetworkItem) -> void:
 		if device != selected_device:
 			_select_device(item)
 		else:
+			# Vérification des droits de déplacement
+			if not device.is_movable:
+				print("[EditMode] Cette machine est fixée par le niveau, déplacement interdit.")
+				return
+			
 			# Si le device est sélectionné et non connecté, on démarre le Drag & Drop
 			if not device.is_wired():
 				is_dragging = true
@@ -88,8 +93,6 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 		return
 		
 	var device_view = device_data.device_scene.instantiate() as NetworkDeviceView
-	
-	# On demande au GridView de calculer le centre géométrique
 	device_view.global_position = grid_view.cell_to_world_center(cell)
 	
 	# Le GridView sert de conteneur d'affichage
@@ -99,18 +102,15 @@ func handle_device_drop(cell: Vector2i, device_data: Variant) -> void:
 	# 4. Enregistrement dans les systèmes
 	grid_board.register_device(logic_device)
 	grid_view.register_device_view(logic_device, device_view)
-	simulation.register_device(logic_device)
-	
-	# 5. Abonnement dynamique : on connecte les signaux du device au ModeManager
-	device_view.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
-	device_view.interaction_started.connect(mode_manager.on_item_interaction_started)
-	device_view.interaction_ended.connect(mode_manager.on_item_interaction_ended)
-	
-	print("[EditMode] Appareil posé avec succès : ", unique_id)
 
 
 func handle_rotate_requested(direction: int) -> void:
 	if selected_device == null:
+		return
+	
+	# Vérification des droits de déplacement
+	if not selected_device.is_movable:
+		print("[EditMode] Cette machine est fixée par le niveau, rotation interdite.")
 		return
 		
 	# On ne peut pas tourner une machine déjà connectée à des câbles
@@ -123,8 +123,6 @@ func handle_rotate_requested(direction: int) -> void:
 	var view = grid_view.get_device_view(selected_device)
 	if view != null:
 		view.update_rotation(direction, grid_view.cell_size)
-		
-	print("[EditMode] Appareil tourné : ", selected_device.id)
 
 
 

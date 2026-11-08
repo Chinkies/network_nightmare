@@ -12,12 +12,13 @@ var emission_timer: float = 0.0
 
 func _init(p_id: String, p_schedule: Array[ScheduleEvent], p_capacity: int = 5, p_rate:float = 2.0) -> void:
 	super(p_id, p_capacity, p_rate)
+	
 	device_type = Type.TRANSMITTER
+	port_types = {0: PortType.STATIC_OUTPUT}
+	is_deletable = false
+	is_movable = false
+	
 	emission_schedule = p_schedule
-
-	port_types = {
-		2: PortType.STATIC_OUTPUT
-	}
 
 ## Surcharge de simulate pour gérer le calendrier d'émission de paquets
 func simulate(delta: float) -> void:

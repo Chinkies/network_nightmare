@@ -3,8 +3,8 @@ extends Line2D
 
 # --- Signaux ---
 
-signal interaction_started(logic_item: Variant)
-signal interaction_ended(logic_item: Variant)
+signal interaction_started(logic_item: NetworkItem)
+signal interaction_ended(logic_item: NetworkItem)
 
 
 # =====================

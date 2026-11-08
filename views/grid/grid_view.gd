@@ -8,6 +8,9 @@ extends Control
 ## Émis quand le joueur lâche un appareil sur une case valide
 signal device_drop_requested(cell: Vector2i, device_data: Variant)
 
+signal device_view_registered(view: NetworkDeviceView)
+signal wire_view_registered(view: NetworkWireView)
+
 
 # =====================
 # ===== ATTRIBUTS =====
@@ -144,6 +147,7 @@ func get_delete_bar_placement(mouse_global_pos: Vector2) -> Vector2:
 func register_device_view(device: NetworkDevice, view: NetworkDeviceView) -> void:
 	if device != null and view != null and view.logic_device == device:
 		device_views[device] = view
+		device_view_registered.emit(view)
 
 func unregister_device_view(device: NetworkDevice) -> void:
 	if device != null and device_views.has(device):
