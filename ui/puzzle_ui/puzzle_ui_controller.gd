@@ -56,84 +56,63 @@ func _ready() -> void:
 	speed_button.pressed.connect(func(): speed_button_pressed.emit())
 	hint_button.pressed.connect(func(): hint_button_pressed.emit())
 
-	call_deferred("_setup_menu_with_resources")
-
 ## Initialise les quotas du niveau
 func initialize_device_limits(limits: Dictionary) -> void:
 	device_limits = limits.duplicate()
 	remaining_stocks.clear()
 	
-	for device_data in available_devices:
-		if device_data:
-			# Si aucune limite n'est définie pour ce device dans le niveau, on met un quota par défaut (ex: infini ou 99)
-			var key = device_data.device_id_template # Ou l'identifiant que tu utilises pour tes devices
-			remaining_stocks[key] = device_limits.get(key, 99)
+	_setup_menu_with_resources()
 
 
 ## Consomme 1 exemplaire du stock lors du placement
 func consume_device_stock(device: NetworkDevice) -> void:
-	var key = _get_device_stock_key(device)
-	if remaining_stocks.has(key):
-		remaining_stocks[key] = max(0, remaining_stocks[key] - 1)
+	var dtype = device.device_type
+	if remaining_stocks.has(dtype):
+		remaining_stocks[dtype] = max(0, remaining_stocks[dtype] - 1)
 		_update_menu_display()
-
 
 ## Restaure 1 exemplaire du stock lors de la suppression
 func restore_device_stock(device: NetworkDevice) -> void:
-	var key = _get_device_stock_key(device)
-	if remaining_stocks.has(key):
-		var max_limit = device_limits.get(key, 99)
-		remaining_stocks[key] = min(max_limit, remaining_stocks[key] + 1)
+	var dtype = device.device_type
+	if remaining_stocks.has(dtype):
+		var max_limit = device_limits.get(dtype, 99)
+		remaining_stocks[dtype] = min(max_limit, remaining_stocks[dtype] + 1)
 		_update_menu_display()
-
-## Utilitaire unifié pour récupérer la clé de stock d'un device
-func _get_device_stock_key(device: NetworkDevice) -> String:
-	match device.device_type:
-		NetworkDevice.Type.SWITCH:
-			return "switch"
-		NetworkDevice.Type.RECEIVER:
-			return "receiver"
-		NetworkDevice.Type.GENERIC:
-			return "generic"
-		_:
-			return ""
 
 func _update_menu_display() -> void:
 	if has_node("%DeviceSelectionMenu"):
 		%DeviceSelectionMenu.update_stocks(remaining_stocks)
 
 
-## Création du menu des appareils disponibles (en ignorant les Transmitters)
+## Création du menu des appareils disponibles (uniquement ceux autorisés par le niveau)
 func _setup_menu_with_resources() -> void:
 	if has_node("%DeviceSelectionMenu"):
-		# On filtre pour exclure les Transmitters du menu de sélection
 		var placeable_devices: Array[NetworkDeviceData] = []
+		
 		for device_data in available_devices:
-			if device_data and device_data.device_type != NetworkDevice.Type.TRANSMITTER:
-				placeable_devices.append(device_data)
+			if device_data == null:
+				continue
 				
-				# Initialisation de la clé de stock associée
-				var key = _get_data_stock_key(device_data)
-				if not remaining_stocks.has(key):
-					remaining_stocks[key] = device_limits.get(key, 99)
+			# On exclut les éléments fixes du niveau
+			if device_data.device_type == NetworkDevice.Type.TRANSMITTER or device_data.device_type == NetworkDevice.Type.RECEIVER:
+				continue
+				
+			var dtype = device_data.device_type
+			
+			# On récupère la limite définie dans le .tres (par défaut -1 si non défini)
+			var stock_limit = device_limits.get(dtype, -1)
+			
+			if stock_limit > 0:
+				placeable_devices.append(device_data)
+				remaining_stocks[dtype] = stock_limit
+			else:
+				print("[UI] Device %s exclu du niveau (quota à 0 ou non défini)." % device_data.device_name)
 		
 		%DeviceSelectionMenu.setup_menu(placeable_devices, remaining_stocks)
 		print("[UI] Menu peuplé avec %d devices plaçables." % placeable_devices.size())
 	else:
 		push_warning("[UI] Impossible de trouver le nœud UIMenuDeviceSelection")
-
-
-func _get_data_stock_key(data: NetworkDeviceData) -> String:
-	match data.device_type:
-		NetworkDevice.Type.SWITCH:
-			return "switch"
-		NetworkDevice.Type.RECEIVER:
-			return "receiver"
-		NetworkDevice.Type.GENERIC:
-			return "generic"
-		_:
-			return ""
-
+		
 			
 # ==========================================
 # ===== METHODES DE MISE À JOUR VISUELLE ===

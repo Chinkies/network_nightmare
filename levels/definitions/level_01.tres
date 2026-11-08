@@ -1,15 +1,105 @@
-[gd_resource type="Resource" script_class="LevelDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://quotpy3ltltf"]
 
-[ext_resource type="Script" path="res://core/resource_definitions/level_definition.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://cil0ws5dyw4l2" path="res://core/resource_definitions/schedule_event.gd" id="1_y4ixx"]
+[ext_resource type="Script" uid="uid://etua5m2qnltd" path="res://core/resource_definitions/network_packet_data.gd" id="2_omtm5"]
+[ext_resource type="Script" uid="uid://d0amqpyma2u0n" path="res://core/resource_definitions/level_device_entry.gd" id="3_jrnom"]
+[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="4_y4ixx"]
+[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="5_omtm5"]
+[ext_resource type="Script" uid="uid://njrtu55p54" path="res://core/resource_definitions/level_objective/level_objective.gd" id="6_kywl6"]
+[ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="7_omtm5"]
+
+[sub_resource type="Resource" id="Resource_au533"]
+script = ExtResource("2_omtm5")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_fmoe2"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_au533")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_h6avo"]
+script = ExtResource("2_omtm5")
+id = 2
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_fjgti"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_h6avo")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_5sa8j"]
+script = ExtResource("2_omtm5")
+id = 3
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_xkdr3"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_5sa8j")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_d48b5"]
+script = ExtResource("2_omtm5")
+id = 4
+target_number = 2
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_aet40"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_d48b5")
+delay = 0.2
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_t4yv6"]
+script = ExtResource("2_omtm5")
+id = 5
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_s5euo"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_t4yv6")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_3tqyv"]
+script = ExtResource("2_omtm5")
+id = 6
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_2yd0h"]
+script = ExtResource("1_y4ixx")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_5yvq2"]
+script = ExtResource("3_jrnom")
+device_data = ExtResource("4_y4ixx")
+device_id = "transmitter"
+grid_position = Vector2i(2, 2)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_o37q7"]
+script = ExtResource("3_jrnom")
+device_data = ExtResource("5_omtm5")
+device_id = "receiver"
+grid_position = Vector2i(8, 2)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_40y5m"]
+script = ExtResource("7_omtm5")
+required_count = 6
+metadata/_custom_type_script = "uid://bkcxp38ps4ory"
 
 [resource]
 script = ExtResource("1_level")
 level_id = "level_01"
-display_name = "Niveau 1"
-description = "Premier niveau de routage."
-grid_width = 10
-grid_height = 6
-device_limits = {
-"receiver": 1,
-"switch": 1
-}
+emission_schedule = Array[ExtResource("1_y4ixx")]([SubResource("Resource_fmoe2"), SubResource("Resource_fjgti"), SubResource("Resource_xkdr3"), SubResource("Resource_aet40"), SubResource("Resource_s5euo"), SubResource("Resource_2yd0h")])
+initial_devices = Array[ExtResource("3_jrnom")]([SubResource("Resource_5yvq2"), SubResource("Resource_o37q7")])
+device_limits = Dictionary[int, int]({
+3: 2
+})
+objectives = Array[ExtResource("6_kywl6")]([SubResource("Resource_40y5m")])
