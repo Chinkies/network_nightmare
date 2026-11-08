@@ -15,6 +15,10 @@ extends Node
 @export_category("UI & Menus")
 @export var pause_menu: PauseMenu
 
+@export_category("Configuration du Niveau")
+## Dictionnaire des quotas de devices pour ce niveau (ex: {"router": 2, "switch": 1})
+@export var level_device_limits: Dictionary = {}
+
 ## Ressource du transmitter de test à placer au lancement (pour le dev)
 @export_category("Test & Debug - Mock Level Setup")
 @export var debug_transmitter_data: NetworkTransmitterData
@@ -39,6 +43,7 @@ func _ready() -> void:
 	
 	puzzle_ui.set_reset_button_enabled(false)
 	puzzle_ui.set_simulation_button_state(false)
+	puzzle_ui.initialize_device_limits(level_device_limits)
 
 	call_deferred("_debug_spawn_transmitter")
 
@@ -57,8 +62,8 @@ func _connect_signals() -> void:
 	mode_manager.mode_changed.connect(_on_mode_changed)
 	
 	# Connexion des signaux du GridBoard
-	grid_board.device_registered.connect(simulation.register_device)
-	grid_board.device_unregistered.connect(simulation.unregister_device)
+	grid_board.device_registered.connect(_on_device_placed_on_grid)
+	grid_board.device_unregistered.connect(_on_device_removed_from_grid)
 	grid_board.wire_registered.connect(simulation.register_wire)
 	grid_board.wire_unregistered.connect(simulation.unregister_wire)
 	
@@ -133,6 +138,17 @@ func _on_speed_requested() -> void:
 
 func _on_hint_requested() -> void:
 	print("[LevelManager] Demande d'indice reçue.")
+
+func _on_device_placed_on_grid(device: NetworkDevice) -> void:
+	simulation.register_device(device)
+	if puzzle_ui:
+		puzzle_ui.consume_device_stock(device)
+
+
+func _on_device_removed_from_grid(device: NetworkDevice) -> void:
+	simulation.unregister_device(device)
+	if puzzle_ui:
+		puzzle_ui.restore_device_stock(device)
 
 # ==========================================
 # ===== CALLBACKS : MODE -> UI & JEU =======
