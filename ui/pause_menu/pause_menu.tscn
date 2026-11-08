@@ -18,6 +18,7 @@ resume_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonResume")
 level_selection_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonLevelSelectionMenu")
 main_menu_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonMainMenu")
 level_selection_path = "uid://defsx4in2glgw"
+main_menu_path = "uid://c1gsg2ri04juw"
 
 [node name="Background" type="ColorRect" parent="." unique_id=1566821197]
 layout_mode = 1
