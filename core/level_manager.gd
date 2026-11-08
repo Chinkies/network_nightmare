@@ -90,8 +90,6 @@ func _on_reset_requested() -> void:
 		var wire_view = grid_view.get_wire_view(wire)
 		if wire_view and wire_view.has_method("reset_state"):
 			wire_view.reset_state()
-
-	current_speed_index = 0
 	
 	# Retour forcé en mode édition
 	mode_manager.switch_mode_by_enum(ModeManager.GameMode.EDIT)
