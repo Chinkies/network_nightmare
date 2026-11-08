@@ -78,16 +78,13 @@ func _on_simulation_requested() -> void:
 		puzzle_ui.set_edit_button_enabled(false)
 		puzzle_ui.set_wiring_button_enabled(false)
 		puzzle_ui.set_delete_button_enabled(false)
-			
-		print("[LevelManager] Simulation lancée.")
+		
 	else:
 		# --- MISE EN PAUSE ---
 		simulation.stop()
 		
 		puzzle_ui.set_simulation_button_state(false) # Repasse l'icône à "Start"
 		puzzle_ui.set_reset_button_enabled(true)     # Le Reset reste actif en pause
-			
-		print("[LevelManager] Simulation mise en pause.")
 
 
 func _on_reset_requested() -> void:
@@ -127,7 +124,6 @@ func _on_speed_requested() -> void:
 	simulation.simulation_speed = new_speed
 	
 	puzzle_ui.set_speed_button_state(new_speed)
-	print("[LevelManager] Vitesse de simulation changée à : %.1fx" % new_speed)
 
 func _on_hint_requested() -> void:
 	print("[LevelManager] Demande d'indice reçue.")
@@ -137,10 +133,6 @@ func _on_hint_requested() -> void:
 # ==========================================
 
 func _on_mode_changed(new_mode: BaseMode) -> void:
-	print("[LevelManager] Changement de mode détecté : ", new_mode.name)
-	
-	# On compare directement avec le nœud simulation_mode stocké dans le mode_manager si besoin, 
-	# ou on vérifie si le mode est de type SimulationMode
 	var is_wiring = (new_mode == mode_manager.wiring_mode)
 	puzzle_ui.update_mode_buttons(new_mode, is_wiring)
 		

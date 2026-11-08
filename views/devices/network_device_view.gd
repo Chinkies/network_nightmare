@@ -216,12 +216,13 @@ func set_port_visual_state(port_id: int, state: NetworkPortView.PortState) -> vo
 # ----------------------------------------
 
 func _on_packet_received(_port: int, _packet: NetworkPacket) -> void:
-	# Plus tard : faire clignoter le port d'entrée
+	# TODO: feedback ? 
 	pass
 
 func _on_packet_processed(_packet: NetworkPacket) -> void:
-	# Plus tard : petite animation de succès
-	print("[", logic_device.id, "] Paquet ", _packet.shape, " ", _packet.color, " ", _packet.target_number, " bien reçu !")
+	if logic_device.device_type == NetworkDevice.Type.RECEIVER:
+		print("[", logic_device.id, "] Paquet ", _packet.shape, " ", _packet.color, " ", _packet.target_number, " bien reçu !")
+		# TODO: flash vert de validation ? 
 
 func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
 	# Feedback immédiat pour le prototype : le carré devient rouge un instant

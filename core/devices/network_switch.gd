@@ -86,5 +86,5 @@ func learn_route(packet_color: int, target_number: int, learned_port: int) -> vo
 	
 	if not mac_table.has(routing_key) or mac_table[routing_key] != learned_port:
 		mac_table[routing_key] = learned_port
-		print("Route apprise sur ", id)
+		print("[", id, "]Route apprise !")
 		# TODO: Émettre un signal pour l'UI afin d'afficher la nouvelle entrée dans la table visuelle
