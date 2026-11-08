@@ -66,3 +66,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	set_drag_preview(preview_container)
 
 	return {"type": "network_item", "device_data": device_data}
+
+func _get_tooltip(_at_position: Vector2) -> String:
+	if device_data:
+		return device_data.device_name
+	return ""
