@@ -25,7 +25,7 @@ var remaining_stocks: Dictionary = {}
 @onready var edit_button: TextureButton = %EditButton
 @onready var delete_button: TextureButton = %DeleteButton
 @onready var speed_button: TextureButton = %SpeedButton
-@onready var hint_button: Button = %HintButton
+@onready var hint_button: TextureButton = %HintButton
 
 # --- TEXTURES POUR LE BOUTON WIRING (Normal vs Connecté) ---
 @export_category("Textures Wiring Button")
