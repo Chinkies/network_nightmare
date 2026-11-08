@@ -1194,6 +1194,7 @@ layout_mode = 2
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer2/HBoxContainer/FoldableContainer" unique_id=1198708450]
 custom_minimum_size = Vector2(200, 400)
 layout_mode = 2
+horizontal_scroll_mode = 0
 
 [node name="DeviceSelectionMenu" type="GridContainer" parent="HBoxContainer2/HBoxContainer/FoldableContainer/ScrollContainer" unique_id=617299613]
 unique_name_in_owner = true
