@@ -249,14 +249,16 @@ func _on_port_clicked(local_port_id: int) -> void:
 # ---------------------------------
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton:
+		
 		# --- CLIC GAUCHE (Sélection / Drag) ---
-		if event.pressed:
-			is_pressed = true
-			interaction_started.emit(logic_device)
-		elif is_pressed: # Clic relâché
-			is_pressed = false
-			interaction_ended.emit(logic_device)
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				is_pressed = true
+				interaction_started.emit(logic_device)
+			elif is_pressed: # Clic relâché
+				is_pressed = false
+				interaction_ended.emit(logic_device)
 		
 		# --- CLIC DROIT (Configuration) ---
 		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
