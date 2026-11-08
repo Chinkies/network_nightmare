@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cju008n8rvnv2"]
 
+[ext_resource type="Theme" uid="uid://b7clmriaof56q" path="res://resources/theme/tooltip.tres" id="1_3bcsb"]
 [ext_resource type="Texture2D" uid="uid://cd2drrderclba" path="res://resources/ui/rotation_left/rotationLeft.tres" id="1_hfag7"]
 [ext_resource type="Script" uid="uid://68mifsfns1ui" path="res://ui/device_edit_ui/device_edit_ui.gd" id="1_syrhr"]
 [ext_resource type="Texture2D" uid="uid://d1naw1cm4o2vp" path="res://resources/ui/rotation_left/rotationLeftPressed.tres" id="2_fguih"]
@@ -20,6 +21,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("1_3bcsb")
 script = ExtResource("1_syrhr")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=517007250]
@@ -32,6 +34,7 @@ alignment = 1
 [node name="BtnRotateLeft" type="TextureButton" parent="HBoxContainer" unique_id=1605563482]
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Left Rotation"
 texture_normal = ExtResource("1_hfag7")
 texture_pressed = ExtResource("2_fguih")
 texture_hover = ExtResource("3_lliq7")
@@ -42,6 +45,7 @@ stretch_mode = 0
 [node name="BtnRotateRight" type="TextureButton" parent="HBoxContainer" unique_id=361148909]
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Right Rotation"
 texture_normal = ExtResource("5_1qerr")
 texture_pressed = ExtResource("6_b1i6i")
 texture_hover = ExtResource("7_sl5rv")
@@ -52,6 +56,7 @@ stretch_mode = 0
 [node name="BtnConfig" type="TextureButton" parent="HBoxContainer" unique_id=528357296]
 texture_filter = 1
 layout_mode = 2
+tooltip_text = "Configure the device"
 texture_normal = ExtResource("9_pgfa2")
 texture_pressed = ExtResource("10_syrhr")
 texture_hover = ExtResource("11_3bcsb")
