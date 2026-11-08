@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://cesry4bbtnb2a" path="res://gameplay_modes/edit_mode.gd" id="8_3mabw"]
 [ext_resource type="Script" uid="uid://4d4b2mhkij6n" path="res://views/wires/ghost_wire_view.gd" id="8_ko617"]
 [ext_resource type="Script" uid="uid://cw3g35nhnqyps" path="res://gameplay_modes/wiring_mode.gd" id="9_3mabw"]
+[ext_resource type="PackedScene" uid="uid://cju008n8rvnv2" path="res://ui/device_edit_ui/device_edit_ui.tscn" id="10_28p8s"]
 [ext_resource type="PackedScene" uid="uid://c2wkqupjeppxg" path="res://views/delete_progress_bar/delete_progress_bar.tscn" id="10_ujns5"]
 [ext_resource type="Script" uid="uid://ks110jpoehyv" path="res://gameplay_modes/simulation_mode.gd" id="11_ko617"]
 [ext_resource type="Script" uid="uid://dd0l88lwk5plk" path="res://gameplay_modes/delete_mode.gd" id="11_owvkk"]
@@ -64,13 +65,16 @@ mouse_filter = 1
 script = ExtResource("6_vmibe")
 grid_board = NodePath("../GridBoard")
 
-[node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
-z_index = 1
-script = ExtResource("8_ko617")
+[node name="DeviceEditUi" parent="LevelManager/GridView" unique_id=2091956752 instance=ExtResource("10_28p8s")]
+layout_mode = 0
 
 [node name="DeleteProgressBar" parent="LevelManager/GridView" unique_id=1294964939 instance=ExtResource("10_ujns5")]
 layout_mode = 0
 offset_bottom = 27.0
+
+[node name="GhostWire" type="Line2D" parent="LevelManager/GridView" unique_id=302798272]
+z_index = 1
+script = ExtResource("8_ko617")
 
 [node name="ModeManager" type="Node" parent="LevelManager" unique_id=1236743190]
 script = ExtResource("7_bvijt")

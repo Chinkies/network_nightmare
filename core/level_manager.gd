@@ -61,6 +61,12 @@ func _connect_signals() -> void:
 	grid_board.device_unregistered.connect(simulation.unregister_device)
 	grid_board.wire_registered.connect(simulation.register_wire)
 	grid_board.wire_unregistered.connect(simulation.unregister_wire)
+	
+	# Connexion de l'UI flottante de la grille vers le ModeManager
+	grid_view.ui_rotate_requested.connect(mode_manager.on_rotate_requested)
+	grid_view.ui_config_requested.connect(mode_manager.on_config_requested)
+
+
 
 # ============================================
 # ===== CALLBACKS : UI -> LOGIQUE DE JEU =====

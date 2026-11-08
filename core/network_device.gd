@@ -155,6 +155,17 @@ func disconnect_output(port: int) -> void:
 
 
 
+# ----------------------
+# --- Getters d'état ---
+# ----------------------
+
+## Renvoie un booléen indiquant si le device est en possibilité de tourner.
+## Pour pouvoir tourner il doit être movable et ne pas être branché. 
+func can_rotate() -> bool:
+	return is_movable and not is_wired()
+
+
+
 # --------------------------------
 # --- Utilitaires géométriques ---
 # --------------------------------

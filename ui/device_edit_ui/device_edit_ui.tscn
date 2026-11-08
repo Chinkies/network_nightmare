@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cju008n8rvnv2"]
+
+[ext_resource type="Texture2D" uid="uid://cd2drrderclba" path="res://resources/ui/rotation_left/rotationLeft.tres" id="1_hfag7"]
+[ext_resource type="Script" uid="uid://68mifsfns1ui" path="res://ui/device_edit_ui/device_edit_ui.gd" id="1_syrhr"]
+[ext_resource type="Texture2D" uid="uid://d1naw1cm4o2vp" path="res://resources/ui/rotation_left/rotationLeftPressed.tres" id="2_fguih"]
+[ext_resource type="Texture2D" uid="uid://gmc1up4vsovu" path="res://resources/ui/rotation_left/rotationLeftHover.tres" id="3_lliq7"]
+[ext_resource type="Texture2D" uid="uid://bpssvbjbs86un" path="res://resources/ui/rotation_left/rotationLeftDisable.tres" id="4_6i0nj"]
+[ext_resource type="Texture2D" uid="uid://ivai1kpa7ice" path="res://resources/ui/rotation_right/rotationRight.tres" id="5_1qerr"]
+[ext_resource type="Texture2D" uid="uid://bcjdjxwbgqi1a" path="res://resources/ui/rotation_right/rotationRightPressed.tres" id="6_b1i6i"]
+[ext_resource type="Texture2D" uid="uid://72sduvw253nr" path="res://resources/ui/rotation_right/rotationRightHover.tres" id="7_sl5rv"]
+[ext_resource type="Texture2D" uid="uid://bvo6r65nhcma8" path="res://resources/ui/rotation_right/rotationRightDisable.tres" id="8_f4ldo"]
+[ext_resource type="Texture2D" uid="uid://cpiim74n4nplo" path="res://resources/ui/config/config.tres" id="9_pgfa2"]
+[ext_resource type="Texture2D" uid="uid://dmb2yueeqytpt" path="res://resources/ui/config/configPressed.tres" id="10_syrhr"]
+[ext_resource type="Texture2D" uid="uid://dlxs506v17qka" path="res://resources/ui/config/configHover.tres" id="11_3bcsb"]
+[ext_resource type="Texture2D" uid="uid://cjvrln3b14pcr" path="res://resources/ui/config/configDisable.tres" id="12_trabj"]
+
+[node name="DeviceEditUi" type="Control" unique_id=2091956752]
+z_index = 15
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_syrhr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=517007250]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="BtnRotateLeft" type="TextureButton" parent="HBoxContainer" unique_id=1605563482]
+layout_mode = 2
+texture_normal = ExtResource("1_hfag7")
+texture_pressed = ExtResource("2_fguih")
+texture_hover = ExtResource("3_lliq7")
+texture_disabled = ExtResource("4_6i0nj")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BtnRotateRight" type="TextureButton" parent="HBoxContainer" unique_id=361148909]
+layout_mode = 2
+texture_normal = ExtResource("5_1qerr")
+texture_pressed = ExtResource("6_b1i6i")
+texture_hover = ExtResource("7_sl5rv")
+texture_disabled = ExtResource("8_f4ldo")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BtnConfig" type="TextureButton" parent="HBoxContainer" unique_id=528357296]
+layout_mode = 2
+texture_normal = ExtResource("9_pgfa2")
+texture_pressed = ExtResource("10_syrhr")
+texture_hover = ExtResource("11_3bcsb")
+texture_disabled = ExtResource("12_trabj")
+ignore_texture_size = true
+stretch_mode = 0

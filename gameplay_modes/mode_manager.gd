@@ -101,7 +101,7 @@ func _on_new_device_view_registered(view: NetworkDeviceView) -> void:
 	view.port_interaction_requested.connect(on_port_interaction_requested)
 	view.interaction_started.connect(on_item_interaction_started)
 	view.interaction_ended.connect(on_item_interaction_ended)
-	view.configuration_requested.connect(on_configuration_requested)
+	view.configuration_requested.connect(on_config_requested)
 
 
 # ------------------------------------
@@ -151,14 +151,14 @@ func on_item_interaction_ended(item: Variant) -> void:
 		current_mode.handle_item_interaction_ended(item)
 
 
-func on_configuration_requested(device: NetworkDevice) -> void:
-	if not device.is_configurable:
-		print("[Configuration] Cet appareil n'a pas de paramètres modifiables.")
-		return
-		
-	print("[Configuration] Ouverture de l'interface pour l'appareil : ", device.id)
 
+# --- DeviceEditUi : Rotation et Config d'un device ---
 
 func on_rotate_requested(direction: int) -> void:
 	if current_mode and current_mode.has_method("handle_rotate_requested"):
 		current_mode.handle_rotate_requested(direction)
+
+
+func on_config_requested(device: NetworkDevice = null) -> void:
+	if current_mode and current_mode.has_method("handle_config_requested"):
+		current_mode.handle_config_requested(device)

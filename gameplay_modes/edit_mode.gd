@@ -125,6 +125,23 @@ func handle_rotate_requested(direction: int) -> void:
 		view.update_rotation(direction, grid_view.cell_size)
 
 
+func handle_config_requested(target_device: NetworkDevice = null) -> void:
+	# 1. Définir la cible : si aucune cible n'est fournie (bouton UI), on utilise le device sélectionné
+	var device_to_config = target_device if target_device != null else selected_device
+	
+	if device_to_config == null:
+		return
+		
+	# 2. Vérification métier
+	if not device_to_config.is_configurable:
+		print("[EditMode] Cette machine n'est pas configurable.")
+		return
+		
+	# 3. Action
+	print("[EditMode] Demande d'ouverture de l'interface pour : ", device_to_config.id)
+	# TODO : Tu pourras émettre un signal vers le PuzzleUiController ici pour ouvrir le vrai panneau de configuration !
+
+
 
 # ----------------------
 # --- LOGIQUE PRIVEE --- 
@@ -138,7 +155,11 @@ func _select_device(device: NetworkDevice) -> void:
 	_deselect_current()
 	selected_device = device
 	
+	# Mise à jour de la vue
 	grid_view.set_selection_highlight(selected_device.grid_position)
+	var can_rotate = selected_device.can_rotate()
+	var can_config = selected_device.is_configurable
+	grid_view.update_selection_ui_state(can_rotate, can_config)
 
 
 ## Réinitialise la sélection

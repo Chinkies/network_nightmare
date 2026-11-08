@@ -5,38 +5,49 @@ extends Control
 # ===== SIGNAUX =======
 # =====================
 
+# --- Enregistrement et suppression de Device
+signal device_view_registered(view: NetworkDeviceView)
+@warning_ignore("unused_signal")
+signal wire_view_registered(view: NetworkWireView)
+
 ## Émis quand le joueur lâche un appareil sur une case valide
 signal device_drop_requested(cell: Vector2i, device_data: Variant)
 
-signal device_view_registered(view: NetworkDeviceView)
-signal wire_view_registered(view: NetworkWireView)
+# --- Retours de l'UI ---
+signal ui_rotate_requested(direction: int)
+signal ui_config_requested()
 
 
 # =====================
 # ===== ATTRIBUTS =====
 # =====================
 
+@onready var edit_ui: DeviceEditUi = $DeviceEditUi
+
 ## Référence vers le modèle logique de la grille
 @export var grid_board: GridBoard
 
+# --- Caractéristiques de la grille ---
 @export var cell_size: int = 64
 @export var line_color: Color = Color(0.25, 0.3, 0.4, 0.4)
 @export var background_color: Color = Color(0.08, 0.1, 0.14, 1.0)
 @export var border_color: Color = Color(0.35, 0.45, 0.6, 0.8)
 
-# Highlight des cells pour le drop
+# --- Highlight des cells pour le drop --- 
 @export var highlight_valid_color: Color = Color(0.1, 0.8, 0.3, 0.35)   # Vert translucide
 @export var highlight_invalid_color: Color = Color(0.9, 0.2, 0.2, 0.35) # Rouge translucide
 
-var device_views: Dictionary[NetworkDevice, NetworkDeviceView] = {}
-var wire_views: Dictionary[NetworkWire, NetworkWireView] = {}
-
-## État actuel du Drag & Drop pour le highlight
+# --- Drag & Drop ---
 var _is_dragging_over: bool = false
 var _current_drag_cell: Vector2i = Vector2i(-1, -1)
 var _is_current_cell_valid: bool = false
 var _is_device_selected: bool = false
 var _selected_cell: Vector2i = Vector2i(-1, -1)
+
+# --- Registres Modèle/Vue ---
+var device_views: Dictionary[NetworkDevice, NetworkDeviceView] = {}
+var wire_views: Dictionary[NetworkWire, NetworkWireView] = {}
+
 
 
 # ====================
@@ -45,10 +56,20 @@ var _selected_cell: Vector2i = Vector2i(-1, -1)
 
 func _ready() -> void:
 	assert(grid_board != null, "[GridView] Erreur critique : GridBoard non assigné !")
+	assert(edit_ui != null, "[GridView] Erreur critique : DeviceEditUI non assignée !")
 	
 	# La vue s'adapte automatiquement à la taille dictée par le modèle
 	custom_minimum_size = Vector2(grid_board.grid_width * cell_size, grid_board.grid_height * cell_size)
 	size = custom_minimum_size
+	
+	# On setup la Edit
+	edit_ui.setup(float(cell_size))
+	edit_ui.hide()
+	
+	# On convertit les signaux des boutons en signaux métiers
+	edit_ui.rotate_left_requested.connect(func(): ui_rotate_requested.emit(-1))
+	edit_ui.rotate_right_requested.connect(func(): ui_rotate_requested.emit(1))
+	edit_ui.config_requested.connect(func(): ui_config_requested.emit())
 
 
 func _draw() -> void:
@@ -236,18 +257,28 @@ func set_port_available(device: NetworkDevice, port_id: int) -> bool:
 # --- Gestion du Drag & Drop Manuel (déplacement de device) ---
 # -------------------------------------------------------------
 
-## Affiche le contour jaune de sélection sur une case donnée
+## Affiche le contour jaune de sélection sur une case donnée et affiche l'UI d'edit
 func set_selection_highlight(cell: Vector2i) -> void:
 	if not _is_device_selected or _selected_cell != cell:
 		_is_device_selected = true
 		_selected_cell = cell
 		queue_redraw()
+		
+		# Affichage et positionnement dynamique de l'UI
+		var target_pos = cell_to_world_center(cell)
+		edit_ui.global_position = target_pos + Vector2(0, -cell_size * 0.8)
+		edit_ui.show()
 
-## Masque le contour jaune de sélection
+## Masque le contour jaune de sélection et masque l'UI d'edit
 func clear_selection_highlight() -> void:
 	if _is_device_selected:
 		_is_device_selected = false
 		queue_redraw()
+		edit_ui.hide()
+
+## Permet au contrôleur de mettre à jour l'état des boutons affichés
+func update_selection_ui_state(can_rotate: bool, can_config: bool) -> void:
+	edit_ui.update_state(can_rotate, can_config)
 
 
 ## Force l'affichage du survol (vert/rouge) sur une cellule précise
