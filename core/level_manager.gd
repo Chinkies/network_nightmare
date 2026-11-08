@@ -15,14 +15,8 @@ extends Node
 @export_category("UI & Menus")
 @export var pause_menu: PauseMenu
 
-@export_category("Configuration du Niveau")
-## Dictionnaire des quotas de devices pour ce niveau (ex: {"router": 2, "switch": 1})
-@export var level_device_limits: Dictionary = {}
-
-## Ressource du transmitter de test à placer au lancement (pour le dev)
-@export_category("Test & Debug - Mock Level Setup")
-@export var debug_transmitter_data: NetworkTransmitterData
-@export var debug_transmitter_cell: Vector2i = Vector2i(0, 2)
+## Niveau de test par défaut si la scène est lancée directement depuis l'éditeur
+@export var fallback_default_level: LevelDefinition
 
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
@@ -43,10 +37,8 @@ func _ready() -> void:
 	
 	puzzle_ui.set_reset_button_enabled(false)
 	puzzle_ui.set_simulation_button_state(false)
-	puzzle_ui.initialize_device_limits(level_device_limits)
 
-	call_deferred("_debug_spawn_transmitter")
-
+	call_deferred("_load_current_level")
 
 func _connect_signals() -> void:
 	# Connexion des signaux de l'ui
@@ -72,6 +64,87 @@ func _connect_signals() -> void:
 	grid_view.ui_config_requested.connect(mode_manager.on_config_requested)
 
 
+## Charge la configuration du niveau depuis le LevelContext
+func _load_current_level() -> void:
+	var level_def: LevelDefinition = null
+	
+	# Vérifie si le LevelContext existe en tant qu'autoload
+	if Engine.has_singleton("LevelContext") or has_node("/root/LevelContext"):
+		var context = get_node_or_null("/root/LevelContext")
+		if context and "current_level" in context:
+			level_def = context.current_level
+
+	if not level_def:
+		push_warning("[LevelManager] Aucun niveau actif trouvé dans le contexte. Chargement du niveau de secours par défaut.")
+		level_def = fallback_default_level
+		
+	if not level_def:
+		push_error("[LevelManager] Erreur critique : Aucun LevelDefinition valide trouvé pour initialiser le niveau !")
+		return
+
+	print("[LevelManager] Chargement du niveau : ", level_def.level_id)
+
+	# Configuration de la grille
+	grid_board.grid_width = level_def.grid_width
+	grid_board.grid_height = level_def.grid_height
+
+	# Transmission des limites de devices à l'UI
+	puzzle_ui.initialize_device_limits(level_def.device_limits)
+
+	# Instanciation des devices initiaux définis dans la ressource du niveau
+	for entry in level_def.initial_devices:
+		if not entry.device_data:
+			push_warning("[LevelManager] Entrée de device invalide dans le niveau.")
+			continue
+			
+		var cell = entry.grid_position
+		if not grid_board.is_cell_inside_grid(cell):
+			push_error("[LevelManager] Cellule de device %s hors de la grille !" % cell)
+			continue
+			
+		# Création de la machine logique
+		var unique_id = "%s_%d_%d" % [entry.device_data.device_id_template, cell.x, cell.y]
+		if not entry.device_id.is_empty():
+			unique_id = entry.device_id
+			
+		var logic_device = entry.device_data.instantiate_device(unique_id)
+		logic_device.grid_position = cell
+		logic_device.rotation_quadrants = entry.rotation_quadrants
+		
+		if logic_device is NetworkTransmitter:
+			logic_device.emission_schedule = level_def.emission_schedule
+
+		# Application des états modifiable / supprimable
+		if "is_movable" in logic_device:
+			logic_device.is_movable = entry.is_movable
+		if "is_deletable" in logic_device:
+			logic_device.is_deletable = entry.is_deletable
+
+		# Création de la machine visuelle
+		if not entry.device_data.device_scene:
+			push_error("[LevelManager] Aucune device_scene définie pour %s !" % unique_id)
+			continue
+			
+		var view_node = entry.device_data.device_scene.instantiate() as NetworkDeviceView
+		if not view_node:
+			push_error("[LevelManager] La scène instanciée n'a pas le script NetworkDeviceView attaché !")
+			continue
+
+		view_node.global_position = grid_view.cell_to_world_center(cell)
+		grid_view.add_child(view_node)
+		
+		# Liaison vue / logique
+		view_node.setup(logic_device, entry.device_data.texture, float(grid_view.cell_size))
+		grid_view.register_device_view(logic_device, view_node)
+
+		if not view_node.port_interaction_requested.is_connected(mode_manager.on_port_interaction_requested):
+			view_node.port_interaction_requested.connect(mode_manager.on_port_interaction_requested)
+
+		# Enregistrement dans les systèmes
+		grid_board.register_device(logic_device)
+		simulation.register_device(logic_device)
+		
+	print("[LevelManager] Niveau initialisé avec succès.")
 
 # ============================================
 # ===== CALLBACKS : UI -> LOGIQUE DE JEU =====
@@ -221,44 +294,3 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_E:
 				mode_manager.on_rotate_requested(1)
 				get_viewport().set_input_as_handled()
-
-
-## Fonction debug pour placer le transmitter
-func _debug_spawn_transmitter() -> void:
-	if not debug_transmitter_data:
-		return
-		
-	var cell = debug_transmitter_cell
-	
-	if not grid_board.is_cell_inside_grid(cell):
-		push_error("[LevelManager] Cellule de debug %s hors de la grille !" % cell)
-		return
-		
-	if grid_board.is_cell_occupied(cell):
-		print("[LevelManager] Cellule %s déjà occupée, spawn de debug ignoré." % cell)
-		return
-
-	# 1. Création de la machine logique
-	var unique_id = "%s_%d_%d" % [debug_transmitter_data.device_id_template, cell.x, cell.y]
-	var logic_device = debug_transmitter_data.instantiate_device(unique_id)
-	logic_device.grid_position = cell
-
-	# 2. Création de la machine visuelle
-	if not debug_transmitter_data.device_scene:
-		push_error("[LevelManager] Aucune device_scene définie dans la ressource de debug !")
-		return
-		
-	var view_node = debug_transmitter_data.device_scene.instantiate() as NetworkDeviceView
-	if not view_node:
-		push_error("[LevelManager] La scène de debug n'a pas le script NetworkDeviceView attaché !")
-		return
-
-	view_node.global_position = grid_view.cell_to_world_center(cell)
-	grid_view.add_child(view_node)
-	
-	# 3. Liaison vue / logique
-	view_node.setup(logic_device, debug_transmitter_data.texture, float(grid_view.cell_size))
-
-	# 4. Enregistrement dans les systèmes
-	grid_board.register_device(logic_device)
-	grid_view.register_device_view(logic_device, view_node)

@@ -9,11 +9,14 @@ extends Resource
 @export_range(1, 100) var grid_width: int = 10
 @export_range(1, 100) var grid_height: int = 6
 
+@export_category("Simulation & Émissions")
+@export var emission_schedule: Array[ScheduleEvent] = []
+
 @export_category("Devices imposés")
 @export var initial_devices: Array[LevelDeviceEntry] = []
 
 @export_category("Devices disponibles")
-@export var device_limits: Dictionary = {}
+@export var device_limits: Dictionary[NetworkDevice.Type, int] = {}
 
 @export_category("Objectifs")
 @export var objectives: Array[LevelObjective] = []
