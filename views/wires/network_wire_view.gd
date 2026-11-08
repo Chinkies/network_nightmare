@@ -84,6 +84,13 @@ func setup_wire(wire: NetworkWire, grid_view: GridView) -> void:
 		# Coudes ancrés au centre géométrique des cases
 		add_point(grid_view.cell_to_world_center(cell))
 	
+	var total_pixels = 0.0
+	for i in range(get_point_count() - 1):
+		total_pixels += get_point_position(i).distance_to(get_point_position(i + 1))
+	
+	if logic_wire and cell_size > 0.0:
+		logic_wire.total_length = total_pixels / cell_size
+
 	# 2. Génération des Hitboxes (Câblage physique)
 	_generate_collisions()
 
