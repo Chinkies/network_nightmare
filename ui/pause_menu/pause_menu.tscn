@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://dqg20wubu8que"]
+
+[ext_resource type="Script" uid="uid://ce8if0p80doh8" path="res://ui/pause_menu/pause_menu.gd" id="1_mnjdh"]
+[ext_resource type="StyleBox" uid="uid://ch0ss5nyr6co3" path="res://resources/style/styleButtonPause.tres" id="2_b4b0p"]
+[ext_resource type="StyleBox" uid="uid://cgt7qxbcidluo" path="res://resources/style/styleButtonPausePressed.tres" id="3_c3jo5"]
+[ext_resource type="StyleBox" uid="uid://hr21uhagd84l" path="res://resources/style/styleButtonPauseHover.tres" id="4_uraes"]
+
+[node name="PauseMenu" type="Control" unique_id=1230819823 node_paths=PackedStringArray("resume_button", "level_selection_button", "main_menu_button")]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mnjdh")
+resume_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonResume")
+level_selection_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonLevelSelectionMenu")
+main_menu_button = NodePath("MenuContainer/MenuMargin/MenuVBox/buttonMainMenu")
+level_selection_path = "uid://defsx4in2glgw"
+
+[node name="Background" type="ColorRect" parent="." unique_id=1566821197]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
+
+[node name="MenuContainer" type="PanelContainer" parent="." unique_id=626529773]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -61.5
+offset_top = -61.5
+offset_right = 61.5
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuMargin" type="MarginContainer" parent="MenuContainer" unique_id=2121515968]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="MenuVBox" type="VBoxContainer" parent="MenuContainer/MenuMargin" unique_id=1902327434]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="buttonResume" type="Button" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=605311330]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_b4b0p")
+theme_override_styles/pressed = ExtResource("3_c3jo5")
+theme_override_styles/hover = ExtResource("4_uraes")
+text = "Resume"
+
+[node name="buttonLevelSelectionMenu" type="Button" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1256670746]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_b4b0p")
+theme_override_styles/pressed = ExtResource("3_c3jo5")
+theme_override_styles/hover = ExtResource("4_uraes")
+text = "Level Selection"
+
+[node name="buttonMainMenu" type="Button" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=460905207]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = ExtResource("2_b4b0p")
+theme_override_styles/pressed = ExtResource("3_c3jo5")
+theme_override_styles/hover = ExtResource("4_uraes")
+text = "Main Menu"
