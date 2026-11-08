@@ -77,7 +77,6 @@ func toggle() -> void:
 func reset_runner() -> void:
 	stop()
 	ephemeral_packets.clear()
-	simulation_speed = 1.0
 	has_started = false
 	
 	for device in devices:
