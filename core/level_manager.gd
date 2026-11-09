@@ -289,11 +289,10 @@ func _on_hint_requested() -> void:
 	if not current_level or current_level.hints.is_empty():
 		return
 	
-	var max_hints = min(current_level.hints.size(), 3)
-	if unlocked_hints_count < max_hints:
+	if unlocked_hints_count < current_level.hints.size():
 		unlocked_hints_count += 1
 		
-	print("[LevelManager] Affichage des indices. Débloqués : %d / %d" % [unlocked_hints_count, max_hints])
+	print("[LevelManager] Affichage des indices. Débloqués : %d / %d" % [unlocked_hints_count, current_level.hints.size()])
 	
 	var active_hints = current_level.hints.slice(0, unlocked_hints_count)
 	puzzle_ui.show_hint_pages(active_hints)
