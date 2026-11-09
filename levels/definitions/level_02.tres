@@ -1,0 +1,225 @@
+[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://bw0tjimumgc4n"]
+
+[ext_resource type="Script" uid="uid://cil0ws5dyw4l2" path="res://core/resource_definitions/schedule_event.gd" id="1_l6qne"]
+[ext_resource type="Script" uid="uid://etua5m2qnltd" path="res://core/resource_definitions/network_packet_data.gd" id="2_30wu1"]
+[ext_resource type="Script" uid="uid://0e8ai46cecma" path="res://ui/hint_page/hint_page.gd" id="3_1xv6b"]
+[ext_resource type="Script" uid="uid://d0amqpyma2u0n" path="res://core/resource_definitions/level_device_entry.gd" id="4_l6e5b"]
+[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="5_8ay5l"]
+[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="6_1qrgy"]
+[ext_resource type="Script" uid="uid://njrtu55p54" path="res://core/resource_definitions/level_objective/level_objective.gd" id="7_1hqfi"]
+[ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="8_jciun"]
+[ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="9_5kmsh"]
+[ext_resource type="Script" uid="uid://dgyc14pvgr5ue" path="res://ui/tutorial_page/tutorial_page.gd" id="10_2qaks"]
+[ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/Button.png" id="11_fvfdf"]
+[ext_resource type="Texture2D" uid="uid://c542um1it2wru" path="res://ui/assets/ButtonHover.png" id="12_gln2f"]
+[ext_resource type="Texture2D" uid="uid://mfl2c1j1x4kt" path="res://ui/assets/ButtonDisable.png" id="13_2j15h"]
+
+[sub_resource type="Resource" id="Resource_au533"]
+script = ExtResource("2_30wu1")
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_fmoe2"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_au533")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_h6avo"]
+script = ExtResource("2_30wu1")
+id = 2
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_fjgti"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_h6avo")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_5sa8j"]
+script = ExtResource("2_30wu1")
+id = 3
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_xkdr3"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_5sa8j")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_d48b5"]
+script = ExtResource("2_30wu1")
+id = 4
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_aet40"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_d48b5")
+delay = 0.2
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_t4yv6"]
+script = ExtResource("2_30wu1")
+id = 5
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_s5euo"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_t4yv6")
+delay = 1.0
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_3tqyv"]
+script = ExtResource("2_30wu1")
+id = 6
+target_number = 2
+metadata/_custom_type_script = "uid://etua5m2qnltd"
+
+[sub_resource type="Resource" id="Resource_2yd0h"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_l6qne"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_30wu1"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_1xv6b"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_l6e5b"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_8ay5l"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_1qrgy"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_1hqfi"]
+script = ExtResource("1_l6qne")
+packet = SubResource("Resource_3tqyv")
+delay = 0.5
+metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
+
+[sub_resource type="Resource" id="Resource_kywl6"]
+script = ExtResource("3_1xv6b")
+title = "Première hint"
+text = "Je suis un exemple"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
+[sub_resource type="Resource" id="Resource_1w8on"]
+script = ExtResource("3_1xv6b")
+title = "Deuxième"
+text = "BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
+[sub_resource type="Resource" id="Resource_mlash"]
+script = ExtResource("3_1xv6b")
+title = "Troisième"
+text = "Oskur"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
+[sub_resource type="Resource" id="Resource_5yvq2"]
+script = ExtResource("4_l6e5b")
+device_data = ExtResource("5_8ay5l")
+device_id = "transmitter"
+grid_position = Vector2i(2, 2)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_o37q7"]
+script = ExtResource("4_l6e5b")
+device_data = ExtResource("6_1qrgy")
+device_id = "receiver"
+grid_position = Vector2i(8, 2)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_l46k4"]
+script = ExtResource("4_l6e5b")
+device_data = ExtResource("6_1qrgy")
+device_id = "receiver2"
+grid_position = Vector2i(8, 6)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_40y5m"]
+script = ExtResource("8_jciun")
+required_count = 6
+receiver_id = "1"
+objective_id = "1"
+description = "Test"
+metadata/_custom_type_script = "uid://bkcxp38ps4ory"
+
+[sub_resource type="Resource" id="Resource_p62ga"]
+script = ExtResource("8_jciun")
+required_count = 7
+receiver_id = "2"
+objective_id = "2"
+description = "MERDE"
+metadata/_custom_type_script = "uid://bkcxp38ps4ory"
+
+[sub_resource type="Resource" id="Resource_ojoou"]
+script = ExtResource("10_2qaks")
+title = "Premier TUTO"
+text = "Bienvenue dans le tutoriel. 
+[b]Attention :[/b] Ne dépassez pas la limite de [color=red]2 routeurs[/color] sur ce niveau."
+image = ExtResource("11_fvfdf")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[sub_resource type="Resource" id="Resource_cybon"]
+script = ExtResource("10_2qaks")
+title = "Test page 2"
+text = "Je suis une très jolie page"
+image = ExtResource("12_gln2f")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[sub_resource type="Resource" id="Resource_pghnq"]
+script = ExtResource("10_2qaks")
+title = "Test page 3"
+text = "Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire"
+image = ExtResource("13_2j15h")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[resource]
+script = ExtResource("9_5kmsh")
+level_id = "level_02"
+grid_width = 14
+grid_height = 8
+emission_schedule = Array[ExtResource("1_l6qne")]([SubResource("Resource_fmoe2"), SubResource("Resource_fjgti"), SubResource("Resource_xkdr3"), SubResource("Resource_aet40"), SubResource("Resource_s5euo"), SubResource("Resource_2yd0h"), SubResource("Resource_l6qne"), SubResource("Resource_30wu1"), SubResource("Resource_1xv6b"), SubResource("Resource_l6e5b"), SubResource("Resource_8ay5l"), SubResource("Resource_1qrgy"), SubResource("Resource_1hqfi")])
+initial_devices = Array[ExtResource("4_l6e5b")]([SubResource("Resource_5yvq2"), SubResource("Resource_o37q7"), SubResource("Resource_l46k4")])
+device_limits = Dictionary[int, int]({
+3: 3
+})
+objectives = Array[ExtResource("7_1hqfi")]([SubResource("Resource_40y5m"), SubResource("Resource_p62ga")])
+tutorial_pages = Array[ExtResource("10_2qaks")]([SubResource("Resource_ojoou"), SubResource("Resource_cybon"), SubResource("Resource_pghnq")])
+show_tutorial_on_start = false
+hints = Array[ExtResource("3_1xv6b")]([SubResource("Resource_kywl6"), SubResource("Resource_1w8on"), SubResource("Resource_mlash")])
