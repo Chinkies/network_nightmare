@@ -108,6 +108,10 @@ func _load_current_level() -> void:
 	grid_board.grid_width = level_def.grid_width
 	grid_board.grid_height = level_def.grid_height
 
+	grid_view.custom_minimum_size = Vector2(level_def.grid_width * grid_view.cell_size, level_def.grid_height * grid_view.cell_size)
+	grid_view.size = grid_view.custom_minimum_size
+	grid_view.queue_redraw()
+
 	# Transmission des limites de devices à l'UI
 	puzzle_ui.initialize_device_limits(level_def.device_limits)
 	puzzle_ui.initialize_objectives(level_def.objectives, level_def.emission_schedule)
