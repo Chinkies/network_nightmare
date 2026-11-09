@@ -219,14 +219,18 @@ func _on_packet_received(_port: int, _packet: NetworkPacket) -> void:
 	# TODO: feedback ? 
 	pass
 
-func _on_packet_processed(_packet: NetworkPacket) -> void:
+func _on_packet_processed(_source: NetworkDevice, _packet: NetworkPacket) -> void:
 	if logic_device.device_type == NetworkDevice.Type.RECEIVER:
 		visual_sprite.modulate = Color.GREEN
 		var tween = create_tween()
 		tween.tween_property(visual_sprite, "modulate", Color.WHITE, 0.5)
 	print("[", logic_device.id, "] Paquet ", _packet.shape, " ", _packet.color, " ", _packet.target_number, " bien reçu !")
 
-func _on_packet_dropped(_packet: NetworkPacket, reason: String) -> void:
+func _on_packet_dropped(
+	_source: NetworkDevice,
+	_packet: NetworkPacket,
+	reason: String
+) -> void:
 	# Feedback immédiat pour le prototype : le carré devient rouge un instant
 	if visual_sprite:
 		visual_sprite.modulate = Color.RED

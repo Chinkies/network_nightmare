@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://ks110jpoehyv" path="res://gameplay_modes/simulation_mode.gd" id="11_ko617"]
 [ext_resource type="Script" uid="uid://dd0l88lwk5plk" path="res://gameplay_modes/delete_mode.gd" id="11_owvkk"]
 [ext_resource type="PackedScene" uid="uid://dfgh0pe1hwa38" path="res://views/wires/network_wire_view.tscn" id="12_owvkk"]
+[ext_resource type="Script" uid="uid://d3j4ewtd6tl86" path="res://core/simulation/level_validator.gd" id="13_validator"]
 
 [node name="LevelScene" type="Node2D" unique_id=872985249]
 script = ExtResource("1_3vw7n")
@@ -36,10 +37,11 @@ unique_name_in_owner = true
 
 [node name="PauseMenu" parent="CanvasLayer" unique_id=1230819823 instance=ExtResource("3_3lbvr")]
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "grid_board", "grid_view", "puzzle_ui", "pause_menu")]
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "level_validator", "grid_board", "grid_view", "puzzle_ui", "pause_menu")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
 simulation = NodePath("SimulationRunner")
+level_validator = NodePath("LevelValidator")
 grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
@@ -49,6 +51,9 @@ fallback_default_level = ExtResource("6_018kn")
 [node name="SimulationRunner" type="Node" parent="LevelManager" unique_id=61842431]
 unique_name_in_owner = true
 script = ExtResource("4_3mabw")
+
+[node name="LevelValidator" type="Node" parent="LevelManager" unique_id=61842432]
+script = ExtResource("13_validator")
 
 [node name="GridBoard" type="Node" parent="LevelManager" unique_id=170178700]
 unique_name_in_owner = true

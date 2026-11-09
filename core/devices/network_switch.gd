@@ -44,13 +44,13 @@ func _handle_unicast(packet: NetworkPacket, target_port: int) -> void:
 	
 	if wire == null:
 		var dropped: NetworkPacket = buffer.pop_front()
-		packet_dropped.emit(dropped, "No wire on target port")
+		packet_dropped.emit(self, dropped, "No wire on target port")
 		return
 		
 	if wire.push_packet(packet):
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
-		packet_processed.emit(packet)
+		packet_processed.emit(self, packet)
 
 
 ## Duplication et ajout de la trace si la route est inconnue
@@ -59,7 +59,7 @@ func _handle_broadcast(packet: NetworkPacket) -> void:
 	
 	if valid_ports.is_empty():
 		var dropped: NetworkPacket = buffer.pop_front()
-		packet_dropped.emit(dropped, "No output routes for broadcast")
+		packet_dropped.emit(self, dropped, "No output routes for broadcast")
 		return
 		
 	# Le switch attend que tous les ports soient libres pour lancer son broadcast synchronisé
@@ -77,7 +77,7 @@ func _handle_broadcast(packet: NetworkPacket) -> void:
 		output_wires[port].push_packet(packet_copy)
 		
 	processing_cooldown = 1.0 / processing_rate
-	packet_processed.emit(packet)
+	packet_processed.emit(self, packet)
 
 
 ## Méthode appelée par un Receiver terminal lorsqu'un paquet arrive à la bonne destination

@@ -43,10 +43,10 @@ func _process_next_packet() -> void:
 		if not packet.routing_history.is_empty():
 			route_learned.emit(packet.routing_history, packet.color, packet.target_number)
 			
-		packet_processed.emit(packet)
+		packet_processed.emit(self, packet)
 	else:
 		# Échec : le paquet (ou le clone d'un flooding) s'est perdu.
-		packet_dropped.emit(packet, "Wrong destination")
+		packet_dropped.emit(self, packet, "Wrong destination")
 	
 	# 2. Mise à jour du délai matériel (le temps de traiter le paquet)
 	processing_cooldown = 1.0 / processing_rate

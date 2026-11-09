@@ -3,8 +3,8 @@ extends NetworkItem
 
 # Signaux pour la logique du rendu et du son
 signal packet_received(port: int, packet: NetworkPacket)
-signal packet_processed(packet: NetworkPacket)
-signal packet_dropped(packet: NetworkPacket, reason: String)
+signal packet_processed(source: NetworkDevice, packet: NetworkPacket)
+signal packet_dropped(source: NetworkDevice, packet: NetworkPacket, reason: String)
 # TODO: signal device_overloaded(device: NetworkDevice)
 
 ## Types de machines pour JSON, UI et Factory
@@ -221,7 +221,7 @@ func receive_packet(port: int, packet: NetworkPacket) -> void:
 		elif buffer.size() >= buffer_capacity:
 			reason = "Buffer full"
 			
-		packet_dropped.emit(packet, reason)
+		packet_dropped.emit(self, packet, reason)
 		return
 
 	# 2. Admission dans le buffer
@@ -244,7 +244,7 @@ func simulate(delta: float) -> void:
 		var packet: NetworkPacket = buffer[i]
 		if packet.is_expired:
 			buffer.remove_at(i)
-			packet_dropped.emit(packet, "TTL expired")
+			packet_dropped.emit(self, packet, "TTL expired")
 	
 	# 3. Vérifie si on peut traiter le paquet suivant
 	if processing_cooldown <= 0.0 and not buffer.is_empty():
@@ -268,7 +268,7 @@ func _process_next_packet() -> void:
 	if wire.push_packet(packet):
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
-		packet_processed.emit(packet)
+		packet_processed.emit(self, packet)
 
 # Reset l'état du device
 func reset_state() -> void:

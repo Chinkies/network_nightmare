@@ -2,7 +2,7 @@ class_name NetworkWire
 extends NetworkItem
 
 # Signaux pour la logique du rendu et du son
-signal packet_dropped(packet: NetworkPacket, reason: String)
+signal packet_dropped(source: NetworkWire, packet: NetworkPacket, reason: String)
 signal packet_entered(transit: WireTransit)
 signal packet_exited(transit: WireTransit)
 
@@ -139,7 +139,7 @@ func simulate(delta: float) -> void:
 			var dropped: NetworkPacket = transit.packet
 			transit_queue.remove_at(i)
 			packet_exited.emit(transit)
-			packet_dropped.emit(dropped, "TTL expired")
+			packet_dropped.emit(self, dropped, "TTL expired")
 	
 	if transit_queue.is_empty():
 		return

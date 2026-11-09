@@ -74,7 +74,7 @@ func _process_next_packet() -> void:
 	if packet != null and wire.push_packet(packet):
 		buffer.pop_front()
 		processing_cooldown = 1.0 / processing_rate
-		packet_processed.emit(packet)
+		packet_processed.emit(self, packet)
 
 ## Surcharge pour réinitialiser le calendrier d'émission du transmitter
 func reset_state() -> void:

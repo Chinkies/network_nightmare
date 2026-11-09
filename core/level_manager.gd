@@ -8,6 +8,7 @@ extends Node
 @export_category("Registres, Grid & Simulation")
 @export var mode_manager: ModeManager
 @export var simulation: SimulationRunner
+@export var level_validator: LevelValidator
 @export var grid_board: GridBoard
 @export var grid_view: GridView
 @export var puzzle_ui: PuzzleUiController
@@ -19,6 +20,7 @@ extends Node
 @export var fallback_default_level: LevelDefinition
 
 var is_loading_level: bool = false
+var current_level: LevelDefinition
 
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
@@ -31,6 +33,7 @@ var current_speed_index: int = 0
 func _ready() -> void:
 	assert(mode_manager != null, "[LevelManager] Erreur critique : ModeManager non assigné !")
 	assert(simulation != null, "[LevelManager] Erreur critique : SimulationRunner non assigné !")
+	assert(level_validator != null, "[LevelManager] Erreur critique : LevelValidator non assigné !")
 	assert(grid_board != null, "[LevelManager] Erreur critique : GridBoard non assigné !")
 	assert(grid_view != null, "[LevelManager] Erreur critique : GridView non assigné !")
 	assert(puzzle_ui != null, "[LevelManager] Erreur critique : PuzzleUiController non assigné !")
@@ -54,6 +57,7 @@ func _connect_signals() -> void:
 
 	# Connexion des signaux du ModeManager
 	mode_manager.mode_changed.connect(_on_mode_changed)
+	level_validator.validation_finished.connect(_on_validation_finished)
 	
 	# Connexion des signaux du GridBoard
 	grid_board.device_registered.connect(_on_device_placed_on_grid)
@@ -87,6 +91,8 @@ func _load_current_level() -> void:
 		return
 
 	print("[LevelManager] Chargement du niveau : ", level_def.level_id)
+	current_level = level_def
+	level_validator.setup(current_level, simulation)
 
 	# Configuration de la grille
 	grid_board.grid_width = level_def.grid_width
@@ -151,7 +157,8 @@ func _load_current_level() -> void:
 			push_error("[LevelManager] Impossible d'enregistrer le device '%s' à la cellule %s." % [unique_id, cell])
 			view_node.queue_free()
 			continue
-		
+
+	simulation.set_initial_device_count(simulation.devices.size())
 	is_loading_level = false
 	print("[LevelManager] Niveau initialisé avec succès.")
 
@@ -184,6 +191,7 @@ func _on_simulation_requested() -> void:
 
 func _on_reset_requested() -> void:
 	simulation.reset_runner()
+	level_validator.reset()
 		
 	for wire in grid_board.get_wires():
 		var wire_view = grid_view.get_wire_view(wire)
@@ -201,6 +209,15 @@ func _on_reset_requested() -> void:
 	puzzle_ui.set_delete_button_enabled(true)
 		
 	print("[LevelManager] Simulation réinitialisée.")
+
+
+func _on_validation_finished(result: Dictionary) -> void:
+	print("[LevelManager] Résultat du niveau : ", result)
+
+
+func validate_current_level() -> Dictionary:
+	return level_validator.validate()
+
 
 func _on_wiring_requested() -> void:
 	mode_manager.switch_mode_by_enum(ModeManager.GameMode.WIRING)
@@ -223,17 +240,20 @@ func _on_speed_requested() -> void:
 
 func _on_hint_requested() -> void:
 	print("[LevelManager] Demande d'indice reçue.")
+	validate_current_level()
 
 
 func _on_device_placed_on_grid(device: NetworkDevice) -> void:
 	simulation.register_device(device)
 	
 	if not is_loading_level:
+		simulation.record_player_device_placed()
 		puzzle_ui.consume_device_stock(device)
 
 
 func _on_device_removed_from_grid(device: NetworkDevice) -> void:
 	simulation.unregister_device(device)
+	simulation.record_player_device_removed()
 	if puzzle_ui:
 		puzzle_ui.restore_device_stock(device)
 
