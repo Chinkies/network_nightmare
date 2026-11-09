@@ -33,8 +33,9 @@ var remaining_stocks: Dictionary = {}
 @export_category("Objectifs")
 @export var objectives_panel: ObjectivesPanel
 
-@export_category("Hint & Tutorial")
+@export_category("Tutorial")
 @export var tutorial_window: Control
+@export var tutorial_panel_container: PanelContainer
 @export var tutorial_title_label: Label
 @export var tutorial_content_label: RichTextLabel
 @export var tutorial_texture: TextureRect
@@ -43,13 +44,18 @@ var remaining_stocks: Dictionary = {}
 @export var tutorial_next_button: Button
 @export var tutorial_close_button: Button
 
+@export_category("Hint")
 @export var hint_window: Control
+@export var hint_panel_container: PanelContainer
 @export var hint_title_label: Label
 @export var hint_content_label: RichTextLabel
 @export var hint_page_counter: Label
 @export var hint_prev_button: Button
 @export var hint_next_button: Button
 @export var hint_close_button: Button
+
+@export_category("Margin Size Tuto & Hint")
+@export var window_screen_margin: float = 160.0
 
 var current_tutorial_pages: Array[TutorialPage] = []
 var current_tutorial_index: int = 0
@@ -93,6 +99,8 @@ func _ready() -> void:
 	hint_next_button.pressed.connect(_on_hint_next_pressed)
 	tutorial_close_button.pressed.connect(_on_tutorial_close_pressed)
 	hint_close_button.pressed.connect(_on_hint_close_pressed)
+
+	call_deferred("_apply_window_size_constraints")
 
 ## Initialise les quotas du niveau
 func initialize_device_limits(limits: Dictionary) -> void:
@@ -376,3 +384,16 @@ func close_active_modals() -> void:
 		tutorial_window.visible = false
 	if hint_window:
 		hint_window.visible = false
+
+## Applique des contraintes de taille maximale (Résolution - Marge) sur les panneaux modaux
+func _apply_window_size_constraints() -> void:
+	var viewport_size = get_viewport_rect().size
+	var max_allowed_size = viewport_size - Vector2(window_screen_margin, window_screen_margin)
+	
+	tutorial_panel_container.custom_maximum_size = max_allowed_size
+	hint_panel_container.custom_maximum_size = max_allowed_size
+
+	tutorial_content_label.custom_maximum_size = max_allowed_size * 0.4
+	hint_content_label.custom_maximum_size = max_allowed_size * 0.4
+
+	tutorial_texture.custom_maximum_size = max_allowed_size * 0.3
