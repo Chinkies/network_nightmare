@@ -6,30 +6,45 @@ extends Control
 @export_file("*.tscn") var main_menu_scene: String
 
 @export_category("Sélection des Niveaux")
-@export var level_definition_1: LevelDefinition
+@export var level_definitions: Array[LevelDefinition] = []
 
 @export_category("Références UI")
-@export var level_button_1: TextureButton
+@export var level_buttons: Array[TextureButton] = []
 @export var main_menu_button: Button
 
 
 func _ready() -> void:
-	level_button_1.pressed.connect(_on_level_1_pressed)
-	main_menu_button.pressed.connect(_on_main_menu_button_pressed)
+	if main_menu_button:
+		main_menu_button.pressed.connect(_on_main_menu_button_pressed)
 		
 	if level_scene_path.is_empty():
 		push_error("[LevelSelectionMenu] Le chemin de la scène de jeu (level_scene_path) est vide !")
 		return
 
+	for i in range(level_buttons.size()):
+		var btn = level_buttons[i]
+		if btn:
+			if i >= level_definitions.size() or level_definitions[i] == null:
+				btn.disabled = true
+				continue
+				
+			if not btn.pressed.is_connected(_on_level_button_pressed):
+				btn.pressed.connect(_on_level_button_pressed.bind(i))
 
-func _on_level_1_pressed() -> void:
-	if not level_definition_1:
-		push_error("[LevelSelectionMenu] Aucune ressource LevelDefinition n'a été assignée pour le niveau 1 !")
+
+func _on_level_button_pressed(level_index: int) -> void:
+	if level_index < 0 or level_index >= level_definitions.size():
+		push_error("[LevelSelectionMenu] Index de niveau invalide : %d" % level_index)
+		return
+		
+	var level_def = level_definitions[level_index]
+	if not level_def:
+		push_error("[LevelSelectionMenu] Aucune ressource LevelDefinition assignée pour le niveau %d !" % (level_index + 1))
 		return
 
 	if has_node("/root/LevelContext"):
 		var context = get_node("/root/LevelContext")
-		context.current_level = level_definition_1
+		context.current_level = level_def
 	else:
 		push_error("[LevelSelectionMenu] L'autoload LevelContext est introuvable !")
 		return
