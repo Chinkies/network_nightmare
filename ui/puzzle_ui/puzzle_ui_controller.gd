@@ -27,6 +27,9 @@ var remaining_stocks: Dictionary = {}
 @onready var speed_button: TextureButton = %SpeedButton
 @onready var hint_button: TextureButton = %HintButton
 
+# --- RÉFÉRENCE AU PANEL D'OBJECTIF ---
+@export var objectives_panel: ObjectivesPanel
+
 # --- TEXTURES POUR LE BOUTON WIRING (Normal vs Connecté) ---
 @export_category("Textures Wiring Button")
 @export var wiring_disable_textures: Dictionary = {} # { "normal": Texture, "hover": Texture, "pressed": Texture }
@@ -112,8 +115,24 @@ func _setup_menu_with_resources() -> void:
 		print("[UI] Menu peuplé avec %d devices plaçables." % placeable_devices.size())
 	else:
 		push_warning("[UI] Impossible de trouver le nœud UIMenuDeviceSelection")
-		
-			
+
+
+# ==========================================
+# ===== AJOUT : GESTION DES OBJECTIFS ======
+# ==========================================
+
+## Initialise le panneau d'objectifs avec la liste des objectifs du niveau
+func initialize_objectives(objectives: Array[LevelObjective], emission_schedule: Array = []) -> void:
+	if objectives_panel:
+		objectives_panel.setup_objectives(objectives, emission_schedule.size())
+
+
+## Transmet les métriques de la simulation en direct au panneau (Bonus)
+func update_objectives_from_statistics(stats: Dictionary) -> void:
+	if objectives_panel:
+		objectives_panel.update_from_statistics(stats)
+
+
 # ==========================================
 # ===== METHODES DE MISE À JOUR VISUELLE ===
 # ==========================================
@@ -160,6 +179,11 @@ func set_speed_button_state(speed: float) -> void:
 			_apply_textures(speed_button, speed_1_textures)
 		2.:
 			_apply_textures(speed_button, speed_2_textures)
+
+## Active ou désactive l'état de session active du panneau d'objectifs
+func set_simulation_session_active(active: bool) -> void:
+	if objectives_panel:
+		objectives_panel.set_session_active(active)
 
 ## Active ou désactive le bouton Reset
 func set_reset_button_enabled(is_enabled: bool) -> void:

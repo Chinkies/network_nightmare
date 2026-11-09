@@ -65,6 +65,8 @@ func _connect_signals() -> void:
 	grid_board.wire_registered.connect(simulation.register_wire)
 	grid_board.wire_unregistered.connect(simulation.unregister_wire)
 	
+	simulation.statistics_updated.connect(puzzle_ui.update_objectives_from_statistics)
+
 	# Connexion de l'UI flottante de la grille vers le ModeManager
 	grid_view.ui_rotate_requested.connect(mode_manager.on_rotate_requested)
 	grid_view.ui_config_requested.connect(mode_manager.on_config_requested)
@@ -100,6 +102,7 @@ func _load_current_level() -> void:
 
 	# Transmission des limites de devices à l'UI
 	puzzle_ui.initialize_device_limits(level_def.device_limits)
+	puzzle_ui.initialize_objectives(level_def.objectives, level_def.emission_schedule)
 
 	# Instanciation des devices initiaux définis dans la ressource du niveau
 	for entry in level_def.initial_devices:
@@ -159,9 +162,9 @@ func _load_current_level() -> void:
 			continue
 
 	simulation.set_initial_device_count(simulation.devices.size())
+	simulation.recalculate_initial_stats()
 	is_loading_level = false
 	print("[LevelManager] Niveau initialisé avec succès.")
-
 
 
 # ============================================
@@ -175,6 +178,7 @@ func _on_simulation_requested() -> void:
 		
 		mode_manager.switch_mode_by_enum(ModeManager.GameMode.SIMULATION)
 			
+		puzzle_ui.set_simulation_session_active(true)
 		puzzle_ui.set_simulation_button_state(true)  # Passe l'icône à "Pause"
 		puzzle_ui.set_reset_button_enabled(true)     # Active le bouton Reset
 		puzzle_ui.set_edit_button_enabled(false)
@@ -202,6 +206,7 @@ func _on_reset_requested() -> void:
 	mode_manager.switch_mode_by_enum(ModeManager.GameMode.EDIT)
 		
 	# Remise à zéro de l'UI
+	puzzle_ui.set_simulation_session_active(false)
 	puzzle_ui.set_simulation_button_state(false)
 	puzzle_ui.set_reset_button_enabled(false)
 	puzzle_ui.set_edit_button_enabled(true)
