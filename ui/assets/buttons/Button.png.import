@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wyrsh2unuyml"
-path="res://.godot/imported/level.png-03fe9c579cb6b155744f4ba872c68498.ctex"
+uid="uid://cdo8rixra4j8t"
+path="res://.godot/imported/Button.png-6c8363fe36bb573401108e2cd5c1e57c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/level.png"
-dest_files=["res://.godot/imported/level.png-03fe9c579cb6b155744f4ba872c68498.ctex"]
+source_file="res://ui/assets/buttons/Button.png"
+dest_files=["res://.godot/imported/Button.png-6c8363fe36bb573401108e2cd5c1e57c.ctex"]
 
 [params]
 

@@ -272,7 +272,11 @@ func _update_tutorial_display() -> void:
 	if tutorial_texture:
 		if page.image:
 			tutorial_texture.texture = page.image
+			tutorial_texture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tutorial_texture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			tutorial_texture.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 			tutorial_texture.visible = true
+			call_deferred("_resize_tutorial_image", page)
 		else:
 			tutorial_texture.visible = false
 			
@@ -283,6 +287,20 @@ func _update_tutorial_display() -> void:
 		tutorial_prev_button.disabled = (current_tutorial_index == 0)
 	if tutorial_next_button:
 		tutorial_next_button.disabled = (current_tutorial_index >= current_tutorial_pages.size() - 1)
+
+
+func _resize_tutorial_image(page: TutorialPage) -> void:
+	if tutorial_texture == null or page.image == null:
+		return
+
+	var container := tutorial_texture.get_parent_control()
+	if container == null or container.size.x <= 0.0 or page.image.get_width() <= 0:
+		return
+
+	var width_percent := clampf(page.image_width_percent, 10.0, 100.0)
+	var image_width := container.size.x * width_percent / 100.0
+	var image_height := image_width * page.image.get_height() / page.image.get_width()
+	tutorial_texture.custom_minimum_size = Vector2(image_width, image_height)
 
 func _on_tutorial_prev_pressed() -> void:
 	if current_tutorial_index > 0:

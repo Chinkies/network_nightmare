@@ -238,6 +238,7 @@ func _on_reset_requested() -> void:
 		
 	print("[LevelManager] Simulation réinitialisée.")
 
+
 func _on_restart_end_ui_requested() -> void:
 	if level_end_ui:
 		level_end_ui.hide_ui()

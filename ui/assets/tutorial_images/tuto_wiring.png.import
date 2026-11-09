@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3e3sw7ejo8ih"
-path="res://.godot/imported/editPressed.png-5452a63f73eb9d076877ce41bb04ff82.ctex"
+uid="uid://bdnm2a6qp4ue1"
+path="res://.godot/imported/tuto_wiring.png-39b35a1e057add1b47fdf52a6b9082d0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/editPressed.png"
-dest_files=["res://.godot/imported/editPressed.png-5452a63f73eb9d076877ce41bb04ff82.ctex"]
+source_file="res://ui/assets/tutorial_images/tuto_wiring.png"
+dest_files=["res://.godot/imported/tuto_wiring.png-39b35a1e057add1b47fdf52a6b9082d0.ctex"]
 
 [params]
 

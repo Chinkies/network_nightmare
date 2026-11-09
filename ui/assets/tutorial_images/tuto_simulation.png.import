@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mfl2c1j1x4kt"
-path="res://.godot/imported/ButtonDisable.png-e4c56287001e89ca68e4ab4303f23774.ctex"
+uid="uid://c3b4jc85kgyf1"
+path="res://.godot/imported/tuto_simulation.png-40ec5342b2377a8b44c99f6086f7b574.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/ButtonDisable.png"
-dest_files=["res://.godot/imported/ButtonDisable.png-e4c56287001e89ca68e4ab4303f23774.ctex"]
+source_file="res://ui/assets/tutorial_images/tuto_simulation.png"
+dest_files=["res://.godot/imported/tuto_simulation.png-40ec5342b2377a8b44c99f6086f7b574.ctex"]
 
 [params]
 

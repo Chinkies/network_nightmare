@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://b7clmriaof56q" path="res://resources/theme/tooltip.tres" id="1_0vpv5"]
 [ext_resource type="Script" uid="uid://bcc7yx1gydj8i" path="res://ui/puzzle_ui/puzzle_ui_controller.gd" id="1_kijq7"]
 [ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://core/resource_definitions/network_device_data.gd" id="2_8hbgh"]
-[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="3_8hbgh"]
+[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receivers/receiver.tres" id="3_8hbgh"]
 [ext_resource type="Resource" uid="uid://bsb2a6r6khtdb" path="res://resources/devices/switch.tres" id="4_5p8q3"]
 [ext_resource type="Script" uid="uid://br303se0nha48" path="res://ui/device_selection_menu/device_selection_menu.gd" id="7_7rt4c"]
 [ext_resource type="Texture2D" uid="uid://ceye5kpal83tp" path="res://resources/ui/speed/speed1.tres" id="8_kawcb"]
@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://cg581b2dos3n6" path="res://resources/ui/edit/edit.tres" id="8_tot04"]
 [ext_resource type="Texture2D" uid="uid://d210h3p46gdl2" path="res://resources/ui/wiring/wiringEnable.tres" id="8_xtaqe"]
 [ext_resource type="Texture2D" uid="uid://dgi05j6pdmu80" path="res://resources/ui/edit/editPressed.tres" id="9_2uvxc"]
-[ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/Button.png" id="9_3gv1r"]
+[ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/buttons/Button.png" id="9_3gv1r"]
 [ext_resource type="Texture2D" uid="uid://becgrgqnjtq82" path="res://resources/ui/wiring/wiringEnablePressed.tres" id="9_k2lam"]
 [ext_resource type="Texture2D" uid="uid://cq8rwycumd02m" path="res://resources/ui/wiring/wiringDisable.tres" id="9_kawcb"]
 [ext_resource type="Texture2D" uid="uid://d28l5jh3gi7ip" path="res://resources/ui/edit/editHover.tres" id="10_cxewn"]
@@ -54,6 +54,9 @@
 [sub_resource type="AtlasTexture" id="AtlasTexture_kawcb"]
 atlas = ExtResource("9_3gv1r")
 region = Rect2(1, 1, 42, 42)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tutorial_panel"]
+bg_color = Color(0.08, 0.1, 0.14, 1)
 
 [node name="PuzzleUi" type="Control" unique_id=214307631 node_paths=PackedStringArray("objectives_panel", "tutorial_window", "tutorial_title_label", "tutorial_content_label", "tutorial_texture", "tutorial_page_counter", "tutorial_prev_button", "tutorial_next_button", "tutorial_close_button", "hint_window", "hint_title_label", "hint_content_label", "hint_page_counter", "hint_prev_button", "hint_next_button", "hint_close_button")]
 layout_mode = 3
@@ -374,14 +377,15 @@ color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
 [node name="PanelContainer" type="PanelContainer" parent="TutorialPanel" unique_id=122615077]
 propagate_maximum_size = false
 layout_mode = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_tutorial_panel")
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -119.0
+offset_left = -263.0
 offset_top = -85.5
-offset_right = 119.0
+offset_right = 263.0
 offset_bottom = 85.5
 grow_horizontal = 2
 grow_vertical = 2
@@ -389,10 +393,10 @@ grow_vertical = 2
 [node name="TutorialMargin" type="MarginContainer" parent="TutorialPanel/PanelContainer" unique_id=1203153837]
 propagate_maximum_size = false
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="TutorialVBox" type="VBoxContainer" parent="TutorialPanel/PanelContainer/TutorialMargin" unique_id=1098393443]
 layout_mode = 2
@@ -418,6 +422,9 @@ text = "X"
 
 [node name="TutorialTexture" type="TextureRect" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=59690076]
 layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+size_flags_horizontal = 4
 
 [node name="TutorialContentLabel" type="RichTextLabel" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=1535134691]
 layout_mode = 2

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://daqv4m4u6tnpx"
-path="res://.godot/imported/OtherButtonAll.png-61166ee38cc6d6d716b8ebc129b68c62.ctex"
+uid="uid://c542um1it2wru"
+path="res://.godot/imported/ButtonHover.png-4c5193bd42d48e0bee79c5e54e43b510.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/OtherButtonAll.png"
-dest_files=["res://.godot/imported/OtherButtonAll.png-61166ee38cc6d6d716b8ebc129b68c62.ctex"]
+source_file="res://ui/assets/buttons/ButtonHover.png"
+dest_files=["res://.godot/imported/ButtonHover.png-4c5193bd42d48e0bee79c5e54e43b510.ctex"]
 
 [params]
 

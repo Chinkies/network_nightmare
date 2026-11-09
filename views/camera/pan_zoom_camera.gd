@@ -5,6 +5,8 @@ extends Camera2D
 # ===== ATTRIBUTS =====
 # =====================
 
+@export var puzzle_ui: PuzzleUiController
+
 # --- Paramètres de déplacement (Pan) ---
 @export var move_speed: float = 600.0 # Pixels par seconde
 
@@ -28,15 +30,23 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if _is_modal_open():
+		return
 	_handle_movement(delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _is_modal_open():
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.is_pressed():
 			_adjust_zoom(zoom_factor)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.is_pressed():
 			_adjust_zoom(1.0 / zoom_factor)
+
+
+func _is_modal_open() -> bool:
+	return puzzle_ui != null and puzzle_ui.is_modal_open()
 
 
 ## Déplacement au clavier ZQSD

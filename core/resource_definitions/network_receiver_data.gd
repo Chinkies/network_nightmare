@@ -13,8 +13,8 @@ func _init() -> void:
 ## Surcharge de la FACTORY
 func instantiate_device(unique_id: String) -> NetworkDevice:
 	var device = NetworkReceiver.new(
-        unique_id, expected_color, expected_number, 
-        default_buffer_capacity, default_processing_rate
-    )
+		unique_id, expected_color, expected_number, 
+		default_buffer_capacity, default_processing_rate
+	)
 	device.device_type = device_type
 	return device

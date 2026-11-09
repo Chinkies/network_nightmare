@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8lyslafwxlxu"
-path="res://.godot/imported/editDisable.png-013a107ef626c0a4666afc54feafc42c.ctex"
+uid="uid://wyrsh2unuyml"
+path="res://.godot/imported/level.png-75f932fabab874f6407dcfd57af772ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/editDisable.png"
-dest_files=["res://.godot/imported/editDisable.png-013a107ef626c0a4666afc54feafc42c.ctex"]
+source_file="res://ui/assets/buttons/level.png"
+dest_files=["res://.godot/imported/level.png-75f932fabab874f6407dcfd57af772ca.ctex"]
 
 [params]
 

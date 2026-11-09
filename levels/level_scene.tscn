@@ -24,12 +24,13 @@
 [node name="LevelScene" type="Node2D" unique_id=872985249]
 script = ExtResource("1_3vw7n")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=107341410]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=107341410 node_paths=PackedStringArray("puzzle_ui")]
 limit_left = -1500
 limit_top = -800
 limit_right = 1500
 limit_bottom = 800
 script = ExtResource("2_vmibe")
+puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1856073983]
 

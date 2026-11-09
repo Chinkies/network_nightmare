@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c33vjm3gsc1oi"
-path="res://.godot/imported/editHover.png-1c3d85bfe1dae5c70d8a32adc7cd334e.ctex"
+uid="uid://chshigq17px3p"
+path="res://.godot/imported/tuto_transmitter.png-e39f981534fab347c7a8b12c88cffab8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/assets/editHover.png"
-dest_files=["res://.godot/imported/editHover.png-1c3d85bfe1dae5c70d8a32adc7cd334e.ctex"]
+source_file="res://ui/assets/tutorial_images/tuto_transmitter.png"
+dest_files=["res://.godot/imported/tuto_transmitter.png-e39f981534fab347c7a8b12c88cffab8.ctex"]
 
 [params]
 
