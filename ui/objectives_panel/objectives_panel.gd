@@ -58,14 +58,6 @@ func set_session_active(active: bool) -> void:
 		if bonus_stats_container:
 			bonus_stats_container.visible = false
 		_set_open_state(false)
-		# Pas sur de ça
-		#update_from_statistics({
-		#	"delivered_count": 0,
-		#	"dropped_count": 0,
-		#	"expired_count": 0,
-		#	"current_tx_packets": 0,
-		#	"initial_tx_packets": 0
-		#})
 
 
 ## Initialise les objectifs et le total des paquets

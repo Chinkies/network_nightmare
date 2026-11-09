@@ -15,6 +15,7 @@ extends Node
 
 @export_category("UI & Menus")
 @export var pause_menu: PauseMenu
+@export var level_end_ui: LevelEndUi
 
 ## Niveau de test par défaut si la scène est lancée directement depuis l'éditeur
 @export var fallback_default_level: LevelDefinition
@@ -59,6 +60,10 @@ func _connect_signals() -> void:
 	mode_manager.mode_changed.connect(_on_mode_changed)
 	level_validator.validation_finished.connect(_on_validation_finished)
 	
+	level_end_ui.restart_requested.connect(_on_restart_end_ui_requested)
+	level_end_ui.return_to_selection_requested.connect(_on_return_to_selection_requested)
+	level_end_ui.next_level_requested.connect(_on_next_level_requested)
+
 	# Connexion des signaux du GridBoard
 	grid_board.device_registered.connect(_on_device_placed_on_grid)
 	grid_board.device_unregistered.connect(_on_device_removed_from_grid)
@@ -215,9 +220,32 @@ func _on_reset_requested() -> void:
 		
 	print("[LevelManager] Simulation réinitialisée.")
 
+func _on_restart_end_ui_requested() -> void:
+	if level_end_ui:
+		level_end_ui.hide_ui()
+	_on_reset_requested()
+
+
+func _on_next_level_requested() -> void:
+	if current_level and current_level.next_level:
+		if Engine.has_singleton("LevelContext") or has_node("/root/LevelContext"):
+			var context = get_node_or_null("/root/LevelContext")
+			if context and "current_level" in context:
+				context.current_level = current_level.next_level
+		
+		get_tree().reload_current_scene()
+	else:
+		print("[LevelManager] C'était le dernier niveau du jeu !")
+		_on_return_to_selection_requested()
+
+
+func _on_return_to_selection_requested() -> void:
+	get_tree().change_scene_to_file("res://ui/levelSelectionMenu/levelSelectionMenu.tscn")
 
 func _on_validation_finished(result: Dictionary) -> void:
 	print("[LevelManager] Résultat du niveau : ", result)
+	if level_end_ui:
+		level_end_ui.show_result(result, current_level.objectives)
 
 
 func validate_current_level() -> Dictionary:

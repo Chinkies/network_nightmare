@@ -3,7 +3,7 @@ extends Resource
 
 @export_category("Informations du niveau")
 @export var level_id: String = ""
-@export var next_level_id: String = ""
+@export var next_level: LevelDefinition
 
 @export_category("Configuration de la grille")
 @export_range(1, 100) var grid_width: int = 10
