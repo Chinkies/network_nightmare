@@ -156,7 +156,7 @@ device_name = "Emetteur"
 texture = ExtResource("7_jciun")
 device_scene = ExtResource("5_8ay5l")
 default_buffer_capacity = 10
-default_processing_rate = 1.0
+default_processing_rate = 10.0
 metadata/_custom_type_script = "uid://p614kjuagoim"
 
 [sub_resource type="Resource" id="Resource_5yvq2"]
@@ -219,6 +219,16 @@ device_id = "green_receiver"
 grid_position = Vector2i(4, 1)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
+[sub_resource type="Resource" id="Resource_1r7xk"]
+script = ExtResource("8_5kmsh")
+texture = ExtResource("10_fvfdf")
+metadata/_custom_type_script = "uid://cv17sdaxsymyd"
+
+[sub_resource type="Resource" id="Resource_u87n1"]
+script = ExtResource("4_l6e5b")
+device_data = SubResource("Resource_1r7xk")
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
 [sub_resource type="Resource" id="Resource_40y5m"]
 script = ExtResource("8_jciun")
 required_count = 6
@@ -268,7 +278,7 @@ level_id = "level_02"
 grid_width = 5
 grid_height = 5
 emission_schedule = Array[ExtResource("1_l6qne")]([SubResource("Resource_fmoe2"), SubResource("Resource_fjgti"), SubResource("Resource_xkdr3"), SubResource("Resource_aet40"), SubResource("Resource_s5euo"), SubResource("Resource_2yd0h"), SubResource("Resource_l6qne"), SubResource("Resource_30wu1"), SubResource("Resource_1xv6b"), SubResource("Resource_l6e5b"), SubResource("Resource_8ay5l"), SubResource("Resource_1qrgy"), SubResource("Resource_1hqfi")])
-initial_devices = Array[ExtResource("4_l6e5b")]([SubResource("Resource_5yvq2"), SubResource("Resource_o37q7"), SubResource("Resource_l46k4"), SubResource("Resource_5kmsh")])
+initial_devices = Array[ExtResource("4_l6e5b")]([SubResource("Resource_5yvq2"), SubResource("Resource_o37q7"), SubResource("Resource_l46k4"), SubResource("Resource_5kmsh"), SubResource("Resource_u87n1")])
 device_limits = Dictionary[int, int]({
 3: 3
 })
