@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="NetworkReceiverData" format=3 uid="uid://rfcumcocsgi8"]
+
+[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://views/devices/network_device_view.tscn" id="1_csx14"]
+[ext_resource type="Script" uid="uid://cv17sdaxsymyd" path="res://core/resource_definitions/network_receiver_data.gd" id="2_gbsfb"]
+[ext_resource type="Texture2D" uid="uid://duq7e0e7w8h4e" path="res://views/devices/assets/receiver.png" id="3_3d7sl"]
+
+[resource]
+script = ExtResource("2_gbsfb")
+expected_color = 3
+expected_number = 2
+device_id_template = "yellow_receiver_2"
+device_type = 2
+device_name = "Yellow receiver 2"
+texture = ExtResource("3_3d7sl")
+device_scene = ExtResource("1_csx14")
+metadata/_custom_type_script = "uid://br8w83rtqy42y"

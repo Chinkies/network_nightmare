@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="NetworkDeviceData" format=3 uid="uid://bsb2a6r6khtdb"]
+
+[ext_resource type="PackedScene" uid="uid://dfeqmbf30xv7x" path="res://views/devices/network_device_view.tscn" id="1_d5bx5"]
+[ext_resource type="Script" uid="uid://br8w83rtqy42y" path="res://core/resource_definitions/network_device_data.gd" id="2_kirfx"]
+[ext_resource type="Texture2D" uid="uid://b8av85i4rsmb7" path="res://views/devices/assets/switch.png" id="3_8j2sj"]
+
+[resource]
+script = ExtResource("2_kirfx")
+device_id_template = "basic_switch"
+device_type = 3
+device_name = "Switch"
+texture = ExtResource("3_8j2sj")
+device_scene = ExtResource("1_d5bx5")
+default_processing_rate = 1.0
+metadata/_custom_type_script = "uid://br8w83rtqy42y"

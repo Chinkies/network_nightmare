@@ -5,8 +5,8 @@
 [ext_resource type="Script" uid="uid://etua5m2qnltd" path="res://core/resource_definitions/network_packet_data.gd" id="2_omtm5"]
 [ext_resource type="Script" uid="uid://0e8ai46cecma" path="res://ui/hint_page/hint_page.gd" id="3_cybon"]
 [ext_resource type="Script" uid="uid://d0amqpyma2u0n" path="res://core/resource_definitions/level_device_entry.gd" id="3_jrnom"]
-[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="5_0h4g0"]
-[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="6_k85c2"]
+[ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/level_1/transmitter.tres" id="5_0h4g0"]
+[ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/level_1/receiver_blue_1.tres" id="6_k85c2"]
 [ext_resource type="Script" uid="uid://njrtu55p54" path="res://core/resource_definitions/level_objective/level_objective.gd" id="6_kywl6"]
 [ext_resource type="Resource" uid="uid://bw0tjimumgc4n" path="res://levels/definitions/level_02.tres" id="7_mlash"]
 [ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="7_omtm5"]
@@ -37,7 +37,7 @@ metadata/_custom_type_script = "uid://etua5m2qnltd"
 [sub_resource type="Resource" id="Resource_fjgti"]
 script = ExtResource("1_y4ixx")
 packet = SubResource("Resource_h6avo")
-delay = 0.5
+delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_5sa8j"]
@@ -49,7 +49,7 @@ metadata/_custom_type_script = "uid://etua5m2qnltd"
 [sub_resource type="Resource" id="Resource_xkdr3"]
 script = ExtResource("1_y4ixx")
 packet = SubResource("Resource_5sa8j")
-delay = 0.5
+delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_d48b5"]
@@ -61,7 +61,7 @@ metadata/_custom_type_script = "uid://etua5m2qnltd"
 [sub_resource type="Resource" id="Resource_aet40"]
 script = ExtResource("1_y4ixx")
 packet = SubResource("Resource_d48b5")
-delay = 0.5
+delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_t4yv6"]
@@ -73,7 +73,7 @@ metadata/_custom_type_script = "uid://etua5m2qnltd"
 [sub_resource type="Resource" id="Resource_s5euo"]
 script = ExtResource("1_y4ixx")
 packet = SubResource("Resource_t4yv6")
-delay = 3.0
+delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
 [sub_resource type="Resource" id="Resource_kywl6"]
@@ -167,7 +167,7 @@ metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
 
 [sub_resource type="Resource" id="Resource_jretr"]
 script = ExtResource("10_pghnq")
-title = "le mode Câblage"
+title = "Le mode Câblage"
 text = "Le mode câblage permet, dans un premier temps, d'afficher les ports des appareils. Un port est symbolisé par une flèche :
 - dirigée vers l'appareil pour un port entrant ;
 - dirigée vers l'extérieur pour un port sortant. 
