@@ -403,6 +403,7 @@ layout_mode = 2
 
 [node name="TutorialTitleLabel" type="Label" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer" unique_id=1683124615]
 layout_mode = 2
+theme_override_font_sizes/font_size = 26
 
 [node name="Separator" type="Control" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer" unique_id=1647552064]
 layout_mode = 2
@@ -499,6 +500,7 @@ layout_mode = 2
 
 [node name="HintTitleLabel" type="Label" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer" unique_id=1149206886]
 layout_mode = 2
+theme_override_font_sizes/font_size = 26
 
 [node name="Separator" type="Control" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer" unique_id=1583547533]
 layout_mode = 2
