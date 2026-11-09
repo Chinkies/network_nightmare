@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://defsx4in2glgw"]
 
 [ext_resource type="Script" uid="uid://c4rpfwhmk85m" path="res://ui/levelSelectionMenu/levelSelectionMenu.gd" id="1_2lye0"]
-[ext_resource type="Resource" uid="uid://quotpy3ltltf" path="res://levels/definitions/level_01.tres" id="2_0d1hw"]
+[ext_resource type="Resource" uid="uid://cy0f4pas87ahm" path="res://levels/definitions/level_01.tres" id="2_0d1hw"]
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="2_8j836"]
 [ext_resource type="Script" uid="uid://d1c3ygvugah2e" path="res://ui/levelSelectionMenu/path_lines.gd" id="2_y1sm7"]
 [ext_resource type="Texture2D" uid="uid://nfeovtlc4dkl" path="res://resources/ui/levelSelectionMenu/level/5/level5.tres" id="3_pgeke"]

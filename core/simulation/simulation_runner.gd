@@ -1,7 +1,10 @@
 class_name SimulationRunner
 extends Node
 
-# --- Signaux ---
+
+# ===================
+# ===== SIGNAUX =====
+# ===================
 
 signal packet_emitted(packet: NetworkPacket, transmitter: NetworkTransmitter)
 signal packet_delivered(packet: NetworkPacket, receiver: NetworkReceiver)
@@ -9,7 +12,7 @@ signal packet_dropped(packet: NetworkPacket, source: NetworkItem, reason: String
 signal packet_expired(packet: NetworkPacket, source: NetworkItem)
 signal statistics_updated(statistics: Dictionary)
 signal simulation_finished
-
+signal stats_updated(processed: int, dropped: int, tx_buffer: int, tx_initial: int)
 
 # =====================
 # ===== ATTRIBUTS =====
@@ -23,6 +26,11 @@ var ephemeral_packets: Array[NetworkPacket] = []
 var statistics: Dictionary = {}
 var initial_devices_count: int = 0
 var player_devices_count: int = 0
+
+# --- Compteurs de télémétrie en direct ---
+var total_processed_count: int = 0
+var total_dropped_count: int = 0
+var initial_nbr_packets: int = -1
 
 # --- Contrôle du temps de simulation ---
 var is_running: bool = false
@@ -50,12 +58,12 @@ func register_device(device: NetworkDevice) -> void:
 		_update_statistics_device_count()
 		_emit_statistics_updated()
 
-		device.packet_processed.connect(_on_device_packet_processed)
-		device.packet_dropped.connect(_on_device_packet_dropped)
+		if not device.packet_processed.is_connected(_on_device_packet_processed):
+			device.packet_processed.connect(_on_device_packet_processed)
+		if not device.packet_dropped.is_connected(_on_device_packet_dropped):
+			device.packet_dropped.connect(_on_device_packet_dropped)
 		
-		# Connexion dynamique si la machine est un Receiver
 		if device is NetworkReceiver:
-			# On connecte le signal à la méthode apply_route_learning
 			if not device.route_learned.is_connected(apply_route_learning):
 				device.route_learned.connect(apply_route_learning)
 
@@ -71,7 +79,6 @@ func unregister_device(device: NetworkDevice) -> void:
 	if device.packet_dropped.is_connected(_on_device_packet_dropped):
 		device.packet_dropped.disconnect(_on_device_packet_dropped)
 	
-	# Déconnexion propre
 	if device is NetworkReceiver:
 		if device.route_learned.is_connected(apply_route_learning):
 			device.route_learned.disconnect(apply_route_learning)
@@ -80,13 +87,12 @@ func unregister_device(device: NetworkDevice) -> void:
 func register_wire(wire: NetworkWire) -> void:
 	if not wires.has(wire):
 		wires.append(wire)
-
-		wire.packet_dropped.connect(_on_wire_packet_dropped)
+		if not wire.packet_dropped.is_connected(_on_wire_packet_dropped):
+			wire.packet_dropped.connect(_on_wire_packet_dropped)
 
 
 func unregister_wire(wire: NetworkWire) -> void:
 	wires.erase(wire)
-
 	if wire.packet_dropped.is_connected(_on_wire_packet_dropped):
 		wire.packet_dropped.disconnect(_on_wire_packet_dropped)
 
@@ -96,10 +102,8 @@ func register_ephemeral_packet(packet: NetworkPacket) -> void:
 	if packet.ttl > 0.0 and not ephemeral_packets.has(packet):
 		ephemeral_packets.append(packet)
 
-
 func _unregister_ephemeral_packet(packet: NetworkPacket) -> void:
 	ephemeral_packets.erase(packet)
-
 
 
 # --------------------------------
@@ -157,7 +161,21 @@ func _increment_statistic(key: String) -> void:
 	statistics[key] = statistics.get(key, 0) + 1
 	_emit_statistics_updated()
 
-
+# Calcul et émission des stats pour l'UI du Panneau d'Objectifs (Bonus)
+func _emit_stats() -> void:
+	var tx_current = 0
+	for device in devices:
+		if device is NetworkTransmitter:
+			var sched_size = device.emission_schedule.size()
+			var sched_index = device.schedule_index
+			var buf_size = device.buffer.size()
+			tx_current += max(0, sched_size - sched_index) + buf_size
+				
+	# Sécurité supplémentaire : si initial_nbr_packets n'a pas encore été posé, on le pose ici une seule fois
+	if initial_nbr_packets < 0:
+		initial_nbr_packets = tx_current
+				
+	stats_updated.emit(total_processed_count, total_dropped_count, tx_current, initial_nbr_packets)
 
 # -------------------------------
 # --- Contrôle de l'exécution ---
@@ -168,6 +186,17 @@ func start() -> void:
 		return
 	has_started = true
 	is_running = true
+	
+	if initial_nbr_packets < 0:
+		initial_nbr_packets = 0
+		for device in devices:
+			if device is NetworkTransmitter:
+				var sched_size = device.emission_schedule.size()
+				var sched_index = device.schedule_index
+				var buf_size = device.buffer.size()
+				initial_nbr_packets += max(0, sched_size - sched_index) + buf_size
+					
+	_emit_stats()
 
 func stop() -> void:
 	is_running = false
@@ -184,8 +213,11 @@ func reset_runner() -> void:
 	ephemeral_packets.clear()
 	has_started = false
 	_simulation_finished_emitted = false
+	total_processed_count = 0
+	total_dropped_count = 0
+	initial_nbr_packets = -1
 	reset_statistics()
-	
+
 	for device in devices:
 		if device.has_method("reset_state"):
 			device.reset_state()
@@ -193,6 +225,8 @@ func reset_runner() -> void:
 	for wire in wires:
 		if wire.has_method("reset_state"):
 			wire.reset_state()
+
+	_emit_stats()
 
 
 
@@ -259,40 +293,48 @@ func _check_simulation_finished() -> void:
 
 
 
-# -----------------------------------------------
-# --- Interface de communication inter-device ---
-# -----------------------------------------------
+# ------------------------------------------------------
+# --- Gestion des événements de paquets (UI & Stats) ---
+# ------------------------------------------------------
 
 func _on_device_packet_processed(device: NetworkDevice, packet: NetworkPacket) -> void:
 	if device is NetworkTransmitter:
 		register_ephemeral_packet(packet)
 		_increment_statistic("emitted_count")
 		packet_emitted.emit(packet, device)
+		_emit_stats()
 	elif device is NetworkReceiver:
 		_unregister_ephemeral_packet(packet)
 		_increment_statistic("delivered_count")
+		total_processed_count += 1
 		packet_delivered.emit(packet, device)
+		_emit_stats()
+	else:
+		_emit_stats()
 
 
 func _on_device_packet_dropped(device: NetworkDevice, packet: NetworkPacket, reason: String) -> void:
 	_unregister_ephemeral_packet(packet)
+	total_dropped_count += 1
 	if reason == "TTL expired":
 		_increment_statistic("expired_count")
 		packet_expired.emit(packet, device)
 	else:
 		_increment_statistic("dropped_count")
 		packet_dropped.emit(packet, device, reason)
+	_emit_stats()
 
 
 func _on_wire_packet_dropped(wire: NetworkWire, packet: NetworkPacket, reason: String) -> void:
 	_unregister_ephemeral_packet(packet)
+	total_dropped_count += 1
 	if reason == "TTL expired":
 		_increment_statistic("expired_count")
 		packet_expired.emit(packet, wire)
 	else:
 		_increment_statistic("dropped_count")
 		packet_dropped.emit(packet, wire, reason)
-
+	_emit_stats()
 
 
 # -----------------------------------------------

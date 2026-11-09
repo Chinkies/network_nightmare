@@ -46,12 +46,13 @@
 [ext_resource type="Texture2D" uid="uid://bti0dnu42xmhv" path="res://resources/ui/exit/exitPressed.tres" id="39_0vpv5"]
 [ext_resource type="Texture2D" uid="uid://dwt66yhxkn7ka" path="res://resources/ui/exit/exitHover.tres" id="40_wbjex"]
 [ext_resource type="Texture2D" uid="uid://b2uy7kswk0xw1" path="res://resources/ui/exit/exitDisable.tres" id="41_yh2yv"]
+[ext_resource type="Script" uid="uid://dyu21v55ix1e6" path="res://ui/objectives_panel/objectives_panel.gd" id="47_vgq7u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kawcb"]
 atlas = ExtResource("9_3gv1r")
 region = Rect2(1, 1, 42, 42)
 
-[node name="PuzzleUi" type="Control" unique_id=214307631]
+[node name="PuzzleUi" type="Control" unique_id=214307631 node_paths=PackedStringArray("objectives_panel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,6 +63,7 @@ mouse_filter = 2
 theme = ExtResource("1_0vpv5")
 script = ExtResource("1_kijq7")
 available_devices = Array[ExtResource("2_8hbgh")]([ExtResource("3_8hbgh"), ExtResource("4_5p8q3")])
+objectives_panel = NodePath("ObjectivePanel")
 wiring_disable_textures = {
 "hover": ExtResource("19_if15r"),
 "normal": ExtResource("9_kawcb"),
@@ -275,3 +277,46 @@ tooltip_text = "Change the simulation speed"
 texture_normal = ExtResource("8_kawcb")
 texture_pressed = ExtResource("12_ni558")
 texture_hover = ExtResource("13_i5nrg")
+
+[node name="ObjectivePanel" type="PanelContainer" parent="." unique_id=822219 node_paths=PackedStringArray("header_button", "content_container", "bonus_stats_container", "lbl_processed", "lbl_dropped", "lbl_tx_buffer")]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("47_vgq7u")
+header_button = NodePath("VBoxContainer/ButtonHeader")
+content_container = NodePath("VBoxContainer/ContentContainer")
+bonus_stats_container = NodePath("VBoxContainer/StatContainer")
+lbl_processed = NodePath("VBoxContainer/StatContainer/LabelProcessed")
+lbl_dropped = NodePath("VBoxContainer/StatContainer/LabelDropped")
+lbl_tx_buffer = NodePath("VBoxContainer/StatContainer/LabelBuffer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ObjectivePanel" unique_id=984652965]
+layout_mode = 2
+
+[node name="ButtonHeader" type="Button" parent="ObjectivePanel/VBoxContainer" unique_id=71994218]
+layout_mode = 2
+
+[node name="ContentContainer" type="VBoxContainer" parent="ObjectivePanel/VBoxContainer" unique_id=415963935]
+layout_mode = 2
+
+[node name="StatContainer" type="VBoxContainer" parent="ObjectivePanel/VBoxContainer" unique_id=2115092178]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=2103962403]
+layout_mode = 2
+
+[node name="TitleStats" type="Label" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=844617122]
+layout_mode = 2
+
+[node name="LabelProcessed" type="Label" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=988806418]
+layout_mode = 2
+
+[node name="LabelDropped" type="Label" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=1746084201]
+layout_mode = 2
+
+[node name="LabelBuffer" type="Label" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=1566108197]
+layout_mode = 2
