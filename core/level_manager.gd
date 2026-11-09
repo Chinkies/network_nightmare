@@ -23,7 +23,7 @@ extends Node
 var is_loading_level: bool = false
 var current_level: LevelDefinition
 
-var unlocked_hints_count: int = 0 # Max 3 indices
+var unlocked_hints_count: int = 0
 
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
