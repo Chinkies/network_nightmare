@@ -199,6 +199,8 @@ func _on_simulation_requested() -> void:
 		puzzle_ui.set_edit_button_enabled(false)
 		puzzle_ui.set_wiring_button_enabled(false)
 		puzzle_ui.set_delete_button_enabled(false)
+		puzzle_ui.set_tutorial_button_enabled(false)
+		puzzle_ui.set_hint_button_enabled(false)
 		
 	else:
 		# --- MISE EN PAUSE ---
@@ -227,6 +229,8 @@ func _on_reset_requested() -> void:
 	puzzle_ui.set_edit_button_enabled(true)
 	puzzle_ui.set_wiring_button_enabled(true)
 	puzzle_ui.set_delete_button_enabled(true)
+	puzzle_ui.set_tutorial_button_enabled(true)
+	puzzle_ui.set_hint_button_enabled(true)
 		
 	print("[LevelManager] Simulation réinitialisée.")
 

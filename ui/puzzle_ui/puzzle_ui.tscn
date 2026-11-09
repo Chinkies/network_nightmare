@@ -181,6 +181,7 @@ theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = ExtResource("29_qxaa1")
 theme_override_styles/pressed = ExtResource("30_l0dbo")
 theme_override_styles/hover = ExtResource("31_5v7h7")
+theme_override_styles/disabled = ExtResource("31_5v7h7")
 text = "Tutoriel"
 
 [node name="MarginHint" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=528928049]
