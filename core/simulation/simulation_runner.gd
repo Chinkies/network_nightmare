@@ -111,6 +111,11 @@ func _unregister_ephemeral_packet(packet: NetworkPacket) -> void:
 # --------------------------------
 
 func reset_statistics() -> void:
+	var total_initial_tx = 0
+	for device in devices:
+		if device is NetworkTransmitter and "emission_schedule" in device:
+			total_initial_tx += device.emission_schedule.size()
+
 	statistics = {
 		"emitted_count": 0,
 		"delivered_count": 0,
@@ -119,7 +124,9 @@ func reset_statistics() -> void:
 		"initial_devices_count": initial_devices_count,
 		"placed_devices_count": player_devices_count,
 		"total_devices_count": devices.size(),
-		"elapsed_time": 0.0
+		"elapsed_time": 0.0,
+		"initial_tx_packets": total_initial_tx,
+		"current_tx_packets": total_initial_tx
 	}
 	statistics_updated.emit(statistics.duplicate())
 
@@ -171,11 +178,26 @@ func _emit_stats() -> void:
 			var buf_size = device.buffer.size()
 			tx_current += max(0, sched_size - sched_index) + buf_size
 				
-	# Sécurité supplémentaire : si initial_nbr_packets n'a pas encore été posé, on le pose ici une seule fois
 	if initial_nbr_packets < 0:
 		initial_nbr_packets = tx_current
+		statistics["initial_tx_packets"] = initial_nbr_packets
 				
+	statistics["current_tx_packets"] = tx_current
+
+	_emit_statistics_updated()
 	stats_updated.emit(total_processed_count, total_dropped_count, tx_current, initial_nbr_packets)
+
+# Recalcule les stats initiales (utile après l'injection du schedule par le LevelManager)
+func recalculate_initial_stats() -> void:
+	var total_initial_tx = 0
+	for device in devices:
+		if device is NetworkTransmitter and "emission_schedule" in device:
+			total_initial_tx += device.emission_schedule.size()
+
+	statistics["initial_tx_packets"] = total_initial_tx
+	statistics["current_tx_packets"] = total_initial_tx
+	initial_nbr_packets = total_initial_tx
+	_emit_statistics_updated()
 
 # -------------------------------
 # --- Contrôle de l'exécution ---
@@ -246,14 +268,11 @@ func _physics_process(delta: float) -> void:
 
 # Exécute un pas discret de simulation complet
 func step(delta: float) -> void:
-	# 1. Mise à jour de l'horloge des paquets éphémères
 	_update_ephemeral_packets(delta)
 
-	# 2. Simulation des machines (consommation du buffer, timers internes, injections)
 	for device in devices:
 		device.simulate(delta)
 
-	# 3. Simulation des câbles (mouvements, bouchons, arrivées en bout de ligne)
 	for wire in wires:
 		wire.simulate(delta)
 
@@ -265,7 +284,6 @@ func _update_ephemeral_packets(delta: float) -> void:
 	for i in range(ephemeral_packets.size() - 1, -1, -1):
 		var packet: NetworkPacket = ephemeral_packets[i]
 		
-		# Si le paquet a expiré lors de ce pas de temps
 		if packet.update_ttl(delta):
 			ephemeral_packets.remove_at(i)
 

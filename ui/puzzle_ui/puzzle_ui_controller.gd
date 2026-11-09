@@ -128,10 +128,9 @@ func initialize_objectives(objectives: Array[LevelObjective], emission_schedule:
 
 
 ## Transmet les métriques de la simulation en direct au panneau (Bonus)
-func update_objectives_live_metrics(processed: int, dropped: int, tx_current: int, tx_initial: int) -> void:
+func update_objectives_from_statistics(stats: Dictionary) -> void:
 	if objectives_panel:
-		objectives_panel.update_live_metrics(processed, dropped, tx_current, tx_initial)
-
+		objectives_panel.update_from_statistics(stats)
 
 
 # ==========================================

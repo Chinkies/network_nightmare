@@ -65,7 +65,7 @@ func _connect_signals() -> void:
 	grid_board.wire_registered.connect(simulation.register_wire)
 	grid_board.wire_unregistered.connect(simulation.unregister_wire)
 	
-	simulation.stats_updated.connect(puzzle_ui.update_objectives_live_metrics)
+	simulation.statistics_updated.connect(puzzle_ui.update_objectives_from_statistics)
 
 	# Connexion de l'UI flottante de la grille vers le ModeManager
 	grid_view.ui_rotate_requested.connect(mode_manager.on_rotate_requested)
@@ -162,6 +162,7 @@ func _load_current_level() -> void:
 			continue
 
 	simulation.set_initial_device_count(simulation.devices.size())
+	simulation.recalculate_initial_stats()
 	is_loading_level = false
 	print("[LevelManager] Niveau initialisé avec succès.")
 

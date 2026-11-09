@@ -58,6 +58,14 @@ func set_session_active(active: bool) -> void:
 		if bonus_stats_container:
 			bonus_stats_container.visible = false
 		_set_open_state(false)
+		# Pas sur de ça
+		#update_from_statistics({
+		#	"delivered_count": 0,
+		#	"dropped_count": 0,
+		#	"expired_count": 0,
+		#	"current_tx_packets": 0,
+		#	"initial_tx_packets": 0
+		#})
 
 
 ## Initialise les objectifs et le total des paquets
@@ -76,10 +84,15 @@ func setup_objectives(objectives: Array[LevelObjective], emission_schedule_size:
 	total_expected_packets = emission_schedule_size
 
 
-## Met à jour les métriques bonus en temps réel
-func update_live_metrics(processed: int, dropped: int, tx_current: int, tx_initial: int) -> void:
+## Met à jour l'affichage en direct à partir du dictionnaire global de statistiques
+func update_from_statistics(stats: Dictionary) -> void:
+	var delivered = stats.get("delivered_count", 0)
+	var dropped = stats.get("dropped_count", 0) + stats.get("expired_count", 0)
+	var tx_current = stats.get("current_tx_packets", 0)
+	var tx_initial = stats.get("initial_tx_packets", 0)
+	
 	if lbl_processed:
-		lbl_processed.text = "Traités : %d / %d" % [processed, total_expected_packets]
+		lbl_processed.text = "Traités : %d / %d" % [delivered, total_expected_packets]
 	if lbl_dropped:
 		lbl_dropped.text = "Perdus / Expirés : %d" % dropped
 	if lbl_tx_buffer:
