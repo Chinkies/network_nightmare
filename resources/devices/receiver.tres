@@ -6,11 +6,9 @@
 
 [resource]
 script = ExtResource("3_32bcw")
-device_id_template = "reciever"
+device_id_template = "receiver"
 device_type = 2
-device_name = "Serveur bleu"
+device_name = "Receiver Blue"
 texture = ExtResource("2_3krk2")
 device_scene = ExtResource("1_ucvky")
-default_buffer_capacity = 1
-default_processing_rate = 5.0
 metadata/_custom_type_script = "uid://br8w83rtqy42y"

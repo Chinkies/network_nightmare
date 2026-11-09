@@ -9,7 +9,7 @@
 script = ExtResource("2_6sxq6")
 device_id_template = "transmitter"
 device_type = 1
-device_name = "transmitter"
+device_name = "Transmitter"
 texture = ExtResource("2_gmn0c")
 device_scene = ExtResource("1_5yvq2")
 metadata/_custom_type_script = "uid://p614kjuagoim"
