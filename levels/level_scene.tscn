@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bno3xw4nosg5i" path="res://core/simulation/simulation_runner.gd" id="4_3mabw"]
 [ext_resource type="Script" uid="uid://cd6ku4d1qpfmt" path="res://core/level_manager.gd" id="4_3pm0d"]
 [ext_resource type="Script" uid="uid://bt1dvknldftfd" path="res://core/grid/grid_board.gd" id="5_3vw7n"]
+[ext_resource type="PackedScene" uid="uid://dxh7nttcamaux" path="res://ui/level_end_menu/level_end_menu.tscn" id="5_u87n1"]
 [ext_resource type="Resource" uid="uid://cy0f4pas87ahm" path="res://levels/definitions/level_01.tres" id="6_018kn"]
 [ext_resource type="Script" uid="uid://d1wlenpatmk2l" path="res://views/grid/grid_view.gd" id="6_vmibe"]
 [ext_resource type="Script" uid="uid://xj50lgcqr33r" path="res://gameplay_modes/mode_manager.gd" id="7_bvijt"]
@@ -37,7 +38,10 @@ unique_name_in_owner = true
 
 [node name="PauseMenu" parent="CanvasLayer" unique_id=1230819823 instance=ExtResource("3_3lbvr")]
 
-[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "level_validator", "grid_board", "grid_view", "puzzle_ui", "pause_menu")]
+[node name="LevelEndMenu" parent="CanvasLayer" unique_id=1015091987 instance=ExtResource("5_u87n1")]
+visible = false
+
+[node name="LevelManager" type="Node" parent="." unique_id=146579722 node_paths=PackedStringArray("mode_manager", "simulation", "level_validator", "grid_board", "grid_view", "puzzle_ui", "pause_menu", "level_end_ui")]
 script = ExtResource("4_3pm0d")
 mode_manager = NodePath("ModeManager")
 simulation = NodePath("SimulationRunner")
@@ -46,6 +50,7 @@ grid_board = NodePath("GridBoard")
 grid_view = NodePath("GridView")
 puzzle_ui = NodePath("../CanvasLayer/PuzzleUi")
 pause_menu = NodePath("../CanvasLayer/PauseMenu")
+level_end_ui = NodePath("../CanvasLayer/LevelEndMenu")
 fallback_default_level = ExtResource("6_018kn")
 
 [node name="SimulationRunner" type="Node" parent="LevelManager" unique_id=61842431]

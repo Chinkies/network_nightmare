@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://dxh7nttcamaux"]
+
+[ext_resource type="Script" uid="uid://dkpghwxahc1gd" path="res://ui/level_end_menu/level_end_menu.gd" id="1_nmw7l"]
+[ext_resource type="StyleBox" uid="uid://ch0ss5nyr6co3" path="res://resources/style/styleButtonPause.tres" id="2_vwtro"]
+[ext_resource type="StyleBox" uid="uid://cgt7qxbcidluo" path="res://resources/style/styleButtonPausePressed.tres" id="3_w72g8"]
+[ext_resource type="StyleBox" uid="uid://hr21uhagd84l" path="res://resources/style/styleButtonPauseHover.tres" id="4_iicrv"]
+
+[node name="LevelEndMenu" type="Control" unique_id=1015091987 node_paths=PackedStringArray("title_label", "success_container", "failed_container", "stats_label", "restart_button", "level_selection_button", "next_level_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nmw7l")
+title_label = NodePath("MenuContainer/MenuMargin/MenuVBox/LabelTitle")
+success_container = NodePath("MenuContainer/MenuMargin/MenuVBox/SuccessContainer")
+failed_container = NodePath("MenuContainer/MenuMargin/MenuVBox/FailedContainer")
+stats_label = NodePath("MenuContainer/MenuMargin/MenuVBox/LabelStat")
+restart_button = NodePath("MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer/ButtonRestart")
+level_selection_button = NodePath("MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer/ButtonLevelSelection")
+next_level_button = NodePath("MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer/ButtonNextLevel")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1961116801]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
+
+[node name="MenuContainer" type="PanelContainer" parent="." unique_id=1111201839]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuMargin" type="MarginContainer" parent="MenuContainer" unique_id=103463620]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MenuVBox" type="VBoxContainer" parent="MenuContainer/MenuMargin" unique_id=1728284822]
+layout_mode = 2
+
+[node name="LabelTitle" type="Label" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=243925701]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1392544296]
+layout_mode = 2
+
+[node name="LabelSuccess" type="Label" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1978687660]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Objectifs Réussis"
+horizontal_alignment = 1
+
+[node name="SuccessContainer" type="VBoxContainer" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1860901987]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HSeparator" type="HSeparator" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1239430165]
+layout_mode = 2
+
+[node name="LabelFailed" type="Label" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1515651488]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Objectifs Ratés"
+horizontal_alignment = 1
+
+[node name="FailedContainer" type="VBoxContainer" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=290538016]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HSeparator3" type="HSeparator" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1854197695]
+layout_mode = 2
+
+[node name="LabelStat" type="Label" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=148678156]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1292264816]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MenuContainer/MenuMargin/MenuVBox/MarginContainer" unique_id=1140974290]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="ButtonLevelSelection" type="Button" parent="MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer" unique_id=883026642]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("2_vwtro")
+theme_override_styles/pressed = ExtResource("3_w72g8")
+theme_override_styles/hover = ExtResource("4_iicrv")
+text = "Sélection des niveaux"
+
+[node name="ButtonRestart" type="Button" parent="MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer" unique_id=682749474]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("2_vwtro")
+theme_override_styles/pressed = ExtResource("3_w72g8")
+theme_override_styles/hover = ExtResource("4_iicrv")
+text = "Recommencer"
+
+[node name="ButtonNextLevel" type="Button" parent="MenuContainer/MenuMargin/MenuVBox/MarginContainer/HBoxContainer" unique_id=1440039253]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("2_vwtro")
+theme_override_styles/pressed = ExtResource("3_w72g8")
+theme_override_styles/hover = ExtResource("4_iicrv")
+text = "Niveau Suivant"
