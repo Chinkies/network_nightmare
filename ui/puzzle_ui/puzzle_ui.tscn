@@ -36,7 +36,10 @@
 [ext_resource type="Texture2D" uid="uid://cf35ee1g7xjbv" path="res://resources/ui/start/startHover.tres" id="25_mxk3m"]
 [ext_resource type="Texture2D" uid="uid://dkdsla0dmtwmx" path="res://resources/ui/speed/speed05Hover.tres" id="25_wbjex"]
 [ext_resource type="Texture2D" uid="uid://djas73tvi2mmr" path="res://resources/ui/hint/hint.tres" id="29_1ylt8"]
+[ext_resource type="StyleBox" uid="uid://ch0ss5nyr6co3" path="res://resources/style/styleButtonPause.tres" id="29_qxaa1"]
+[ext_resource type="StyleBox" uid="uid://cgt7qxbcidluo" path="res://resources/style/styleButtonPausePressed.tres" id="30_l0dbo"]
 [ext_resource type="Texture2D" uid="uid://c3bevgt63143" path="res://resources/ui/hint/hintPressed.tres" id="30_vgq7u"]
+[ext_resource type="StyleBox" uid="uid://hr21uhagd84l" path="res://resources/style/styleButtonPauseHover.tres" id="31_5v7h7"]
 [ext_resource type="Texture2D" uid="uid://b67pb2ynq2lhf" path="res://resources/ui/hint/hintHover.tres" id="31_cu2ot"]
 [ext_resource type="Texture2D" uid="uid://b6cw80bqbxk8g" path="res://resources/ui/delete/deleteDisable.tres" id="32_p0i88"]
 [ext_resource type="Texture2D" uid="uid://cqun78pgnfd8o" path="res://resources/ui/hint/hintDisable.tres" id="32_rqbf6"]
@@ -52,7 +55,7 @@
 atlas = ExtResource("9_3gv1r")
 region = Rect2(1, 1, 42, 42)
 
-[node name="PuzzleUi" type="Control" unique_id=214307631 node_paths=PackedStringArray("objectives_panel")]
+[node name="PuzzleUi" type="Control" unique_id=214307631 node_paths=PackedStringArray("objectives_panel", "tutorial_window", "tutorial_title_label", "tutorial_content_label", "tutorial_texture", "tutorial_page_counter", "tutorial_prev_button", "tutorial_next_button", "tutorial_close_button", "hint_window", "hint_title_label", "hint_content_label", "hint_page_counter", "hint_prev_button", "hint_next_button", "hint_close_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,6 +67,21 @@ theme = ExtResource("1_0vpv5")
 script = ExtResource("1_kijq7")
 available_devices = Array[ExtResource("2_8hbgh")]([ExtResource("3_8hbgh"), ExtResource("4_5p8q3")])
 objectives_panel = NodePath("ObjectivePanel")
+tutorial_window = NodePath("TutorialPanel")
+tutorial_title_label = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer/TutorialTitleLabel")
+tutorial_content_label = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/TutorialContentLabel")
+tutorial_texture = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/TutorialTexture")
+tutorial_page_counter = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox/TutorialPageCounter")
+tutorial_prev_button = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox/TutorialPreviousButton")
+tutorial_next_button = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox/TutorialNextButton")
+tutorial_close_button = NodePath("TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer/TutorialCloseButton")
+hint_window = NodePath("HintPanel")
+hint_title_label = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer/HintTitleLabel")
+hint_content_label = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HintContentLabel")
+hint_page_counter = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox/HintPageCounter")
+hint_prev_button = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox/HintPreviousButton")
+hint_next_button = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox/HintNextButton")
+hint_close_button = NodePath("HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer/HintCloseButton")
 wiring_disable_textures = {
 "hover": ExtResource("19_if15r"),
 "normal": ExtResource("9_kawcb"),
@@ -148,6 +166,23 @@ theme_override_constants/margin_bottom = 10
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer" unique_id=111758252]
 layout_mode = 2
 alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=221920562]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="TutorialButton" type="Button" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/MarginContainer" unique_id=1412021236]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+theme_override_styles/disabled = ExtResource("31_5v7h7")
+text = "Tutoriel"
 
 [node name="MarginHint" type="MarginContainer" parent="HBoxContainer2/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=528928049]
 custom_minimum_size = Vector2(48, 48)
@@ -319,4 +354,192 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="LabelBuffer" type="Label" parent="ObjectivePanel/VBoxContainer/StatContainer" unique_id=1566108197]
+layout_mode = 2
+
+[node name="TutorialPanel" type="Control" parent="." unique_id=1621441940]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="TutorialPanel" unique_id=175305541]
+layout_mode = 0
+offset_right = 1440.0
+offset_bottom = 810.0
+color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
+
+[node name="PanelContainer" type="PanelContainer" parent="TutorialPanel" unique_id=122615077]
+propagate_maximum_size = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -119.0
+offset_top = -85.5
+offset_right = 119.0
+offset_bottom = 85.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TutorialMargin" type="MarginContainer" parent="TutorialPanel/PanelContainer" unique_id=1203153837]
+propagate_maximum_size = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TutorialVBox" type="VBoxContainer" parent="TutorialPanel/PanelContainer/TutorialMargin" unique_id=1098393443]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=51600155]
+layout_mode = 2
+
+[node name="TutorialTitleLabel" type="Label" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer" unique_id=1683124615]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer" unique_id=1647552064]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TutorialCloseButton" type="Button" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/HBoxContainer" unique_id=1018722088]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "X"
+
+[node name="TutorialTexture" type="TextureRect" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=59690076]
+layout_mode = 2
+
+[node name="TutorialContentLabel" type="RichTextLabel" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=1535134691]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="MarginContainer" type="MarginContainer" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox" unique_id=1126155360]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TutorialHBox" type="HBoxContainer" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer" unique_id=1950651374]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TutorialPreviousButton" type="Button" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox" unique_id=345343886]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "Précédent"
+
+[node name="TutorialNextButton" type="Button" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox" unique_id=510879130]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "Suivant"
+
+[node name="TutorialPageCounter" type="Label" parent="TutorialPanel/PanelContainer/TutorialMargin/TutorialVBox/MarginContainer/TutorialHBox" unique_id=412009593]
+layout_mode = 2
+
+[node name="HintPanel" type="Control" parent="." unique_id=863712213]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="HintPanel" unique_id=173799459]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
+
+[node name="PanelContainer" type="PanelContainer" parent="HintPanel" unique_id=1265408553]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -119.0
+offset_top = -78.0
+offset_right = 119.0
+offset_bottom = 78.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HintMargin" type="MarginContainer" parent="HintPanel/PanelContainer" unique_id=2081457800]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HintVBox" type="VBoxContainer" parent="HintPanel/PanelContainer/HintMargin" unique_id=1809220831]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HintPanel/PanelContainer/HintMargin/HintVBox" unique_id=829346952]
+layout_mode = 2
+
+[node name="HintTitleLabel" type="Label" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer" unique_id=1149206886]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer" unique_id=1583547533]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HintCloseButton" type="Button" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HBoxContainer" unique_id=2147422448]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "X"
+
+[node name="HintContentLabel" type="RichTextLabel" parent="HintPanel/PanelContainer/HintMargin/HintVBox" unique_id=1511029591]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="HintMargin" type="MarginContainer" parent="HintPanel/PanelContainer/HintMargin/HintVBox" unique_id=1163912365]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HintHBox" type="HBoxContainer" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin" unique_id=1705935220]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HintPreviousButton" type="Button" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox" unique_id=2082724811]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "Précédent"
+
+[node name="HintNextButton" type="Button" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox" unique_id=555596009]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("29_qxaa1")
+theme_override_styles/pressed = ExtResource("30_l0dbo")
+theme_override_styles/hover = ExtResource("31_5v7h7")
+text = "Suivant"
+
+[node name="HintPageCounter" type="Label" parent="HintPanel/PanelContainer/HintMargin/HintVBox/HintMargin/HintHBox" unique_id=402071784]
 layout_mode = 2

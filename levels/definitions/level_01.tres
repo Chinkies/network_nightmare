@@ -3,11 +3,16 @@
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="1_level"]
 [ext_resource type="Script" uid="uid://cil0ws5dyw4l2" path="res://core/resource_definitions/schedule_event.gd" id="1_y4ixx"]
 [ext_resource type="Script" uid="uid://etua5m2qnltd" path="res://core/resource_definitions/network_packet_data.gd" id="2_omtm5"]
+[ext_resource type="Script" uid="uid://0e8ai46cecma" path="res://ui/hint_page/hint_page.gd" id="3_cybon"]
 [ext_resource type="Script" uid="uid://d0amqpyma2u0n" path="res://core/resource_definitions/level_device_entry.gd" id="3_jrnom"]
 [ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/transmitter.tres" id="4_y4ixx"]
 [ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/receiver.tres" id="5_omtm5"]
 [ext_resource type="Script" uid="uid://njrtu55p54" path="res://core/resource_definitions/level_objective/level_objective.gd" id="6_kywl6"]
 [ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="7_omtm5"]
+[ext_resource type="Script" uid="uid://dgyc14pvgr5ue" path="res://ui/tutorial_page/tutorial_page.gd" id="10_pghnq"]
+[ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/Button.png" id="11_1w8on"]
+[ext_resource type="Texture2D" uid="uid://c542um1it2wru" path="res://ui/assets/ButtonHover.png" id="12_mlash"]
+[ext_resource type="Texture2D" uid="uid://mfl2c1j1x4kt" path="res://ui/assets/ButtonDisable.png" id="13_1ir1e"]
 
 [sub_resource type="Resource" id="Resource_au533"]
 script = ExtResource("2_omtm5")
@@ -74,6 +79,29 @@ packet = SubResource("Resource_3tqyv")
 delay = 0.5
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
+[sub_resource type="Resource" id="Resource_kywl6"]
+script = ExtResource("3_cybon")
+title = "Première hint"
+text = "Je suis un exemple"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
+[sub_resource type="Resource" id="Resource_1w8on"]
+script = ExtResource("3_cybon")
+title = "Deuxième"
+text = "BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla
+BLABLABLA BLABLABLA blablabla bla"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
+[sub_resource type="Resource" id="Resource_mlash"]
+script = ExtResource("3_cybon")
+title = "Troisième"
+text = "Oskur"
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
 [sub_resource type="Resource" id="Resource_5yvq2"]
 script = ExtResource("3_jrnom")
 device_data = ExtResource("4_y4ixx")
@@ -95,6 +123,33 @@ objective_id = "1"
 description = "Test"
 metadata/_custom_type_script = "uid://bkcxp38ps4ory"
 
+[sub_resource type="Resource" id="Resource_ojoou"]
+script = ExtResource("10_pghnq")
+title = "Premier TUTO"
+text = "Bienvenue dans le tutoriel. 
+[b]Attention :[/b] Ne dépassez pas la limite de [color=red]2 routeurs[/color] sur ce niveau."
+image = ExtResource("11_1w8on")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[sub_resource type="Resource" id="Resource_cybon"]
+script = ExtResource("10_pghnq")
+title = "Test page 2"
+text = "Je suis une très jolie page"
+image = ExtResource("12_mlash")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[sub_resource type="Resource" id="Resource_pghnq"]
+script = ExtResource("10_pghnq")
+title = "Test page 3"
+text = "Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
+Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire"
+image = ExtResource("13_1ir1e")
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
 [resource]
 script = ExtResource("1_level")
 level_id = "level_01"
@@ -104,3 +159,5 @@ device_limits = Dictionary[int, int]({
 3: 2
 })
 objectives = Array[ExtResource("6_kywl6")]([SubResource("Resource_40y5m")])
+tutorial_pages = Array[ExtResource("10_pghnq")]([SubResource("Resource_ojoou"), SubResource("Resource_cybon"), SubResource("Resource_pghnq")])
+hints = Array[ExtResource("3_cybon")]([SubResource("Resource_kywl6"), SubResource("Resource_1w8on"), SubResource("Resource_mlash")])
