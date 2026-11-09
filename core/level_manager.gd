@@ -23,6 +23,8 @@ extends Node
 var is_loading_level: bool = false
 var current_level: LevelDefinition
 
+var unlocked_hints_count: int = 0 # Max 3 indices
+
 # Vitesses disponibles pour la boucle cyclique
 var speed_multipliers: Array[float] = [1.0, 2.0, 0.5]
 var current_speed_index: int = 0
@@ -55,6 +57,7 @@ func _connect_signals() -> void:
 	puzzle_ui.delete_button_pressed.connect(_on_delete_requested)
 	puzzle_ui.speed_button_pressed.connect(_on_speed_requested)
 	puzzle_ui.hint_button_pressed.connect(_on_hint_requested)
+	puzzle_ui.tutorial_button_pressed.connect(_on_tutorial_requested)
 
 	# Connexion des signaux du ModeManager
 	mode_manager.mode_changed.connect(_on_mode_changed)
@@ -108,6 +111,13 @@ func _load_current_level() -> void:
 	# Transmission des limites de devices à l'UI
 	puzzle_ui.initialize_device_limits(level_def.device_limits)
 	puzzle_ui.initialize_objectives(level_def.objectives, level_def.emission_schedule)
+
+	# Configuration de l'aide et du tutoriel pour ce niveau
+	var has_tutorial = not current_level.tutorial_pages.is_empty()
+	puzzle_ui.set_tutorial_button_visible(has_tutorial)
+	
+	if has_tutorial and current_level.show_tutorial_on_start:
+		puzzle_ui.show_tutorial_pages(current_level.tutorial_pages)
 
 	# Instanciation des devices initiaux définis dans la ressource du niveau
 	for entry in level_def.initial_devices:
@@ -272,9 +282,22 @@ func _on_speed_requested() -> void:
 
 
 func _on_hint_requested() -> void:
-	print("[LevelManager] Demande d'indice reçue.")
-	validate_current_level()
+	if not current_level or current_level.hints.is_empty():
+		return
+	
+	var max_hints = min(current_level.hints.size(), 3)
+	if unlocked_hints_count < max_hints:
+		unlocked_hints_count += 1
+		
+	print("[LevelManager] Affichage des indices. Débloqués : %d / %d" % [unlocked_hints_count, max_hints])
+	
+	var active_hints = current_level.hints.slice(0, unlocked_hints_count)
+	puzzle_ui.show_hint_pages(active_hints)
 
+func _on_tutorial_requested() -> void:
+	print("[LevelManager] Affichage du tutoriel.")
+	if current_level and puzzle_ui:
+		puzzle_ui.show_tutorial_pages(current_level.tutorial_pages)
 
 func _on_device_placed_on_grid(device: NetworkDevice) -> void:
 	simulation.register_device(device)
@@ -289,10 +312,6 @@ func _on_device_removed_from_grid(device: NetworkDevice) -> void:
 	simulation.record_player_device_removed()
 	if puzzle_ui:
 		puzzle_ui.restore_device_stock(device)
-
-# ==========================================
-# ===== CALLBACKS : MODE -> UI & JEU =======
-# ==========================================
 
 func _on_mode_changed(new_mode: BaseMode) -> void:
 	var is_wiring = (new_mode == mode_manager.wiring_mode)
@@ -309,6 +328,15 @@ func _on_mode_changed(new_mode: BaseMode) -> void:
 # ==========================================
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Si une fenêtre modale (Tuto ou Hint) est ouverte, on bloque les inputs du jeu
+	if puzzle_ui and puzzle_ui.is_modal_open():
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_ESCAPE:
+				puzzle_ui.close_active_modals()
+				get_viewport().set_input_as_handled()
+		return # Empêche l'exécution de tous les autres raccourcis en dessous
+
+	# --- Tes inputs habituels (Escape pour le menu pause, raccourcis de jeu, etc.) ---
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_ESCAPE:

@@ -20,3 +20,10 @@ extends Resource
 
 @export_category("Objectifs")
 @export var objectives: Array[LevelObjective] = []
+
+@export_category("Tutoriel")
+@export var tutorial_pages: Array[TutorialPage] = []
+@export var show_tutorial_on_start: bool = true
+
+@export_category("Indices (Hint)")
+@export var hints: Array[HintPage] = []

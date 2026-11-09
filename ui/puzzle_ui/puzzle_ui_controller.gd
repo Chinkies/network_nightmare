@@ -10,6 +10,7 @@ signal edit_button_pressed
 signal delete_button_pressed
 signal speed_button_pressed
 signal hint_button_pressed
+signal tutorial_button_pressed
 
 ## Liste des items disponibles
 @export var available_devices: Array[NetworkDeviceData] = []
@@ -26,9 +27,35 @@ var remaining_stocks: Dictionary = {}
 @onready var delete_button: TextureButton = %DeleteButton
 @onready var speed_button: TextureButton = %SpeedButton
 @onready var hint_button: TextureButton = %HintButton
+@onready var tutorial_button: Button = %TutorialButton
 
-# --- RÉFÉRENCE AU PANEL D'OBJECTIF ---
+# --- RÉFÉRENCE AU PANEL OBJECTIFS ---
+@export_category("Objectifs")
 @export var objectives_panel: ObjectivesPanel
+
+@export_category("Hint & Tutorial")
+@export var tutorial_window: Control
+@export var tutorial_title_label: Label
+@export var tutorial_content_label: RichTextLabel
+@export var tutorial_texture: TextureRect
+@export var tutorial_page_counter: Label
+@export var tutorial_prev_button: Button
+@export var tutorial_next_button: Button
+@export var tutorial_close_button: Button
+
+@export var hint_window: Control
+@export var hint_title_label: Label
+@export var hint_content_label: RichTextLabel
+@export var hint_page_counter: Label
+@export var hint_prev_button: Button
+@export var hint_next_button: Button
+@export var hint_close_button: Button
+
+var current_tutorial_pages: Array[TutorialPage] = []
+var current_tutorial_index: int = 0
+
+var current_hint_pages: Array[HintPage] = []
+var current_hint_index: int = 0
 
 # --- TEXTURES POUR LE BOUTON WIRING (Normal vs Connecté) ---
 @export_category("Textures Wiring Button")
@@ -58,6 +85,14 @@ func _ready() -> void:
 	delete_button.pressed.connect(func(): delete_button_pressed.emit())
 	speed_button.pressed.connect(func(): speed_button_pressed.emit())
 	hint_button.pressed.connect(func(): hint_button_pressed.emit())
+	tutorial_button.pressed.connect(func(): tutorial_button_pressed.emit())
+
+	tutorial_prev_button.pressed.connect(_on_tutorial_prev_pressed)
+	tutorial_next_button.pressed.connect(_on_tutorial_next_pressed)
+	hint_prev_button.pressed.connect(_on_hint_prev_pressed)
+	hint_next_button.pressed.connect(_on_hint_next_pressed)
+	tutorial_close_button.pressed.connect(_on_tutorial_close_pressed)
+	hint_close_button.pressed.connect(_on_hint_close_pressed)
 
 ## Initialise les quotas du niveau
 func initialize_device_limits(limits: Dictionary) -> void:
@@ -206,3 +241,114 @@ func _apply_textures(btn: TextureButton, textures: Dictionary) -> void:
 		btn.texture_hover = textures["hover"]
 	if textures.has("pressed") and textures["pressed"]:
 		btn.texture_pressed = textures["pressed"]
+
+# --- GESTION DU TUTORIEL ---
+
+func show_tutorial_pages(pages: Array[TutorialPage]) -> void:
+	if pages.is_empty():
+		return
+	current_tutorial_pages = pages
+	current_tutorial_index = 0
+	_update_tutorial_display()
+	if tutorial_window:
+		tutorial_window.visible = true
+
+func _update_tutorial_display() -> void:
+	if current_tutorial_pages.is_empty():
+		return
+	var page = current_tutorial_pages[current_tutorial_index]
+	
+	if tutorial_title_label:
+		tutorial_title_label.text = page.title
+	if tutorial_content_label:
+		tutorial_content_label.text = page.text # RichTextLabel supporte nativement le BBCode
+		
+	if tutorial_texture:
+		if page.image:
+			tutorial_texture.texture = page.image
+			tutorial_texture.visible = true
+		else:
+			tutorial_texture.visible = false
+			
+	if tutorial_page_counter:
+		tutorial_page_counter.text = "Page %d / %d" % [current_tutorial_index + 1, current_tutorial_pages.size()]
+		
+	if tutorial_prev_button:
+		tutorial_prev_button.disabled = (current_tutorial_index == 0)
+	if tutorial_next_button:
+		tutorial_next_button.disabled = (current_tutorial_index >= current_tutorial_pages.size() - 1)
+
+func _on_tutorial_prev_pressed() -> void:
+	if current_tutorial_index > 0:
+		current_tutorial_index -= 1
+		_update_tutorial_display()
+
+func _on_tutorial_next_pressed() -> void:
+	if current_tutorial_index < current_tutorial_pages.size() - 1:
+		current_tutorial_index += 1
+		_update_tutorial_display()
+
+func _on_tutorial_close_pressed() -> void:
+	if tutorial_window:
+		tutorial_window.visible = false
+
+
+# --- GESTION DES INDICES (HINTS) ---
+
+func show_hint_pages(hints: Array[HintPage]) -> void:
+	if hints.is_empty():
+		return
+	current_hint_pages = hints
+	current_hint_index = hints.size() - 1
+	_update_hint_display()
+	if hint_window:
+		hint_window.visible = true
+
+func _update_hint_display() -> void:
+	if current_hint_pages.is_empty():
+		return
+	var hint_page = current_hint_pages[current_hint_index]
+	
+	if hint_title_label:
+		hint_title_label.text = hint_page.title
+	if hint_content_label:
+		hint_content_label.text = hint_page.text
+		
+	if hint_page_counter:
+		hint_page_counter.text = "Indice %d / %d" % [current_hint_index + 1, current_hint_pages.size()]
+		
+	if hint_prev_button:
+		hint_prev_button.disabled = (current_hint_index == 0)
+	if hint_next_button:
+		hint_next_button.disabled = (current_hint_index >= current_hint_pages.size() - 1)
+
+
+func _on_hint_prev_pressed() -> void:
+	if current_hint_index > 0:
+		current_hint_index -= 1
+		_update_hint_display()
+
+func _on_hint_next_pressed() -> void:
+	if current_hint_index < current_hint_pages.size() - 1:
+		current_hint_index += 1
+		_update_hint_display()
+
+func set_tutorial_button_visible(v: bool) -> void:
+	if tutorial_button:
+		tutorial_button.visible = v
+
+func _on_hint_close_pressed() -> void:
+	if hint_window:
+		hint_window.visible = false
+
+
+## Renvoie true si l'une des fenêtres Tuto ou Hint est visible
+func is_modal_open() -> bool:
+	return (tutorial_window and tutorial_window.visible) or (hint_window and hint_window.visible)
+
+## Ferme toutes les fenêtres modales ouvertes
+func close_active_modals() -> void:
+	if tutorial_window:
+		tutorial_window.visible = false
+	if hint_window:
+		hint_window.visible = false
