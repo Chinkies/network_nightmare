@@ -76,6 +76,12 @@ packet = SubResource("Resource_t4yv6")
 delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
+[sub_resource type="Resource" id="Resource_k1xm3"]
+script = ExtResource("3_cybon")
+title = "Indice n°1"
+text = "Si sur le premier niveau vous êtes déjà ici, il serait peut-être intéressant de relire le tutoriel."
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
 [sub_resource type="Resource" id="Resource_gln2f"]
 script = ExtResource("3_jrnom")
 device_data = ExtResource("5_0h4g0")
@@ -191,3 +197,4 @@ emission_schedule = Array[ExtResource("1_y4ixx")]([SubResource("Resource_fmoe2")
 initial_devices = Array[ExtResource("3_jrnom")]([SubResource("Resource_gln2f"), SubResource("Resource_2j15h")])
 objectives = Array[ExtResource("6_kywl6")]([SubResource("Resource_40y5m")])
 tutorial_pages = Array[ExtResource("10_pghnq")]([SubResource("Resource_ojoou"), SubResource("Resource_1ir1e"), SubResource("Resource_vs7yx"), SubResource("Resource_k85c2"), SubResource("Resource_3s6os"), SubResource("Resource_jretr"), SubResource("Resource_0eo5p"), SubResource("Resource_0h4g0")])
+hints = Array[ExtResource("3_cybon")]([SubResource("Resource_k1xm3")])
