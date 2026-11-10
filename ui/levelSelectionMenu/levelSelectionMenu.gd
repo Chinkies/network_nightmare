@@ -27,9 +27,18 @@ func _ready() -> void:
 			if i >= level_definitions.size() or level_definitions[i] == null:
 				btn.disabled = true
 				continue
+
+			btn.disabled = not _is_level_unlocked(level_definitions[i], i)
 				
 			if not btn.pressed.is_connected(_on_level_button_pressed):
 				btn.pressed.connect(_on_level_button_pressed.bind(i))
+
+
+func _is_level_unlocked(level_definition: LevelDefinition, level_index: int) -> bool:
+	var context = get_node_or_null("/root/LevelContext")
+	if context and context.has_method("is_level_unlocked"):
+		return context.is_level_unlocked(level_definition)
+	return level_index == 0
 
 
 func _on_level_button_pressed(level_index: int) -> void:

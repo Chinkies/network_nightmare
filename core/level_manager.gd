@@ -263,6 +263,10 @@ func _on_return_to_selection_requested() -> void:
 
 func _on_validation_finished(result: Dictionary) -> void:
 	print("[LevelManager] Résultat du niveau : ", result)
+	if result.get("success", false) and current_level and current_level.next_level:
+		var context = get_node_or_null("/root/LevelContext")
+		if context and context.has_method("unlock_level"):
+			context.unlock_level(current_level.next_level)
 	if level_end_ui:
 		level_end_ui.show_result(result, current_level.objectives)
 
