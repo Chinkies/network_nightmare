@@ -414,6 +414,9 @@ metadata/_custom_type_script = "uid://bqsv0ibs8kdpn"
 
 [sub_resource type="Resource" id="Resource_hcrga"]
 script = ExtResource("18_4rqxl")
+max_device_counts = Dictionary[int, int]({
+3: 4
+})
 objective_id = "5"
 description = "Utiliser au maximum 4 switchs."
 metadata/_custom_type_script = "uid://fqrne22um1g2"
