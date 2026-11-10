@@ -13,6 +13,8 @@
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="9_5kmsh"]
 [ext_resource type="Resource" uid="uid://baqmiecmtjf40" path="res://levels/definitions/level_03.tres" id="9_l6qne"]
 [ext_resource type="Script" uid="uid://dgyc14pvgr5ue" path="res://ui/tutorial_page/tutorial_page.gd" id="10_2qaks"]
+[ext_resource type="Texture2D" uid="uid://b11mlvopq2pnr" path="res://ui/assets/tutorial_images/tuto_ports.png" id="14_30wu1"]
+[ext_resource type="Texture2D" uid="uid://cq07nv4r5frsv" path="res://ui/assets/tutorial_images/tuto_selection.png" id="15_1xv6b"]
 
 [sub_resource type="Resource" id="Resource_eps72"]
 script = ExtResource("2_30wu1")
@@ -162,6 +164,28 @@ objective_id = "1"
 description = "Délivrer les 9 paquets."
 metadata/_custom_type_script = "uid://bkcxp38ps4ory"
 
+[sub_resource type="Resource" id="Resource_gw5ix"]
+script = ExtResource("10_2qaks")
+title = "Le switch"
+text = "Pour ce niveau vous allez avoir besoin d'un nouvel appareil : le switch ! 
+
+La première particularité du switch est qu'il possède deux ports dynamiques (symbolisés par un losange). Un port dynamique peut faire office de sortie ou d'entrée, il s'adapte en fonction de la compatibilité lors du branchement. Si vous branchez deux ports dynamiques entre eux, le premier fera office de sortie. 
+
+Le switch fonctionne de la manière suivante : lorsqu'il reçoit un paquet, il l'envoie sur tous ses ports de sortie. Si le paquet arrive sur le bon appareil, l'appareil notifie le switch et celui-ci retiens le port adapté au paquet. "
+image = ExtResource("14_30wu1")
+image_width_percent = 50.0
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
+[sub_resource type="Resource" id="Resource_30wu1"]
+script = ExtResource("10_2qaks")
+title = "Nouvelles mécaniques du mode Edit"
+text = "Vous pouvez maintenant voir les appareils que vous pouvez placer dans la fenêtre des appareils, située à gauche. Chaque appareil est disponible dans un nombre limité. Il suffit de le tirer et de le lâcher sur la grille afin de le placer. 
+
+Vous pouvez sélectionner un appareil placé en cliquant dessus. Une fois l'appareil sélectionné vous pouvez le tourner à l'aide des boutons de rotation, ou le tirer avec la souris pour le replacer. "
+image = ExtResource("15_1xv6b")
+image_width_percent = 60.0
+metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
+
 [resource]
 script = ExtResource("9_5kmsh")
 level_id = "level_02"
@@ -174,4 +198,4 @@ device_limits = Dictionary[int, int]({
 3: 1
 })
 objectives = Array[ExtResource("7_1hqfi")]([SubResource("Resource_24kat")])
-show_tutorial_on_start = false
+tutorial_pages = Array[ExtResource("10_2qaks")]([SubResource("Resource_gw5ix"), SubResource("Resource_30wu1")])
