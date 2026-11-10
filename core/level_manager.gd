@@ -128,7 +128,7 @@ func _load_current_level() -> void:
 		if not entry.device_data:
 			push_warning("[LevelManager] Entrée de device invalide dans le niveau.")
 			continue
-			
+		
 		var cell = entry.grid_position
 		if not grid_board.is_cell_inside_grid(cell):
 			push_error("[LevelManager] Cellule de device %s hors de la grille !" % cell)

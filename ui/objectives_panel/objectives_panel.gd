@@ -17,7 +17,7 @@ func _ready() -> void:
 	if header_button:
 		header_button.pressed.connect(_on_header_pressed)
 	
-	_set_open_state(false)
+	_set_open_state(true)
 	if bonus_stats_container:
 		bonus_stats_container.visible = false
 

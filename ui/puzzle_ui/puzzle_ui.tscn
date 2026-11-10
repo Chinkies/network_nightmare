@@ -371,9 +371,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="TutorialPanel" unique_id=175305541]
-layout_mode = 0
-offset_right = 1440.0
-offset_bottom = 810.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.20392157, 0.28235295, 0.6117647, 0.3529412)
 
 [node name="PanelContainer" type="PanelContainer" parent="TutorialPanel" unique_id=122615077]
