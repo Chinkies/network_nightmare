@@ -55,6 +55,12 @@ func register_device(device: NetworkDevice) -> void:
 	if not devices.has(device):
 		devices.append(device)
 		_device_map[device.id] = device
+
+		if not statistics.has("placed_devices_details"):
+			statistics["placed_devices_details"] = []
+		if not statistics["placed_devices_details"].has(device):
+			statistics["placed_devices_details"].append(device)
+
 		_update_statistics_device_count()
 		_emit_statistics_updated()
 
@@ -71,6 +77,10 @@ func register_device(device: NetworkDevice) -> void:
 func unregister_device(device: NetworkDevice) -> void:
 	devices.erase(device)
 	_device_map.erase(device.id)
+
+	if statistics.has("placed_devices_details"):
+		statistics["placed_devices_details"].erase(device)
+
 	_update_statistics_device_count()
 	_emit_statistics_updated()
 
@@ -121,6 +131,9 @@ func reset_statistics() -> void:
 		"delivered_count": 0,
 		"dropped_count": 0,
 		"expired_count": 0,
+		"delivered_packets_details": [],
+		"dropped_packets_details": [],
+		"placed_devices_details": [],
 		"initial_devices_count": initial_devices_count,
 		"placed_devices_count": player_devices_count,
 		"total_devices_count": devices.size(),
@@ -324,6 +337,11 @@ func _on_device_packet_processed(device: NetworkDevice, packet: NetworkPacket) -
 	elif device is NetworkReceiver:
 		_unregister_ephemeral_packet(packet)
 		_increment_statistic("delivered_count")
+		
+		if not statistics.has("delivered_packets_details"):
+			statistics["delivered_packets_details"] = []
+		statistics["delivered_packets_details"].append(packet)
+		
 		total_processed_count += 1
 		packet_delivered.emit(packet, device)
 		_emit_stats()
@@ -334,6 +352,11 @@ func _on_device_packet_processed(device: NetworkDevice, packet: NetworkPacket) -
 func _on_device_packet_dropped(device: NetworkDevice, packet: NetworkPacket, reason: String) -> void:
 	_unregister_ephemeral_packet(packet)
 	total_dropped_count += 1
+	
+	if not statistics.has("dropped_packets_details"):
+		statistics["dropped_packets_details"] = []
+	statistics["dropped_packets_details"].append(packet)
+	
 	if reason == "TTL expired":
 		_increment_statistic("expired_count")
 		packet_expired.emit(packet, device)
@@ -346,6 +369,11 @@ func _on_device_packet_dropped(device: NetworkDevice, packet: NetworkPacket, rea
 func _on_wire_packet_dropped(wire: NetworkWire, packet: NetworkPacket, reason: String) -> void:
 	_unregister_ephemeral_packet(packet)
 	total_dropped_count += 1
+	
+	if not statistics.has("dropped_packets_details"):
+		statistics["dropped_packets_details"] = []
+	statistics["dropped_packets_details"].append(packet)
+	
 	if reason == "TTL expired":
 		_increment_statistic("expired_count")
 		packet_expired.emit(packet, wire)
@@ -353,7 +381,6 @@ func _on_wire_packet_dropped(wire: NetworkWire, packet: NetworkPacket, reason: S
 		_increment_statistic("dropped_count")
 		packet_dropped.emit(packet, wire, reason)
 	_emit_stats()
-
 
 # -----------------------------------------------
 # --- Interface de communication inter-device ---

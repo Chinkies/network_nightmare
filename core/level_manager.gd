@@ -337,6 +337,13 @@ func _on_mode_changed(new_mode: BaseMode) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Si une fenêtre modale (Tuto ou Hint) est ouverte, on bloque les inputs du jeu
+	if level_end_ui and level_end_ui.visible:
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_ESCAPE:
+				level_end_ui.close_active_modals()
+				get_viewport().set_input_as_handled()
+		return # Bloque les autres raccourcis tant que l'écran de fin est visible
+	
 	if puzzle_ui and puzzle_ui.is_modal_open():
 		if event is InputEventKey and event.pressed and not event.echo:
 			if event.keycode == KEY_ESCAPE:

@@ -91,3 +91,12 @@ func _populate_list(container: VBoxContainer, items: Array, desc_map: Dictionary
 		var lbl = Label.new()
 		lbl.text = desc_map.get(item_id, item_id)
 		container.add_child(lbl)
+
+## Renvoie true si l'écran de fin est visible
+func is_modal_open() -> bool:
+	return visible
+
+## Ferme l'écran de fin et déclenche le redémarrage
+func close_active_modals() -> void:
+	hide_ui()
+	restart_requested.emit()
