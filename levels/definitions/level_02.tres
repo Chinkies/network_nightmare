@@ -132,7 +132,7 @@ metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 [sub_resource type="Resource" id="Resource_u87n1"]
 script = ExtResource("3_1xv6b")
 title = "Indice n°1"
-text = "Si vous avez du mal ici, vous devirez relire le tutoriel."
+text = "Si vous avez du mal ici, vous devriez relire le tutoriel."
 metadata/_custom_type_script = "uid://0e8ai46cecma"
 
 [sub_resource type="Resource" id="Resource_jciun"]

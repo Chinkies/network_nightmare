@@ -61,7 +61,7 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("2_b4b0p")
 theme_override_styles/pressed = ExtResource("3_c3jo5")
 theme_override_styles/hover = ExtResource("4_uraes")
-text = "Resume"
+text = "Reprendre"
 
 [node name="buttonLevelSelectionMenu" type="Button" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=1256670746]
 layout_mode = 2
@@ -70,7 +70,7 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("2_b4b0p")
 theme_override_styles/pressed = ExtResource("3_c3jo5")
 theme_override_styles/hover = ExtResource("4_uraes")
-text = "Level Selection"
+text = "Sélection des niveaux"
 
 [node name="buttonMainMenu" type="Button" parent="MenuContainer/MenuMargin/MenuVBox" unique_id=460905207]
 layout_mode = 2
@@ -79,4 +79,4 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = ExtResource("2_b4b0p")
 theme_override_styles/pressed = ExtResource("3_c3jo5")
 theme_override_styles/hover = ExtResource("4_uraes")
-text = "Main Menu"
+text = "Menu principal"

@@ -145,4 +145,4 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("23_2a5du")
 theme_override_styles/pressed = ExtResource("24_0d1hw")
 theme_override_styles/hover = ExtResource("25_8j836")
-text = "Return to Main Menu"
+text = "Retour au menu principal"

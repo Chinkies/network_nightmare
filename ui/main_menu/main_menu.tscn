@@ -62,7 +62,7 @@ theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = ExtResource("2_3c04x")
 theme_override_styles/pressed = ExtResource("3_joh67")
 theme_override_styles/hover = ExtResource("4_u184e")
-text = "Level Selection"
+text = "Sélection des niveaux"
 
 [node name="buttonSettings" type="Button" parent="MenuVBox/ButtonVBox" unique_id=1075243467]
 layout_mode = 2
@@ -71,7 +71,7 @@ theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = ExtResource("2_3c04x")
 theme_override_styles/pressed = ExtResource("3_joh67")
 theme_override_styles/hover = ExtResource("4_u184e")
-text = "Settings"
+text = "Paramètres"
 
 [node name="buttonExit" type="Button" parent="MenuVBox/ButtonVBox" unique_id=1452824675]
 layout_mode = 2
@@ -80,4 +80,4 @@ theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = ExtResource("2_3c04x")
 theme_override_styles/pressed = ExtResource("3_joh67")
 theme_override_styles/hover = ExtResource("4_u184e")
-text = "Exit"
+text = "Quitter"
