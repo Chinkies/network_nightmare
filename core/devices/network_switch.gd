@@ -88,3 +88,8 @@ func learn_route(packet_color: int, target_number: int, learned_port: int) -> vo
 		mac_table[routing_key] = learned_port
 		print("[", id, "]Route apprise !")
 		# TODO: Émettre un signal pour l'UI afin d'afficher la nouvelle entrée dans la table visuelle
+
+
+func reset_state() -> void:
+	super()
+	mac_table.clear()

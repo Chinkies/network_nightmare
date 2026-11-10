@@ -51,6 +51,7 @@ var is_pressed: bool = false
 func setup(p_logic_device: NetworkDevice, p_texture: Texture2D, cell_size: float) -> void:
 	logic_device = p_logic_device
 	_resize_click_area(cell_size)
+	visual_sprite.rotation = logic_device.rotation_quadrants * PI / 2.0
 	
 	# On applique la texture
 	if p_texture and visual_sprite:
