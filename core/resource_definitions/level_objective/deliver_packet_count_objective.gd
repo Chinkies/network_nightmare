@@ -2,9 +2,28 @@ class_name DeliverPacketCountObjective
 extends LevelObjective
 
 @export var required_count: int = 1
-@export var specific_packet_id: int = -1 # Optionnel, -1 si n'importe quel paquet
-@export var receiver_id: String = ""    # Optionnel, vide si n'importe quel receiver
+@export var packet_color: NetworkPacket.PacketColor = NetworkPacket.PacketColor.BLUE
+@export var has_color_filter: bool = false
+@export var packet_number: int = 0
+@export var has_number_filter: bool = false
+@export var packet_shape: NetworkPacket.PacketShape = NetworkPacket.PacketShape.CIRCLE
+@export var has_shape_filter: bool = false
 
 func check_fulfillment(stats: Dictionary) -> bool:
-	var delivered = stats.get("delivered_count", 0)
-	return delivered >= required_count
+	var delivered_packets: Array = stats.get("delivered_packets_details", [])
+	var match_count = 0
+	
+	for packet in delivered_packets:
+		if packet and _matches_criteria(packet):
+			match_count += 1
+			
+	return match_count >= required_count
+
+func _matches_criteria(packet: NetworkPacket) -> bool:
+	if has_number_filter and packet.target_number != packet_number:
+		return false
+	if has_shape_filter and packet.shape != packet_shape:
+		return false
+	if has_color_filter and packet.color != packet_color:
+		return false
+	return true

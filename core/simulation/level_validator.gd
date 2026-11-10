@@ -62,6 +62,10 @@ func reset() -> void:
 	last_result.clear()
 	_has_validated = false
 	_initialize_objective_states()
+	if level_definition:
+		for objective in level_definition.objectives:
+			if objective != null:
+				objective_updated.emit(objective.objective_id, false)
 
 
 func validate() -> Dictionary:
