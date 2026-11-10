@@ -83,9 +83,9 @@ func update_from_statistics(stats: Dictionary) -> void:
 	var tx_current = stats.get("current_tx_packets", 0)
 	var tx_initial = stats.get("initial_tx_packets", 0)
 	
+	if lbl_tx_buffer:
+		lbl_tx_buffer.text = "A émettre : %d / %d" % [tx_current, tx_initial]
 	if lbl_processed:
 		lbl_processed.text = "Traités : %d / %d" % [delivered, total_expected_packets]
 	if lbl_dropped:
 		lbl_dropped.text = "Perdus / Expirés : %d" % dropped
-	if lbl_tx_buffer:
-		lbl_tx_buffer.text = "Buffer Transmitter : %d / %d" % [tx_current, tx_initial]

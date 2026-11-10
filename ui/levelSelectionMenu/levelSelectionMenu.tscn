@@ -4,6 +4,7 @@
 [ext_resource type="Resource" uid="uid://cy0f4pas87ahm" path="res://levels/definitions/level_01.tres" id="2_0d1hw"]
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="2_8j836"]
 [ext_resource type="Resource" uid="uid://bw0tjimumgc4n" path="res://levels/definitions/level_02.tres" id="2_bw0tj"]
+[ext_resource type="Resource" uid="uid://baqmiecmtjf40" path="res://levels/definitions/level_03.tres" id="2_baqm"]
 [ext_resource type="Script" uid="uid://d1c3ygvugah2e" path="res://ui/levelSelectionMenu/path_lines.gd" id="2_y1sm7"]
 [ext_resource type="Texture2D" uid="uid://nfeovtlc4dkl" path="res://resources/ui/levelSelectionMenu/level/5/level5.tres" id="3_pgeke"]
 [ext_resource type="Texture2D" uid="uid://crx55357khlov" path="res://resources/ui/levelSelectionMenu/level/5/level5Pressed.tres" id="4_2a5du"]
@@ -38,8 +39,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2lye0")
 main_menu_scene = "uid://c1gsg2ri04juw"
-level_definitions = Array[ExtResource("2_8j836")]([ExtResource("2_0d1hw"), ExtResource("2_bw0tj")])
-level_buttons = [NodePath("LevelButtonsContainer/buttonLevel1"), NodePath("LevelButtonsContainer/buttonLevel2")]
+level_definitions = Array[ExtResource("2_8j836")]([ExtResource("2_0d1hw"), ExtResource("2_bw0tj"), ExtResource("2_baqm")])
+level_buttons = [NodePath("LevelButtonsContainer/buttonLevel1"), NodePath("LevelButtonsContainer/buttonLevel2"), NodePath("LevelButtonsContainer/buttonLevel3")]
 main_menu_button = NodePath("MarginContainer/buttonMainMenu")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1121171427]
@@ -97,7 +98,6 @@ offset_left = 533.0
 offset_top = 330.0
 offset_right = 591.0
 offset_bottom = 384.0
-disabled = true
 texture_normal = ExtResource("11_d04y8")
 texture_pressed = ExtResource("12_yqpft")
 texture_hover = ExtResource("13_t4e4j")

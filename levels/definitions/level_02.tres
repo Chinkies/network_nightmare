@@ -11,10 +11,8 @@
 [ext_resource type="Resource" uid="uid://hua7u7m6j76e" path="res://resources/devices/level_2/receiver_green_1.tres" id="8_1qrgy"]
 [ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="8_jciun"]
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="9_5kmsh"]
+[ext_resource type="Resource" uid="uid://baqmiecmtjf40" path="res://levels/definitions/level_03.tres" id="9_l6qne"]
 [ext_resource type="Script" uid="uid://dgyc14pvgr5ue" path="res://ui/tutorial_page/tutorial_page.gd" id="10_2qaks"]
-[ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/buttons/Button.png" id="11_l6qne"]
-[ext_resource type="Texture2D" uid="uid://c542um1it2wru" path="res://ui/assets/buttons/ButtonHover.png" id="12_30wu1"]
-[ext_resource type="Texture2D" uid="uid://mfl2c1j1x4kt" path="res://ui/assets/buttons/ButtonDisable.png" id="13_1xv6b"]
 
 [sub_resource type="Resource" id="Resource_eps72"]
 script = ExtResource("2_30wu1")
@@ -129,29 +127,6 @@ packet = SubResource("Resource_4uf1g")
 delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
-[sub_resource type="Resource" id="Resource_kywl6"]
-script = ExtResource("3_1xv6b")
-title = "Première hint"
-text = "Je suis un exemple"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
-[sub_resource type="Resource" id="Resource_1w8on"]
-script = ExtResource("3_1xv6b")
-title = "Deuxième"
-text = "BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
-[sub_resource type="Resource" id="Resource_mlash"]
-script = ExtResource("3_1xv6b")
-title = "Troisième"
-text = "Oskur"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
 [sub_resource type="Resource" id="Resource_jciun"]
 script = ExtResource("4_l6e5b")
 device_data = ExtResource("5_1xv6b")
@@ -180,60 +155,23 @@ device_id = "green_receiver_1"
 grid_position = Vector2i(4, 1)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
-[sub_resource type="Resource" id="Resource_40y5m"]
+[sub_resource type="Resource" id="Resource_24kat"]
 script = ExtResource("8_jciun")
-required_count = 6
-receiver_id = "1"
+required_count = 9
 objective_id = "1"
-description = "Test"
+description = "Délivrer les 9 paquets."
 metadata/_custom_type_script = "uid://bkcxp38ps4ory"
-
-[sub_resource type="Resource" id="Resource_p62ga"]
-script = ExtResource("8_jciun")
-required_count = 7
-receiver_id = "2"
-objective_id = "2"
-description = "MERDE"
-metadata/_custom_type_script = "uid://bkcxp38ps4ory"
-
-[sub_resource type="Resource" id="Resource_ojoou"]
-script = ExtResource("10_2qaks")
-title = "Premier TUTO"
-text = "Bienvenue dans le tutoriel. 
-[b]Attention :[/b] Ne dépassez pas la limite de [color=red]2 routeurs[/color] sur ce niveau."
-image = ExtResource("11_l6qne")
-metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
-
-[sub_resource type="Resource" id="Resource_cybon"]
-script = ExtResource("10_2qaks")
-title = "Test page 2"
-text = "Je suis une très jolie page"
-image = ExtResource("12_30wu1")
-metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
-
-[sub_resource type="Resource" id="Resource_pghnq"]
-script = ExtResource("10_2qaks")
-title = "Test page 3"
-text = "Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
-Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
-Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
-Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
-Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire
-Moi aussi j'adore rire Moi aussi j'adore rire Moi aussi j'adore rire"
-image = ExtResource("13_1xv6b")
-metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
 
 [resource]
 script = ExtResource("9_5kmsh")
 level_id = "level_02"
+next_level = ExtResource("9_l6qne")
 grid_width = 5
 grid_height = 5
 emission_schedule = Array[ExtResource("1_l6qne")]([SubResource("Resource_fmoe2"), SubResource("Resource_fjgti"), SubResource("Resource_xkdr3"), SubResource("Resource_1xv6b"), SubResource("Resource_1qrgy"), SubResource("Resource_gln2f"), SubResource("Resource_l46k4"), SubResource("Resource_vujd0"), SubResource("Resource_74f20")])
 initial_devices = Array[ExtResource("4_l6e5b")]([SubResource("Resource_jciun"), SubResource("Resource_5kmsh"), SubResource("Resource_2qaks"), SubResource("Resource_fvfdf")])
 device_limits = Dictionary[int, int]({
-3: 2
+3: 1
 })
-objectives = Array[ExtResource("7_1hqfi")]([SubResource("Resource_40y5m"), SubResource("Resource_p62ga")])
-tutorial_pages = Array[ExtResource("10_2qaks")]([SubResource("Resource_ojoou"), SubResource("Resource_cybon"), SubResource("Resource_pghnq")])
+objectives = Array[ExtResource("7_1hqfi")]([SubResource("Resource_24kat")])
 show_tutorial_on_start = false
-hints = Array[ExtResource("3_1xv6b")]([SubResource("Resource_kywl6"), SubResource("Resource_1w8on"), SubResource("Resource_mlash")])

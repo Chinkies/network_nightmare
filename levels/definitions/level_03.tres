@@ -7,11 +7,17 @@
 [ext_resource type="Resource" uid="uid://v1lqj4w5l7fq" path="res://resources/devices/level_1/transmitter.tres" id="5_8d3yn"]
 [ext_resource type="Resource" uid="uid://dy8ubn0mritvi" path="res://resources/devices/level_1/receiver_blue_1.tres" id="6_4rqxl"]
 [ext_resource type="Resource" uid="uid://crt15cicudkjp" path="res://resources/devices/level_2/receiver_yellow_1.tres" id="7_g2b1r"]
+[ext_resource type="Resource" uid="uid://375dhgwmsdph" path="res://resources/devices/level_3/receiver_blue_2.tres" id="7_gw5ix"]
 [ext_resource type="Resource" uid="uid://hua7u7m6j76e" path="res://resources/devices/level_2/receiver_green_1.tres" id="8_ddc5b"]
+[ext_resource type="Resource" uid="uid://b1xmfp87jrt83" path="res://resources/devices/level_3/receiver_blue_3.tres" id="8_g2b1r"]
+[ext_resource type="Resource" uid="uid://rfcumcocsgi8" path="res://resources/devices/level_3/receiver_yellow_2.tres" id="9_8d3yn"]
 [ext_resource type="Script" uid="uid://njrtu55p54" path="res://core/resource_definitions/level_objective/level_objective.gd" id="9_l4wtj"]
+[ext_resource type="Resource" uid="uid://colqpbo6nrlh1" path="res://resources/devices/level_3/receiver_yellow_3.tres" id="10_4rqxl"]
 [ext_resource type="Script" uid="uid://bkcxp38ps4ory" path="res://core/resource_definitions/level_objective/deliver_packet_count_objective.gd" id="10_8mte5"]
 [ext_resource type="Script" uid="uid://bmkqn2b2x8rji" path="res://core/resource_definitions/level_definition.gd" id="11_mhe6q"]
+[ext_resource type="Resource" uid="uid://ch80pit6enhd7" path="res://resources/devices/level_3/receiver_green_2.tres" id="12_4rqxl"]
 [ext_resource type="Script" uid="uid://dgyc14pvgr5ue" path="res://ui/tutorial_page/tutorial_page.gd" id="12_q2rpx"]
+[ext_resource type="Resource" uid="uid://byhp1ekudo153" path="res://resources/devices/level_3/receiver_green_3.tres" id="13_g2b1r"]
 [ext_resource type="Texture2D" uid="uid://cdo8rixra4j8t" path="res://ui/assets/buttons/Button.png" id="13_soovu"]
 [ext_resource type="Texture2D" uid="uid://c542um1it2wru" path="res://ui/assets/buttons/ButtonHover.png" id="14_vp8c6"]
 [ext_resource type="Texture2D" uid="uid://mfl2c1j1x4kt" path="res://ui/assets/buttons/ButtonDisable.png" id="15_bdsnn"]
@@ -151,7 +157,7 @@ metadata/_custom_type_script = "uid://0e8ai46cecma"
 script = ExtResource("4_gw5ix")
 device_data = ExtResource("5_8d3yn")
 device_id = "transmitter"
-grid_position = Vector2i(2, 4)
+grid_position = Vector2i(4, 6)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
 [sub_resource type="Resource" id="Resource_5kmsh"]
@@ -159,20 +165,63 @@ script = ExtResource("4_gw5ix")
 device_data = ExtResource("6_4rqxl")
 device_id = "blue_receiver_1"
 grid_position = Vector2i(0, 1)
+rotation_quadrants = 3
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_50jn0"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("7_gw5ix")
+device_id = "blue_receiver_2"
+grid_position = Vector2i(0, 3)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
 [sub_resource type="Resource" id="Resource_2qaks"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("8_g2b1r")
+device_id = "blue_receiver_3"
+grid_position = Vector2i(0, 5)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_5qv61"]
 script = ExtResource("4_gw5ix")
 device_data = ExtResource("7_g2b1r")
 device_id = "yellow_receiver_1"
 grid_position = Vector2i(2, 0)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
+[sub_resource type="Resource" id="Resource_gw5ix"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("9_8d3yn")
+device_id = "yellow_receiver_2"
+grid_position = Vector2i(4, 0)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_8d3yn"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("10_4rqxl")
+device_id = "yellow_receiver_3"
+grid_position = Vector2i(6, 0)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
 [sub_resource type="Resource" id="Resource_fvfdf"]
 script = ExtResource("4_gw5ix")
 device_data = ExtResource("8_ddc5b")
 device_id = "green_receiver_1"
-grid_position = Vector2i(4, 1)
+grid_position = Vector2i(8, 1)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_u87n1"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("12_4rqxl")
+device_id = "green_receiver_2"
+grid_position = Vector2i(8, 3)
+metadata/_custom_type_script = "uid://d0amqpyma2u0n"
+
+[sub_resource type="Resource" id="Resource_1r7xk"]
+script = ExtResource("4_gw5ix")
+device_data = ExtResource("13_g2b1r")
+device_id = "green_receiver_3"
+grid_position = Vector2i(8, 5)
 metadata/_custom_type_script = "uid://d0amqpyma2u0n"
 
 [sub_resource type="Resource" id="Resource_40y5m"]
@@ -221,10 +270,10 @@ metadata/_custom_type_script = "uid://dgyc14pvgr5ue"
 [resource]
 script = ExtResource("11_mhe6q")
 level_id = "level_03"
-grid_width = 5
-grid_height = 5
+grid_width = 9
+grid_height = 7
 emission_schedule = Array[ExtResource("1_50jn0")]([SubResource("Resource_fmoe2"), SubResource("Resource_fjgti"), SubResource("Resource_xkdr3"), SubResource("Resource_aet40"), SubResource("Resource_s5euo"), SubResource("Resource_2yd0h"), SubResource("Resource_l6qne"), SubResource("Resource_30wu1"), SubResource("Resource_1xv6b"), SubResource("Resource_l6e5b"), SubResource("Resource_8ay5l"), SubResource("Resource_1qrgy"), SubResource("Resource_1hqfi")])
-initial_devices = Array[ExtResource("4_gw5ix")]([SubResource("Resource_jciun"), SubResource("Resource_5kmsh"), SubResource("Resource_2qaks"), SubResource("Resource_fvfdf")])
+initial_devices = Array[ExtResource("4_gw5ix")]([SubResource("Resource_jciun"), SubResource("Resource_5kmsh"), SubResource("Resource_50jn0"), SubResource("Resource_2qaks"), SubResource("Resource_5qv61"), SubResource("Resource_gw5ix"), SubResource("Resource_8d3yn"), SubResource("Resource_fvfdf"), SubResource("Resource_u87n1"), SubResource("Resource_1r7xk")])
 device_limits = Dictionary[int, int]({
 3: 2
 })

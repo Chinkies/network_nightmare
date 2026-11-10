@@ -4,6 +4,10 @@
 [ext_resource type="Script" uid="uid://cv17sdaxsymyd" path="res://core/resource_definitions/network_receiver_data.gd" id="2_2v0n5"]
 [ext_resource type="Texture2D" uid="uid://duq7e0e7w8h4e" path="res://views/devices/assets/receiver.png" id="3_rdga6"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_2yr46"]
+atlas = ExtResource("3_rdga6")
+region = Rect2(216, 104, 102, 98)
+
 [resource]
 script = ExtResource("2_2v0n5")
 expected_color = 2
@@ -11,6 +15,6 @@ expected_number = 2
 device_id_template = "green_receiver_2"
 device_type = 2
 device_name = "Green receiver 2"
-texture = ExtResource("3_rdga6")
+texture = SubResource("AtlasTexture_2yr46")
 device_scene = ExtResource("1_24kat")
 metadata/_custom_type_script = "uid://br8w83rtqy42y"
