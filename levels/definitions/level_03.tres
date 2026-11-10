@@ -280,29 +280,6 @@ packet = SubResource("Resource_5br3k")
 delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
-[sub_resource type="Resource" id="Resource_kywl6"]
-script = ExtResource("3_5qv61")
-title = "Première hint"
-text = "Je suis un exemple"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
-[sub_resource type="Resource" id="Resource_1w8on"]
-script = ExtResource("3_5qv61")
-title = "Deuxième"
-text = "BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla
-BLABLABLA BLABLABLA blablabla bla"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
-[sub_resource type="Resource" id="Resource_mlash"]
-script = ExtResource("3_5qv61")
-title = "Troisième"
-text = "Oskur"
-metadata/_custom_type_script = "uid://0e8ai46cecma"
-
 [sub_resource type="Resource" id="Resource_jciun"]
 script = ExtResource("4_gw5ix")
 device_data = ExtResource("5_8d3yn")
@@ -433,4 +410,3 @@ device_limits = Dictionary[int, int]({
 })
 objectives = Array[ExtResource("9_l4wtj")]([SubResource("Resource_40y5m"), SubResource("Resource_p62ga"), SubResource("Resource_4rqxl"), SubResource("Resource_6abal"), SubResource("Resource_hcrga")])
 show_tutorial_on_start = false
-hints = Array[ExtResource("3_5qv61")]([SubResource("Resource_kywl6"), SubResource("Resource_1w8on"), SubResource("Resource_mlash")])

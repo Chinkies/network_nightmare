@@ -129,6 +129,12 @@ packet = SubResource("Resource_4uf1g")
 delay = 1.0
 metadata/_custom_type_script = "uid://cil0ws5dyw4l2"
 
+[sub_resource type="Resource" id="Resource_u87n1"]
+script = ExtResource("3_1xv6b")
+title = "Indice n°1"
+text = "Si vous avez du mal ici, vous devirez relire le tutoriel."
+metadata/_custom_type_script = "uid://0e8ai46cecma"
+
 [sub_resource type="Resource" id="Resource_jciun"]
 script = ExtResource("4_l6e5b")
 device_data = ExtResource("5_1xv6b")
@@ -199,3 +205,4 @@ device_limits = Dictionary[int, int]({
 })
 objectives = Array[ExtResource("7_1hqfi")]([SubResource("Resource_24kat")])
 tutorial_pages = Array[ExtResource("10_2qaks")]([SubResource("Resource_gw5ix"), SubResource("Resource_30wu1")])
+hints = Array[ExtResource("3_1xv6b")]([SubResource("Resource_u87n1")])

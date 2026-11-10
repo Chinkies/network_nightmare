@@ -103,6 +103,7 @@ func _load_current_level() -> void:
 	print("[LevelManager] Chargement du niveau : ", level_def.level_id)
 	current_level = level_def
 	level_validator.setup(current_level, simulation)
+	puzzle_ui.set_hint_button_enabled(not current_level.hints.is_empty())
 
 	# Configuration de la grille
 	grid_board.grid_width = level_def.grid_width
@@ -234,7 +235,7 @@ func _on_reset_requested() -> void:
 	puzzle_ui.set_wiring_button_enabled(true)
 	puzzle_ui.set_delete_button_enabled(true)
 	puzzle_ui.set_tutorial_button_enabled(true)
-	puzzle_ui.set_hint_button_enabled(true)
+	puzzle_ui.set_hint_button_enabled(current_level != null and not current_level.hints.is_empty())
 		
 	print("[LevelManager] Simulation réinitialisée.")
 
